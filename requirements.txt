@@ -1,0 +1,24 @@
+# UP Booth Intelligence — Python dependencies
+# Install: .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+# Tested on: Windows 10/11, Python 3.12, CPU only.
+
+# --- core pipeline (converters, store, reports, dashboard) ---
+pymupdf==1.28.2        # PDF text + page rendering
+pdfplumber==0.11.10    # table extraction (needs Pillow>=12.2)
+openpyxl==3.1.5        # xlsx read/write + conditional formatting
+pillow==12.3.0         # image handling (keep >=12.2 for pdfplumber)
+xlrd==2.0.2            # legacy .xls reading (2017/2019/2022 ECI sheets)
+pandas==3.0.6          # tabular work
+numpy==2.5.3           # numeric work, grid detection
+opencv-python-headless==4.11.0.86  # ruling-line detection (OCR path)
+scikit-image==0.26.0   # pulled in by EasyOCR
+scipy==1.18.1          # pulled in by EasyOCR
+
+# --- OCR path (paused; see brain/CHANGELOG.md) ---
+easyocr==1.7.2         # Hindi+English OCR (needs torch below, CPU ok)
+torch==2.14.1          # EasyOCR backend (CPU wheel; large download)
+torchvision==0.29.1    # EasyOCR backend
+
+# NOT INSTALLED (do not add): surya-ocr 0.22 needs an external
+# llama-server binary on Windows and has no local inference path here.
+# If that changes, pin it explicitly with its binary setup notes.

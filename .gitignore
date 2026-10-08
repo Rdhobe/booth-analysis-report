@@ -1,0 +1,8 @@
+.venv
+__pycache__/
+servedb.sqlite
+output/servedb.sqlite
+server/servedb.sqlite
+web\node_modules
+.env.example
+.env.local

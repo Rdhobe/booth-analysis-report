@@ -1,0 +1,196 @@
+{
+  "description": "Final results of the parliamentary elections 2024",
+  "keywords": [
+    "Elections"
+  ],
+  "license": {
+    "title": "Other (Public Domain)",
+    "type": "other-pd"
+  },
+  "name": "parliamentary-elections-2024-results",
+  "resources": [
+    {
+      "description": "Results of Lok Sabha Elections 2024",
+      "format": "CSV",
+      "name": "lok-sabha-elections-2024-results",
+      "path": "lok-sabha-elections-2024-results.csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "State",
+            "type": "string"
+          },
+          {
+            "name": "PC No",
+            "type": "number"
+          },
+          {
+            "name": "PC Name",
+            "type": "string"
+          },
+          {
+            "name": "Sl no",
+            "type": "number"
+          },
+          {
+            "name": "Candidate",
+            "type": "string"
+          },
+          {
+            "name": "Party",
+            "type": "string"
+          },
+          {
+            "name": "EVM Votes",
+            "type": "number"
+          },
+          {
+            "name": "Postal Votes",
+            "type": "string"
+          },
+          {
+            "name": "Total Votes",
+            "type": "number"
+          },
+          {
+            "name": "Vote Share",
+            "type": "number"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "path": "https://data.opencity.in/dataset/6e1829d5-7ce9-4b04-98ff-d0d92609cfd6/resource/1b837c18-4f7a-4acb-aad0-918c51186a54/download/results_2024.csv",
+          "title": "Lok Sabha Elections 2024 Results"
+        }
+      ],
+      "title": "Lok Sabha Elections 2024 Results"
+    },
+    {
+      "description": "List of elected candidates and runners-up, their respective parties, and vote difference.",
+      "format": "CSV",
+      "name": "lok-sabha-elections-winners-and-runners-up-2024",
+      "path": "lok-sabha-elections-winners-and-runners-up-2024.csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "State",
+            "type": "string"
+          },
+          {
+            "name": "PC No",
+            "type": "number"
+          },
+          {
+            "name": "PC Name",
+            "type": "string"
+          },
+          {
+            "name": "Winning Candidate",
+            "type": "string"
+          },
+          {
+            "name": "Winning Party",
+            "type": "string"
+          },
+          {
+            "name": "Runner-up Canddiate",
+            "type": "string"
+          },
+          {
+            "name": "Runner-up Party",
+            "type": "string"
+          },
+          {
+            "name": "Margin Votes",
+            "type": "string"
+          },
+          {
+            "name": "Results Status",
+            "type": "string"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "path": "https://data.opencity.in/dataset/6e1829d5-7ce9-4b04-98ff-d0d92609cfd6/resource/2a4e0925-0903-4857-902b-9a57cfb78094/download/results_2024_winners.csv",
+          "title": "Lok Sabha Elections Winners and Runners-up 2024"
+        }
+      ],
+      "title": "Lok Sabha Elections Winners and Runners-up 2024"
+    },
+    {
+      "description": "AC level votes data for all 543 constituencies.",
+      "format": "CSV",
+      "name": "assembly-segment-level-voting-data-for-all-constituencies-2024",
+      "path": "assembly-segment-level-voting-data-for-all-constituencies-2024.csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "State/UT Name",
+            "type": "string"
+          },
+          {
+            "name": "PC NO",
+            "type": "number"
+          },
+          {
+            "name": "PC NAME",
+            "type": "string"
+          },
+          {
+            "name": "TOTAL ELECTORS IN PC",
+            "type": "number"
+          },
+          {
+            "name": "AC NO",
+            "type": "number"
+          },
+          {
+            "name": "AC NAME",
+            "type": "string"
+          },
+          {
+            "name": "TOTAL ELECTORS IN AC",
+            "type": "number"
+          },
+          {
+            "name": "TOTAL VALID VOTES IN STATE",
+            "type": "number"
+          },
+          {
+            "name": "NOTA VOTES EVM IN AC",
+            "type": "number"
+          },
+          {
+            "name": "CANDIDATE NAME",
+            "type": "string"
+          },
+          {
+            "name": "PARTY",
+            "type": "string"
+          },
+          {
+            "name": "VOTES SECURED EVM",
+            "type": "number"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "path": "https://data.opencity.in/dataset/6e1829d5-7ce9-4b04-98ff-d0d92609cfd6/resource/142dc4e5-49e3-4412-a751-d712970b0dd5/download/34-details-of-assembly-segment-of-pc.csv",
+          "title": "Assembly Segment Level Voting Data for all Constituencies 2024"
+        }
+      ],
+      "title": "Assembly Segment Level Voting Data for all Constituencies 2024"
+    }
+  ],
+  "sources": [
+    {
+      "email": "vaidyanathanramany@iimb.ac.in",
+      "name": "Vaidyanathan R",
+      "web": "results.eci.gov.in"
+    }
+  ],
+  "title": "Parliamentary Elections 2024 Results"
+}

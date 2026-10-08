@@ -1,0 +1,60 @@
+rel,pdf,pages,ncands,booths,status,xlsx,error,secs
+109Eng.pdf,data\2024\PDF\109Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.04807090759277344
+137Eng.pdf,data\2024\PDF\137Eng.pdf,72,11,1848,REVIEW,data\2024\PDF\137Eng.REVIEW.xlsx,EVM total mismatch col 2: booth-sum=521954 vs evm=104631; EVM total mismatch col 3: booth-sum=555277 vs evm=97788; EVM total mismatch col 4: booth-sum=110122 vs evm=24272; EVM total mismatch col 5: booth-sum=2298 vs evm=493; EVM total mismatch col 6: booth-sum=1018 vs evm=251,30.598578214645386
+141Eng.pdf,data\2024\PDF\141Eng.pdf,66,12,1817,REVIEW,data\2024\PDF\141Eng.REVIEW.xlsx,EVM total mismatch col 2: booth-sum=429860 vs evm=84845; EVM total mismatch col 3: booth-sum=425510 vs evm=90977; EVM total mismatch col 4: booth-sum=179383 vs evm=35417; EVM total mismatch col 5: booth-sum=3448 vs evm=840; EVM total mismatch col 6: booth-sum=1750 vs evm=417,36.51269817352295
+162Eng.pdf,data\2024\PDF\162Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.054112911224365234
+163Eng.pdf,data\2024\PDF\163Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.04511404037475586
+164Eng.pdf,data\2024\PDF\164Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.050481557846069336
+165Eng.pdf,data\2024\PDF\165Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.05329751968383789
+166Eng.pdf,data\2024\PDF\166Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.05946922302246094
+167Eng.pdf,data\2024\PDF\167Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.05556082725524902
+177Eng.pdf,data\2024\PDF\177Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.05692148208618164
+179Eng.pdf,data\2024\PDF\179Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.054253339767456055
+180Eng.pdf,data\2024\PDF\180Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.02392864227294922
+182Eng.pdf,data\2024\PDF\182Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.038092613220214844
+187Eng.pdf,data\2024\PDF\187Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.04054379463195801
+188Eng.pdf,data\2024\PDF\188Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.03885245323181152
+189Eng.pdf,data\2024\PDF\189Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.06971168518066406
+191Eng.pdf,data\2024\PDF\191Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.06468009948730469
+192Eng.pdf,data\2024\PDF\192Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.031615495681762695
+1Eng.pdf,data\2024\PDF\1Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.036631107330322266
+221Eng.pdf,data\2024\PDF\221Eng.pdf,0,0,0,COMPLEX_SKIP,,unmapped (cid:) glyphs / complex layout; manual handling,16.23749613761902
+228Eng.pdf,data\2024\PDF\228Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.05027198791503906
+229Eng.pdf,data\2024\PDF\229Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.04752659797668457
+270Eng.pdf,data\2024\PDF\270Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.027347087860107422
+271Eng.pdf,data\2024\PDF\271Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.0189969539642334
+273Eng.pdf,data\2024\PDF\273Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.027872085571289062
+274Eng.pdf,data\2024\PDF\274Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.022649526596069336
+275Eng.pdf,data\2024\PDF\275Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.030941009521484375
+279Eng.pdf,data\2024\PDF\279Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.026878833770751953
+282Eng.pdf,data\2024\PDF\282Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.026388168334960938
+283Eng.pdf,data\2024\PDF\283Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.03046894073486328
+285Eng.pdf,data\2024\PDF\285Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.016015291213989258
+286Eng.pdf,data\2024\PDF\286Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.03362846374511719
+287Eng.pdf,data\2024\PDF\287Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.03191065788269043
+288Eng.pdf,data\2024\PDF\288Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.03376460075378418
+2Eng (2).pdf,data\2024\PDF\2Eng (2).pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.0355677604675293
+2Eng (3).pdf,data\2024\PDF\2Eng (3).pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.01360774040222168
+2Eng.pdf,data\2024\PDF\2Eng.pdf,0,0,0,COMPLEX_SKIP,,no ruling-line tables; text unusable - OCR/manual,1.5469865798950195
+36Eng.pdf,data\2024\PDF\36Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.039754629135131836
+380Eng.pdf,data\2024\PDF\380Eng.pdf,16,10,407,OK,data\2024\PDF\380Eng.xlsx,,6.762326240539551
+381Eng.pdf,data\2024\PDF\381Eng.pdf,14,10,357,OK,data\2024\PDF\381Eng.xlsx,,6.353802442550659
+382Eng.pdf,data\2024\PDF\382Eng.pdf,14,10,359,OK,data\2024\PDF\382Eng.xlsx,,6.246808767318726
+395Eng.pdf,data\2024\PDF\395Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.06523370742797852
+396Eng.pdf,data\2024\PDF\396Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.28400182723999023
+397Eng.pdf,data\2024\PDF\397Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.0759589672088623
+398Eng.pdf,data\2024\PDF\398Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.05395054817199707
+399Eng.pdf,data\2024\PDF\399Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.07897496223449707
+3Eng.pdf,data\2024\PDF\3Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.0534214973449707
+46Eng.pdf,data\2024\PDF\46Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.03781533241271973
+47Eng.pdf,data\2024\PDF\47Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.046318769454956055
+48Eng.pdf,data\2024\PDF\48Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.040236711502075195
+49Eng.pdf,data\2024\PDF\49Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.05476498603820801
+4Eng.pdf,data\2024\PDF\4Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.02127981185913086
+52Eng.pdf,data\2024\PDF\52Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.045439958572387695
+5Eng.pdf,data\2024\PDF\5Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.023952484130859375
+63Eng.pdf,data\2024\PDF\63Eng.pdf,14,15,398,REVIEW,data\2024\PDF\63Eng.REVIEW.xlsx,"row 327: non-numeric vote cell: [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]",4.993590354919434
+65Eng.pdf,data\2024\PDF\65Eng.pdf,0,0,0,LEGACY_SKIP,,"legacy-encoded Hindi names; skipped, not converted",3.930058240890503
+66Eng.pdf,data\2024\PDF\66Eng.pdf,0,0,0,LEGACY_SKIP,,"legacy-encoded Hindi names; skipped, not converted",1.6713652610778809
+68Eng.pdf,data\2024\PDF\68Eng.pdf,0,0,0,LEGACY_SKIP,,"legacy-encoded Hindi names; skipped, not converted",0.7133893966674805
+6Eng.pdf,data\2024\PDF\6Eng.pdf,0,0,0,SCANNED,,no extractable tables (scanned-image PDF - needs OCR),0.03351593017578125

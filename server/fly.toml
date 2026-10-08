@@ -1,0 +1,27 @@
+# Fly.io deploy (docker). Build store first:
+# python Scripts/build_servedb.py --db server/servedb.sqlite
+app = "upbi"
+primary_region = "bom"
+
+[build]
+  dockerfile = "server/Dockerfile"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = "suspend"
+  auto_start_machines = true
+
+  [[http_service.checks]]
+    grace_period = "30s"
+    path = "/api/meta"
+
+[env]
+  COMPLIANCE_MODE = "off"
+  DB_PATH = "/data/servedb.sqlite"
+
+[mounts]
+  source = "upbi_data"
+  destination = "/data"
+# then: fly volumes create upbi_data
+#       fly secrets set STORE_URL=<release-asset-URL> API_KEY=<random>

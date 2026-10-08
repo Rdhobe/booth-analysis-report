@@ -1,0 +1,24 @@
+# Render deploy (monorepo: docker context = repo root).
+# The 300MB+ servedb.sqlite is NOT in git - it is downloaded once
+# from STORE_URL (GitHub Release asset) onto the disk below.
+services:
+  - type: web
+    name: upbi
+    runtime: docker
+    dockerfilePath: ./server/Dockerfile
+    healthCheckPath: /api/meta
+    disk:
+      name: upbi-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: COMPLIANCE_MODE
+        value: off
+      - key: DB_PATH
+        value: /data/servedb.sqlite
+      - key: STORE_URL
+        sync: false # GitHub Release asset URL of servedb.sqlite
+      - key: API_KEY
+        sync: false # long random string (dashboard secret)
+      - key: ALLOWED_ORIGINS
+        sync: false # e.g. https://your-nextjs-app.vercel.app

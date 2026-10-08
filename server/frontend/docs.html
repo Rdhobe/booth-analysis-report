@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UPBI API docs</title>
+<style>:root{--bg:#faf5ea;--panel:#fffdf6;--line:#e9dcc2;--ink:#332619;--mut:#8a7760;--saf-d:#c85a10}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px}
+header{background:#fffdf6;border-bottom:2px solid #e8721c}
+.head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 0}
+h1{font-size:20px;margin:0}.sub{color:var(--mut);font-size:12px}
+nav a{color:var(--saf-d);margin-left:14px;text-decoration:none;font-weight:600}
+main{padding:16px 0 40px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.panel h2{margin:0 0 10px;font-size:17px}.panel h3{margin:14px 0 8px;font-size:14px}
+.small{font-size:12px}.muted{color:var(--mut)}
+code{background:#f4ecda;padding:1px 6px;border-radius:4px}h3 code{font-size:13px}
+pre.js,pre{background:#fff8ea;border:1px solid var(--line);border-radius:8px;padding:10px;overflow-x:auto;font-size:12px}
+table.data{width:100%;border-collapse:collapse;font-size:12.5px}
+table.data th,table.data td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+table.data th{color:var(--mut)}
+.endpoint{border-left:3px solid #e8721c;padding-left:12px;margin:18px 0}
+footer{color:var(--mut);font-size:12px}</style>
+</head>
+<body>
+<header><div class="wrap head">
+<div><h1>UPBI API docs</h1><p class="sub">read-only JSON for the Next.js frontend · base <code>http://127.0.0.1:8000</code> · examples below are real responses from the full 403-AC store</p></div>
+<nav><a href="/swagger">Swagger</a></nav>
+</div></header>
+<main class="wrap">
+
+<div class="panel"><h2>Next.js quickstart</h2>
+<pre class="js">const API = process.env.NEXT_PUBLIC_UPBI_API ?? "http://127.0.0.1:8000";
+const KEY = process.env.UPBI_API_KEY; // server-side only — never NEXT_PUBLIC_
+const meta = await (await fetch(`${API}/api/meta`,
+  { headers: KEY ? { "x-api-key": KEY } : {} })).json();
+const page = await (await fetch(`${API}/api/booths?ac=88&amp;sort=latest_diff&amp;order=desc&amp;page=1`,
+  { headers: KEY ? { "x-api-key": KEY } : {} })).json();</pre>
+<p class="small muted">CORS: <code>GET</code> from any origin is allowed by default. Tighten with <code>ALLOWED_ORIGINS="https://app.vercel.app"</code> on public deploys. All responses are gzip-encoded JSON (orjson). Every endpoint opens its own read-only SQLite connection — safe to call in parallel.</p></div>
+
+<div class="panel"><h2>Auth</h2>
+<table class="data"><thead><tr><th>Rule</th><th>Detail</th></tr></thead><tbody>
+<tr><td>Header</td><td><code>x-api-key: &lt;API_KEY&gt;</code> on every <code>/api/*</code> call. Missing/wrong → <code>401 {"detail": "invalid or missing API key"}</code>.</td></tr>
+<tr><td>Dev vs prod</td><td><code>API_KEY</code> unset = open mode (localhost convenience; server logs a warning). Any shared/public deploy <b>must</b> set it: <code>API_KEY="…"</code> (uvicorn env) or via <code>render.yaml</code> / <code>fly.toml</code> secrets.</td></tr>
+<tr><td>Public pages</td><td><code>/docs</code>, <code>/swagger</code>, <code>/openapi.json</code>, <code>/assets/*</code>, and <code>/api/meta</code> (health checks) need no key — the data does. (The dashboard lives in the Next.js app, not here.)</td></tr>
+<tr><td>Next.js guidance</td><td>Call this API from Route Handlers / Server Components so the key never reaches the browser. If the browser must call it directly, accept that the key is public and rely on <code>ALLOWED_ORIGINS</code> + (later) rate limits instead.</td></tr>
+</tbody></table></div>
+
+<div class="panel"><h2>Conventions</h2>
+<table class="data"><thead><tr><th>Rule</th><th>Detail</th></tr></thead><tbody>
+<tr><td>Elections</td><td><code>VS2017</code> · <code>LS2019</code> · <code>VS2022</code> · <code>LS2024</code></td></tr>
+<tr><td>Value scales</td><td>shares/margins/turnout (<code>a2017,b2017,d2017,avg_diff,latest_diff,to2017…</code>) are <b>fractions 0–1</b> → display ×100. Religion <code>*_percent_17</code> are already <b>0–100</b>. <code>age_*</code> are years. <code>e/m/f/o/t</code> are headcounts.</td></tr>
+<tr><td>Nulls</td><td><code>null</code> = suppressed (booths &lt; 200 electors), no input, or not applicable — never 0. <code>to*</code> is <code>null</code> where electors are missing.</td></tr>
+<tr><td>Sorting</td><td><code>sort</code> accepts any <code>booth_row</code> column name; unknown keys fall back to <code>ps</code>. <code>order=asc|desc</code>.</td></tr>
+<tr><td>Scoping</td><td><code>/api/booths</code> requires <code>ac=&lt;no&gt;</code> or <code>q=&lt;text&gt;</code> (FTS prefix search over AC/PS/name/district) — never full-table. <code>page_size</code> ≤ 500, default 100.</td></tr>
+<tr><td><code>source</code></td><td><code>/api/ac/{ac}/votes</code> returns <code>"sum of converted booths"</code>, or <code>"official ECI segment totals (all-AC)"</code> when 2024 booth files are missing for that AC.</td></tr>
+<tr><td><code>store_ok</code></td><td><code>/api/meta.store_ok === false</code> means the build was interrupted — rebuild before trusting any page.</td></tr>
+<tr><td>Religion columns</td><td>36 <code>*_17</code> columns are <b>modeled 2017-roll estimates</b> (religion inferred from names; age/sex from the roll). Tag them <code>(modeled)</code> and link Methods — same rule as the dashboard.</td></tr>
+<tr><td>Caching</td><td>Static endpoints (<code>meta/acs/overview/trend/sexratio/religion/ages/averages/past/zones/coverage/methods</code>) are cached in-memory server-side — repeats are instant. The store is immutable, so a rebuild needs a server restart to take effect.</td></tr>
+<tr><td>Errors</td><td><code>400</code> unscoped booths query · <code>401</code> bad/missing API key · <code>404</code> unknown booth · <code>500</code> store file missing (set <code>DB_PATH</code>).</td></tr>
+</tbody></table></div>
+
+<div class="panel"><h2>Endpoints</h2>
+
+<div class="endpoint"><h3>Third-party frontend integration map</h3>
+<p class="small muted">Which endpoint feeds which dashboard widget (for the live shakktii.in frontend).</p>
+<table class="data"><thead><tr><th>Widget</th><th>Endpoint</th></tr></thead><tbody>
+<tr><td>Year selector, seats / vote-share cards</td><td><code>/api/overview?election=&amp;vs=</code>, <code>/api/trend</code></td></tr>
+<tr><td>District dropdown, Top Districts by Booth Count</td><td><code>/api/acs</code> (districts list; sum booths/electors per district client-side)</td></tr>
+<tr><td>Constituencies</td><td><code>/api/acs</code> + <code>/api/ac/{ac}/past</code></td></tr>
+<tr><td>Candidates</td><td><code>/api/ac/{ac}/votes?election=</code> + per-booth <code>/api/booth/{ac}/{ps}</code></td></tr>
+<tr><td>Booth Explorer search / table</td><td><code>/api/booths?ac=&amp;q=&amp;zone=&amp;sort=&amp;page=</code></td></tr>
+<tr><td>Strong / Medium / Weak bands</td><td>Winner-share bands over <code>/api/margins</code> rows (e.g. ≥50 / 40–50 / &lt;40)</td></tr>
+<tr><td>Winning Margin Distribution</td><td><code>/api/margins?election=</code> → <code>histogram</code></td></tr>
+<tr><td>Closest Contests</td><td><code>/api/margins?election=&amp;order=asc&amp;limit=</code></td></tr>
+<tr><td>Landslide Victories</td><td><code>/api/margins?election=&amp;order=desc&amp;limit=</code></td></tr>
+<tr><td>Male / Female turnout</td><td><code>/api/ac/{ac}/sexratio</code></td></tr>
+<tr><td>Coverage / data-health</td><td><code>/api/coverage</code>, <code>/api/methods</code></td></tr>
+</tbody></table>
+<p class="small muted">Upload / Source Files / MongoDB widgets are that app's own systems — not served here.</p></div>
+
+<div class="endpoint"><h3><code>GET /api/meta</code> — store health + column contract</h3>
+<pre class="js">{
+  "counts": {"booth_row": 162396, "booth_election": 385478,
+             "vote": 4724788, "ac_summary": 1070,
+             "coverage": 1259, "acs": 403},
+  "store_ok": true,
+  "scope": "statewide (all 403 ACs)", "is_slice": false,
+  "built_at": "2026-10-06 12:00:00",
+  "elections": ["VS2017", "LS2019", "VS2022", "LS2024"],
+  "demo_cols": ["electors_17", "missing_percent_17", "age_avg_17", … 36 total],
+  "compliance_mode": "off"
+}</pre></div>
+
+<div class="endpoint"><h3><code>GET /api/acs?district=Agra</code> — AC list (+zones, +districts)</h3>
+<p class="small muted">One row per AC × election. Omit <code>district</code> for all 403.</p>
+<pre class="js">{
+  "rows": [{"ac": 88, "ac_name": "Agra South", "district": "Agra",
+            "election": "VS2017", "booths": 377, "electors": 349384,
+            "polled": 217069, "valid": 216089, "nota": 5,
+            "turnout_pct": 62.13}],
+  "zones": [{"ac": 88, "zone": "Safe", "n": 281}],
+  "districts": ["Agra", "Aligarh", …]
+}</pre></div>
+
+<div class="endpoint"><h3><code>GET /api/booths?ac=88&amp;zone=&amp;q=&amp;party=&amp;sort=ps&amp;order=asc&amp;page=1&amp;page_size=100</code></h3>
+<p class="small muted">Filters: <code>zone</code> (Safe/Favorable/Battlefield/Difficult/Data Not sufficient), <code>party</code> = Party-B code, <code>q</code> = FTS prefix. <code>demo_cols</code> lists the 36 religion columns present on every row.</p>
+<pre class="js">{
+  "total": 422, "page": 1, "page_size": 100,
+  "rows": [{"ac": 88, "ps": "1", "district": "Agra",
+            "name": "…", "zone": "Safe",
+            "avg_diff": 0.605, "latest_diff": 0.5927, "party_b": "SP",
+            "a2017": 0.5838, "b2017": 0.0, "d2017": 0.5838,
+            "t2017": 382, "to2017": 0.5904,
+            "muslim_percent_17": 5.36, "age_avg_17": 47.92, …}],
+  "demo_cols": ["electors_17", "missing_percent_17", …]
+}</pre></div>
+
+<div class="endpoint"><h3><code>GET /api/booth/88/1</code> — booth drill-down</h3>
+<p class="small muted">Full row incl. religion columns; per-election turnout rows; top-15 candidates per election the booth contested.</p>
+<pre class="js">{
+  "row": {"ac": 88, "ps": "1", "zone": "Safe", "party_b": "SP",
+          "avg_diff": 0.605, "latest_diff": 0.5927, …},
+  "elections": [{"booth_uid": "LS2019-088-0001", "election": "LS2019",
+                 "ps_name": "H.R.A. I.C Vinay Nagar Room No.1",
+                 "electors": 697, "male": 230, "female": 174,
+                 "other": 0, "polled": 404, "valid": 403,
+                 "nota": 0, "src": "88.xls#FORMAT"}],
+  "votes": {"VS2017": [{"candidate": "YOGENDRA UPADHYAYA",
+                        "party": "BJP", "votes": 223}, …]}
+}</pre></div>
+
+<div class="endpoint"><h3><code>GET /api/ac/88/votes?election=VS2017</code> — party totals for charts</h3>
+<pre class="js">{
+  "parties": [{"party": "BJP", "votes": 113051},
+              {"party": "BSP", "votes": 58025},
+              {"party": "INC", "votes": 39349}, …],
+  "summary": {"electors": 349384, "polled": 217069, …},
+  "source": "sum of converted booths"
+}</pre>
+<p class="small muted">2024 fallback example (<code>?election=LS2024</code>, AC with no 2024 booth files): same shape, <code>"source": "official ECI segment totals (all-AC)"</code>, e.g. BJP 104342 / SP 62997 / BSP 21905 for AC 88, electors 371668, NOTA 1207.</p></div>
+
+<div class="endpoint"><h3><code>GET /api/overview?election=LS2024&amp;vs=VS2022</code> — homepage rollup</h3>
+<p class="small muted">Seats = per-AC plurality (NOTA excluded, MIN_VOTES 2000 gate, party aliases); VS years use booth sums, LS2024 uses official segment totals. Full formula contract in <code>server/DASHBOARD_LOGIC.md</code>.</p>
+<pre class="js">{
+  "election": "LS2024", "vs": "VS2022",
+  "seats": [{"party": "SP", "seats": 183},
+            {"party": "BJP", "seats": 162},
+            {"party": "INC", "seats": 40}, …],
+  "seats_counted": 403,
+  "avg_share": 41.37, "avg_share_vs": 38.35,
+  "ac_zones": [{"zone": "Safe", "acs": 177, "members": [61, …],
+    "best": {"ac": 61, "ac_name": "Noida", "share": 76.5,
+             "share_vs": null}, "worst": {…}}, …],
+  "ac_zone": {"88": "Safe", …},
+  "ac_shares": {"88": [54.6, 52.6], …},
+  "booth_zones": [{"zone": "Safe", "booths": 48363,
+    "top": {"ac": 106, "ac_name": "Jalesar", "ps": "112",
+            "share": 98.7, "share_vs": null}}, …],
+  "voter": {"male_pct": 57.2, "female_pct": 42.8,
+            "voting_pct": 61.9, "from": "VS2022"},
+  "religion": {"hindu": 65.3, "muslim": 18.7, "christian": 5.5,
+               "sikh": 2.0, "others": 1.6, …},
+  "notes": ["2024 seats are assembly-segment leads (Lok Sabha), not seats won"]
+}</pre></div>
+
+<div class="endpoint"><h3><code>GET /api/trend</code> — statewide per-election rollup</h3>
+<p class="small muted">One call for trend charts (share + seats + turnout). Same rollup code as <code>/overview</code>.</p>
+<pre class="js">{"rows": [
+  {"election": "VS2017", "bjp_share": 35.66, "bjp_seats": 292,
+   "seats_counted": 400, "seats_word": "seats", "turnout": 61.22,
+   "top": [{"party": "BJP", "seats": 292}, …]},
+  {"election": "LS2019", "bjp_share": 45.94, "bjp_seats": 200, …},
+  {"election": "VS2022", "bjp_share": 38.38, "bjp_seats": 127, …},
+  {"election": "LS2024", "bjp_share": 41.37, "bjp_seats": 162,
+   "seats_word": "leads", "turnout": 56.78, …}]}</pre></div>
+
+<div class="endpoint"><h3><code>GET /api/ac/88/past</code> — per-election result sheet</h3>
+<pre class="js">{"rows": [{
+  "election": "LS2024", "booths": 0,
+  "turnout": {"electors": 371668, "polled": 192313,
+              "turnout": 51.7, "nota": 1207},
+  "bjp_votes": 104342, "bjp_share": 54.6,
+  "winner": "BJP", "winner_votes": 104342,
+  "runnerup": "SP", "margin_votes": 41345, "margin_pp": 21.64,
+  "parties": [{"party": "BJP", "votes": 104342, "share": 54.6}, …],
+  "source": "official ECI segment totals (all-AC)"}, …]}</pre></div>
+
+<div class="endpoint"><h3><code>GET /api/ac/88/ages</code> — modeled age profile</h3>
+<pre class="js">{"overall": {"electors": 338483, "mean": 42.0, "sd": 14.7},
+ "by_religion": {"hindu": {"electors": …, "mean": 42.3, "sd": 14.2},
+                 "muslim": {"mean": 39.9, …}, …},
+ "booths": 422, "with_data": 377}</pre></div>
+
+<div class="endpoint"><h3><code>GET /api/ac/88/averages</code> — per-booth means</h3>
+<pre class="js">{"rows": [{"election": "VS2017", "booths": 377,
+           "avg_electors": 926.7, "avg_male": 328.0,
+           "avg_female": 247.7, "avg_polled": 575.8,
+           "tot_electors": 349384, "tot_male": 123666, …}, …]}</pre></div>
+
+<div class="endpoint"><h3><code>GET /api/ac/387/religion</code> — AC religion mix (modeled)</h3>
+<pre class="js">{"religion": {"hindu": 73.2, "muslim": 12.2, "christian": 5.3,
+              "sikh": 1.3, "jain": 1.3, "buddhist": 1.4,
+              "parsi": 3.9, "others": 1.4},
+ "booths": 461, "with_data": 372}</pre></div>
+
+<div class="endpoint"><h3><code>GET /api/margins?election=VS2017&amp;order=asc&amp;limit=50&amp;ac=</code> — per-booth margins</h3>
+<p class="small muted"><code>order=asc</code> = closest contests, <code>desc</code> = landslides. <code>ac</code> optional filter. <code>histogram</code> buckets by margin-pp for distribution charts. LS2024 covers converted booths only.</p>
+<pre class="js">{"rows": [{"booth_uid": "VS2017-001-0329", "ac": 1, "ps": "329",
+           "winner_party": "INC", "runnerup_party": "BJP",
+           "margin_votes": 0, "margin_pp": 0.0, …}, …],
+ "total": 114399, "booths": 114399,
+ "histogram": [{"under_pp": 1, "booths": 3127},
+               {"under_pp": 2, "booths": 2589}, …],
+ "order": "asc", "limit": 50}</pre></div>
+
+<div class="endpoint"><h3><code>GET /api/ac/88/sexratio</code> — male/female polling per election</h3>
+<pre class="js">{"rows": [{"election": "VS2017", "electors": 349384,
+           "male": 123666, "female": 93401, "other": 2,
+           "polled": 217069, "f_per_1000m": 755.3}]}</pre>
+<p class="small muted">2024 rows carry booth sums where converted, else <code>null</code> sex splits (segment totals have no M/F).</p></div>
+
+<div class="endpoint"><h3><code>GET /api/zones?district=Agra</code> — zone histogram</h3>
+<pre class="js">{"zones": [{"zone": "Battlefield", "n": 832},
+           {"zone": "Data Not sufficient", "n": 109},
+           {"zone": "Difficult", "n": 143},
+           {"zone": "Favorable", "n": 144},
+           {"zone": "Safe", "n": 2668}]}</pre></div>
+
+<div class="endpoint"><h3><code>GET /api/coverage</code> — data-health log (1,259 rows)</h3>
+<pre class="js">{"rows": [{"election": "VS2017", "ac": "1", "ac_name": "",
+           "file": "1.xls#Sheet1 (2)", "booths": "336",
+           "valid_ok": "True", "has_total": "False", "note": ""}, …]}</pre>
+<p class="small muted"><code>note</code> carries <code>SEG-CHECK</code>, <code>DEMO-CHECK</code>, <code>NO-TRIPLET-SHEETS</code>, <code>HINDI_XLSX_SKIP</code>, <code>INGEST-FAIL</code> markers.</p></div>
+
+<div class="endpoint"><h3><code>GET /api/methods</code> — verbatim Methods sheet + statewide zone counts</h3>
+<pre class="js">{"methods": "&lt;full Methods_Zones text: sources, joins, suppression rules, calibration caveats&gt;",
+ "zone_counts": [["Battlefield", 34991], ["Data Not sufficient", 47442],
+                 ["Difficult", 25569], ["Favorable", 6031],
+                 ["Safe", 48363]]}</pre></div>
+
+</div>
+<footer class="muted small">Swagger UI (needs internet for its CDN) lives at <a href="/swagger">/swagger</a> · this page is offline-safe.</footer>
+</main>
+</body>
+</html>

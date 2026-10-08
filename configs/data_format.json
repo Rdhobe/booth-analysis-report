@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BoothIntelligenceMasterSchema",
+  "type": "object",
+  "description": "Unified micro-level schema mapping historical elections, spatial GIS boundaries, estimated demographics, and real-time sentiment to individual polling booths.",
+  "properties": {
+    "booth_id": {
+      "type": "string",
+      "description": "Unique identifier for the polling station (e.g., 'UP_142_12' or 'AC142_P12').",
+      "example": "UP_142_12"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "state": { "type": "string", "example": "Uttar Pradesh" },
+        "district_name": { "type": "string", "example": "Lucknow" },
+        "assembly_constituency_no": { "type": "integer", "example": 174 },
+        "assembly_constituency_name": { "type": "string", "example": "Lucknow Central" },
+        "polling_station_name": { "type": "string", "example": "Primary School East Wing, Room 2" }
+      },
+      "required": ["state", "district_name", "assembly_constituency_no", "assembly_constituency_name"]
+    },
+    "geospatial": {
+      "type": "object",
+      "description": "GIS coordinates and boundary polygons for spatial joins.",
+      "properties": {
+        "latitude": { "type": "number", "example": 26.8467 },
+        "longitude": { "type": "number", "example": 80.9462 },
+        "geometry_polygon": {
+          "type": "string",
+          "description": "GeoJSON polygon string or boundary coordinate array representing the booth catchment area.",
+          "example": "POLYGON ((80.94 26.84, 80.95 26.84, 80.95 26.85, 80.94 26.85, 80.94 26.84))"
+        }
+      },
+      "required": ["latitude", "longitude"]
+    },
+    "demographics_estimated": {
+      "type": "object",
+      "description": "Micro-demographics and surname-inferred community distributions.",
+      "properties": {
+        "total_electors": { "type": "integer", "example": 980 },
+        "gender_ratio_female_pct": { "type": "number", "example": 46.5 },
+        "census_sc_st_pct": { "type": "number", "description": "Hard census baseline for Scheduled Castes / Tribes in coverage area.", "example": 22.0 },
+        "estimated_caste_splits": {
+          "type": "object",
+          "description": "Probabilistic breakdown derived from surname-dictionary NLP parsing of voter lists.",
+          "properties": {
+            "upper_caste_pct": { "type": "number", "example": 20.0 },
+            "obc_pct": { "type": "number", "example": 45.0 },
+            "sc_st_pct": { "type": "number", "example": 25.0 },
+            "minority_pct": { "type": "number", "example": 10.0 }
+          }
+        }
+      }
+    },
+    "historical_elections": {
+      "type": "array",
+      "description": "Past Form 20 election results tracked over multiple cycles.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "election_year": { "type": "integer", "example": 2022 },
+          "election_type": { "type": "string", "example": "State Assembly" },
+          "total_votes_polled": { "type": "integer", "example": 612 },
+          "turnout_percentage": { "type": "number", "example": 62.4 },
+          "party_vote_shares": {
+            "type": "object",
+            "description": "Votes secured by major parties in this specific booth.",
+            "properties": {
+              "BJP": { "type": "integer", "example": 280 },
+              "SP": { "type": "integer", "example": 245 },
+              "BSP": { "type": "integer", "example": 55 },
+              "CONG": { "type": "integer", "example": 18 },
+              "OTHERS": { "type": "integer", "example": 14 }
+            }
+          },
+          "winning_party": { "type": "string", "example": "BJP" },
+          "margin_of_victory": { "type": "integer", "example": 35 }
+        }
+      }
+    },
+    "real_time_sentiment": {
+      "type": "object",
+      "description": "Aggregated live stream data mapped via point-in-polygon GIS joins.",
+      "properties": {
+        "active_mentions_count": { "type": "integer", "example": 42 },
+        "avg_sentiment_score": { 
+          "type": "number", 
+          "description": "Polarity score normalized between -1.0 (negative) and 1.0 (positive).", 
+          "example": 0.35 
+        },
+        "sentiment_momentum_shift": { 
+          "type": "string", 
+          "description": "Calculated trend against historical baseline.", 
+          "example": "Positive Surge" 
+        }
+      }
+    },
+    "anomaly_flag": {
+      "type": "object",
+      "description": "Machine learning outputs (e.g., Isolation Forest model flags).",
+      "properties": {
+        "is_behavioral_anomaly": { "type": "boolean", "example": false },
+        "anomaly_score": { "type": "number", "example": -0.12 },
+        "flag_reason": { "type": "string", "example": "Normal swing alignment with regional trend" }
+      }
+    }
+  },
+  "required": ["booth_id", "metadata", "geospatial", "historical_elections"]
+}

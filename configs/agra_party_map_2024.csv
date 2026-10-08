@@ -1,0 +1,6 @@
+# Agra 2024 LS party map (manual, T1.5). Form-20 segments list names only.
+election_id,ac_no,candidate_name,party
+# Verified: BJP winners Agra (Baghel) + Fatehpur Sikri (Chahar), 2024 LS.
+# TODO(verify): SP/BSP/Congress/others per segment need ECI affiliate data.
+LS2024,*,RAJKUMAR CHAHAR,BJP
+LS2024,*,PROF S P SINGH BAGHEL,BJP

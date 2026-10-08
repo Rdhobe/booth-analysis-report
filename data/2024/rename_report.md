@@ -1,0 +1,159 @@
+# Rename report - 2024 converted xlsx -> <AC>.xlsx
+
+Renamed 124, skipped 26, missing 0.
+
+Caveat: bulk --skip-existing keys off `<pdf-stem>.xlsx`; a future bulk rerun will reconvert (not skip) renamed files.
+
+- `data\2024\Agra\2024091331.pdf` -> `86.xlsx` ✅
+- `data\2024\Agra\2024091341.pdf` -> `87.xlsx` ✅
+- `data\2024\Agra\2024091385.pdf` -> `88.xlsx` ✅
+- `data\2024\Agra\2024091363.pdf` -> `89.xlsx` ✅
+- `data\2024\Agra\2024091355.pdf` -> `90.xlsx` ✅
+- `data\2024\Agra\2024091321.pdf` -> `91.xlsx` ✅
+- `data\2024\Agra\2024091370.pdf` -> `92.xlsx` ✅
+- `data\2024\Agra\2024091334.pdf` -> `93.xlsx` ✅
+- `data\2024\Agra\2024091376.pdf` -> `94.xlsx` ✅
+- `data\2024\Agra\2024091356.pdf` -> `106.xlsx` ✅
+- `data\2024\Aligarh\2024091771.pdf` -> `71.xlsx` ✅
+- `data\2024\Aligarh\2024091788.pdf` -> `72.xlsx` ✅
+- `data\2024\Aligarh\2024091711.pdf` -> `73.xlsx` ✅
+- `data\2024\Aligarh\2024091723.pdf` -> `74.xlsx` ✅
+- `data\2024\Aligarh\2024091747.pdf` -> `75.xlsx` ✅
+- `data\2024\Aligarh\2024091724.pdf` -> `76.xlsx` ✅
+- `data\2024\Aligarh\2024091711-1.pdf` -> `77.xlsx` ✅
+- `data\2024\Ambedkar Nagar\2024091346.pdf` -> `276.xlsx` ✅
+- `data\2024\Ambedkar Nagar\2024091370.pdf` -> `277.xlsx` ✅
+- `data\2024\Ambedkar Nagar\2024091343.pdf` -> `278.xlsx` ✅
+- `data\2024\Ambedkar Nagar\2024091310.pdf` -> `280.xlsx` ✅
+- `data\2024\Ambedkar Nagar\2024091337.pdf` -> `281.xlsx` ✅
+- `data\2024\Amethi\2024091376.pdf` -> `178.xlsx` ✅
+- `data\2024\Amethi\2024091361.pdf` -> `184.xlsx` ✅
+- `data\2024\Amethi\2024091378.pdf` -> `185.xlsx` ✅
+- `data\2024\Amethi\2024091316.pdf` -> `186.xlsx` ✅
+- `data\2024\Balrampur\2024091316.pdf` -> `289.xlsx` ✅
+- `data\2024\Balrampur\2024091366.pdf` -> `290.xlsx` ✅
+- `data\2024\Balrampur\2024091321.pdf` -> `291.xlsx` ✅
+- `data\2024\Balrampur\2024091333-1.pdf` -> `292.xlsx` ✅
+- `data\2024\Balrampur\2024091377.pdf` -> `294.xlsx` ✅
+- `data\2024\Banda\2024091318.pdf` -> `232.xlsx` ✅
+- `data\2024\Banda\2024091365.pdf` -> `233.xlsx` ✅
+- `data\2024\Banda\2024091317.pdf` -> `234.xlsx` ✅
+- `data\2024\Banda\2024091326.pdf` -> `235.xlsx` ✅
+- `data\2024\Banda\2024091310.pdf` -> `237.xlsx` ✅
+- `data\2024\Banda\Barabanki\2024091459.pdf` -> `266.xlsx` ✅
+- `data\2024\Banda\Barabanki\2024091467.pdf` -> `267.xlsx` ✅
+- `data\2024\Banda\Barabanki\20240914100.pdf` -> `268.xlsx` ✅
+- `data\2024\Banda\Barabanki\2024091415.pdf` -> `269.xlsx` ✅
+- `data\2024\Banda\Barabanki\2024091425.pdf` -> `272.xlsx` ✅
+- `data\2024\Barabanki\2024091459.pdf` -> `266.xlsx` ✅
+- `data\2024\Barabanki\2024091467.pdf` -> `267.xlsx` ✅
+- `data\2024\Barabanki\20240914100.pdf` -> `268.xlsx` ✅
+- `data\2024\Barabanki\2024091415.pdf` -> `269.xlsx` ✅
+- `data\2024\Barabanki\2024091425.pdf` -> `272.xlsx` ✅
+- `data\2024\Bareilly\2024091395.pdf` -> `119.xlsx` ✅
+- `data\2024\Bareilly\2024091329.pdf` -> `120.xlsx` ✅
+- `data\2024\Bareilly\2024091358.pdf` -> `121.xlsx` ✅
+- `data\2024\Bareilly\2024091344.pdf` -> `122.xlsx` ✅
+- `data\2024\Bareilly\2024091337.pdf` -> `123.xlsx` ✅
+- `data\2024\Bareilly\2024091321.pdf` -> `124.xlsx` ✅
+- `data\2024\Bareilly\2024091360.pdf` -> `125.xlsx` ✅
+- `data\2024\Bareilly\2024091360-1.pdf` -> `126.xlsx` ✅
+- `data\2024\Budaun\2025051736.pdf` -> `116.xlsx` ✅
+- `data\2024\Budaun\2025051764.pdf` -> `117.xlsx` ✅
+- `data\2024\Chandauli\2024091335.pdf` -> `383.xlsx` ✅
+- `data\2024\Fatehpur\2025030170.pdf` -> `238.xlsx` ✅
+- `data\2024\Fatehpur\2025030181.pdf` -> `239.xlsx` ✅
+- `data\2024\Fatehpur\2025030158.pdf` -> `240.xlsx` ✅
+- `data\2024\Fatehpur\2025030138.pdf` -> `241.xlsx` ✅
+- `data\2024\Fatehpur\2025030129.pdf` -> `242.xlsx` ✅
+- `data\2024\Fatehpur\2025030152.pdf` -> `243.xlsx` ✅
+- `data\2024\Ghaziabad\2024091319.pdf` -> `54.xlsx` ✅
+- `data\2024\Ghaziabad\2024091349.pdf` -> `55.xlsx` ✅
+- `data\2024\Gorakhpur\2024091756.pdf` -> `320.xlsx` ✅
+- `data\2024\Gorakhpur\2024091790.pdf` -> `321.xlsx` ✅
+- `data\2024\Gorakhpur\2024091770.pdf` -> `322.xlsx` ✅
+- `data\2024\Gorakhpur\2024091725.pdf` -> `323.xlsx` ✅
+- `data\2024\Gorakhpur\2024091797.pdf` -> `324.xlsx` ✅
+- `data\2024\Gorakhpur\2024091779.pdf` -> `327.xlsx` ✅
+- `data\2024\Gorakhpur\2024091710.pdf` -> `328.xlsx` ✅
+- `data\2024\Jaunpur\2024091391.pdf` -> `364.xlsx` ✅
+- `data\2024\Jaunpur\20240913100.pdf` -> `365.xlsx` ✅
+- `data\2024\Jaunpur\2024091362.pdf` -> `366.xlsx` ✅
+- `data\2024\Jaunpur\2024091335.pdf` -> `367.xlsx` ✅
+- `data\2024\Jaunpur\2024091339.pdf` -> `368.xlsx` ✅
+- `data\2024\Jaunpur\2024091363.pdf` -> `369.xlsx` ✅
+- `data\2024\Jaunpur\2024091337.pdf` -> `370.xlsx` ✅
+- `data\2024\Jaunpur\2024091360.pdf` -> `371.xlsx` ✅
+- `data\2024\Jaunpur\2024091375.pdf` -> `372.xlsx` ✅
+- `data\2024\Kannauj\2024091791.pdf` -> `196.xlsx` ✅
+- `data\2024\Kannauj\2024091715.pdf` -> `197.xlsx` ✅
+- `data\2024\Kannauj\2024091713.pdf` -> `198.xlsx` ✅
+- `data\2024\Kanpur Nagar\2024091777.pdf` -> `212.xlsx` ✅
+- `data\2024\Kanpur Nagar\2024091769.pdf` -> `213.xlsx` ✅
+- `data\2024\Kanpur Nagar\2024091790.pdf` -> `214.xlsx` ✅
+- `data\2024\Kanpur Nagar\2024091737.pdf` -> `215.xlsx` ✅
+- `data\2024\Kanpur Nagar\2024091728.pdf` -> `216.xlsx` ✅
+- `data\2024\Kushinagar\2024091350.pdf` -> `329.xlsx` ✅
+- `data\2024\Kushinagar\2024091363.pdf` -> `330.xlsx` ✅
+- `data\2024\Kushinagar\2024091344.pdf` -> `331.xlsx` ✅
+- `data\2024\Kushinagar\2024091326.pdf` -> `332.xlsx` ✅
+- `data\2024\Kushinagar\2024091367.pdf` -> `333.xlsx` ✅
+- `data\2024\Kushinagar\2024091392.pdf` -> `334.xlsx` ✅
+- `data\2024\Kushinagar\2024091345.pdf` -> `335.xlsx` ✅
+- `data\2024\Lucknow\2024091381.pdf` -> `152.xlsx` ✅
+- `data\2024\Lucknow\2024091323.pdf` -> `168.xlsx` ✅
+- `data\2024\Lucknow\2024091316.pdf` -> `169.xlsx` ✅
+- `data\2024\Lucknow\2024091350-1.pdf` -> `170.xlsx` ✅
+- `data\2024\Lucknow\2024091382.pdf` -> `171.xlsx` ✅
+- `data\2024\Lucknow\2024091384.pdf` -> `172.xlsx` ✅
+- `data\2024\Lucknow\2024091380.pdf` -> `173.xlsx` ✅
+- `data\2024\Lucknow\2024091350.pdf` -> `175.xlsx` ✅
+- `data\2024\Lucknow\2024091360.pdf` -> `176.xlsx` ✅
+- `data\2024\Mahoba\2024091395.pdf` -> `231.xlsx` ✅
+- `data\2024\Mau\2024091311.pdf` -> `353.xlsx` ✅
+- `data\2024\Mau\2024091363.pdf` -> `354.xlsx` ✅
+- `data\2024\Mau\2024091384.pdf` -> `355.xlsx` ✅
+- `data\2024\Mau\2024091335.pdf` -> `356.xlsx` ✅
+- `data\2024\Mau\2024091397.pdf` -> `358.xlsx` ✅
+- `data\2024\Pratapgarh\Form20-S24_ac_no244_.pdf` -> `244.xlsx` ✅
+- `data\2024\Pratapgarh\Form20-S24_ac_no247_.pdf` -> `247.xlsx` ✅
+- `data\2024\Pratapgarh\Form20-S24_ac_no248_.pdf` -> `248.xlsx` ✅
+- `data\2024\Pratapgarh\Form20-S24_ac_no249_.pdf` -> `249.xlsx` ✅
+- `data\2024\Pratapgarh\Form20-S24_ac_no250_.pdf` -> `250.xlsx` ✅
+- `data\2024\Shrawasti\2024091341.pdf` -> `290.xlsx` ✅
+- `data\2024\Sitapur\2024091775.pdf` -> `146.xlsx` ✅
+- `data\2024\Sitapur\2024091727.pdf` -> `148.xlsx` ✅
+- `data\2024\Sitapur\2024091739.pdf` -> `149.xlsx` ✅
+- `data\2024\Sitapur\2024091766.pdf` -> `150.xlsx` ✅
+- `data\2024\Sitapur\2024091714.pdf` -> `151.xlsx` ✅
+- `data\2024\Sitapur\2024091741.pdf` -> `152.xlsx` ✅
+- `data\2024\Varanasi\2025022828.pdf` -> `384.xlsx` ✅
+- `data\2024\Amethi\2024091318.pdf` -> `37.xlsx` ✅
+- `data\2024\Azamgarh\2024091332.pdf` -> `345.xlsx` ✅
+- `data\2024\Bhadohi\2024091376.pdf` -> `258.xlsx` ✅
+- `data\2024\Bhadohi\2024091398.pdf` -> `257.xlsx` ✅
+- `data\2024\Gautam Buddha Nagar\2024091350.pdf` -> `62.xlsx` ✅
+- `data\2024\Gautam Buddha Nagar\2024091365.pdf` -> `61.xlsx` ✅
+- `data\2024\Gorakhpur\2024091765.pdf` -> `67.xlsx` ✅
+- `data\2024\Jhansi\2024091725.pdf` (null AC number - cannot name) -> 222 -225 Jhansi ✅
+- `data\2024\Jhansi\2024091732.pdf` (null AC number - cannot name) ✅
+- `data\2024\Jhansi\2024091737.pdf` (null AC number - cannot name) ✅
+- `data\2024\Jhansi\2024091787.pdf` (null AC number - cannot name) ✅
+- `data\2024\Pryagraj\2024091326.pdf` (null AC number - cannot name) -> 254 - 265 Pryagraj ✅
+- `data\2024\Pryagraj\2024091332.pdf` (null AC number - cannot name) ✅
+- `data\2024\Pryagraj\2024091336.pdf` (null AC number - cannot name) ✅
+- `data\2024\Pryagraj\2024091346.pdf` (null AC number - cannot name) ✅
+- `data\2024\Pryagraj\2024091349.pdf` (null AC number - cannot name) ✅
+- `data\2024\Pryagraj\2024091363.pdf` (null AC number - cannot name) ✅
+- `data\2024\Pryagraj\2024091366.pdf` (null AC number - cannot name) ✅
+- `data\2024\Pryagraj\2024091370.pdf` (null AC number - cannot name) ✅
+- `data\2024\Pryagraj\2024091371.pdf` (null AC number - cannot name) ✅
+- `data\2024\Pryagraj\2024091378.pdf` (null AC number - cannot name) ✅
+- `data\2024\Pryagraj\2024091379.pdf` (null AC number - cannot name) ✅
+- `data\2024\Pryagraj\2024091397.pdf` (null AC number - cannot name) ✅
+- `data\2024\Sambhal\2024091320.pdf` (null AC number - cannot name) -> 30- 32 Sambhal ✅
+- `data\2024\Sambhal\2024091351.pdf` (null AC number - cannot name) ✅
+- `data\2024\Sambhal\2024091384.pdf` (null AC number - cannot name) ✅
+
+
+

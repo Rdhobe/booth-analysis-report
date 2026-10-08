@@ -1,0 +1,2425 @@
+{
+  "state": "Uttar Pradesh",
+  "state_code": "UP",
+  "total_assembly_constituencies": 403,
+  "assembly_constituencies": [
+    {
+      "ac_no": 1,
+      "ac_name": "Behat",
+      "district": "Saharanpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 2,
+      "ac_name": "Nakur",
+      "district": "Saharanpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 3,
+      "ac_name": "Saharanpur Nagar",
+      "district": "Saharanpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 4,
+      "ac_name": "Saharanpur",
+      "district": "Saharanpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 5,
+      "ac_name": "Deoband",
+      "district": "Saharanpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 6,
+      "ac_name": "Rampur Maniharan",
+      "district": "Saharanpur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 7,
+      "ac_name": "Gangoh",
+      "district": "Saharanpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 8,
+      "ac_name": "Kairana",
+      "district": "Shamli",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 9,
+      "ac_name": "Thana Bhawan",
+      "district": "Shamli",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 10,
+      "ac_name": "Shamli",
+      "district": "Shamli",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 11,
+      "ac_name": "Budhana",
+      "district": "Muzaffarnagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 12,
+      "ac_name": "Charthawal",
+      "district": "Muzaffarnagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 13,
+      "ac_name": "Purqazi",
+      "district": "Muzaffarnagar",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 14,
+      "ac_name": "Muzaffarnagar",
+      "district": "Muzaffarnagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 15,
+      "ac_name": "Khatauli",
+      "district": "Muzaffarnagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 16,
+      "ac_name": "Meerapur",
+      "district": "Muzaffarnagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 17,
+      "ac_name": "Najibabad",
+      "district": "Bijnor",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 18,
+      "ac_name": "Nagina",
+      "district": "Bijnor",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 19,
+      "ac_name": "Barhapur",
+      "district": "Bijnor",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 20,
+      "ac_name": "Dhampur",
+      "district": "Bijnor",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 21,
+      "ac_name": "Nehtaur",
+      "district": "Bijnor",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 22,
+      "ac_name": "Bijnor",
+      "district": "Bijnor",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 23,
+      "ac_name": "Chandpur",
+      "district": "Bijnor",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 24,
+      "ac_name": "Noorpur",
+      "district": "Bijnor",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 25,
+      "ac_name": "Kanth",
+      "district": "Moradabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 26,
+      "ac_name": "Thakurdwara",
+      "district": "Moradabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 27,
+      "ac_name": "Moradabad Rural",
+      "district": "Moradabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 28,
+      "ac_name": "Moradabad Nagar",
+      "district": "Moradabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 29,
+      "ac_name": "Kundarki",
+      "district": "Moradabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 30,
+      "ac_name": "Bilari",
+      "district": "Moradabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 31,
+      "ac_name": "Chandausi",
+      "district": "Sambhal",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 32,
+      "ac_name": "Asmoli",
+      "district": "Sambhal",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 33,
+      "ac_name": "Sambhal",
+      "district": "Sambhal",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 34,
+      "ac_name": "Suar",
+      "district": "Rampur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 35,
+      "ac_name": "Chamraua",
+      "district": "Rampur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 36,
+      "ac_name": "Bilaspur",
+      "district": "Rampur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 37,
+      "ac_name": "Rampur",
+      "district": "Rampur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 38,
+      "ac_name": "Milak",
+      "district": "Rampur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 39,
+      "ac_name": "Dhanaura",
+      "district": "Amroha",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 40,
+      "ac_name": "Naugawan Sadat",
+      "district": "Amroha",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 41,
+      "ac_name": "Amroha",
+      "district": "Amroha",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 42,
+      "ac_name": "Hasanpur",
+      "district": "Amroha",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 43,
+      "ac_name": "Siwalkhas",
+      "district": "Meerut",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 44,
+      "ac_name": "Sardhana",
+      "district": "Meerut",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 45,
+      "ac_name": "Hastinapur",
+      "district": "Meerut",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 46,
+      "ac_name": "Kithore",
+      "district": "Meerut",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 47,
+      "ac_name": "Meerut Cantt.",
+      "district": "Meerut",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 48,
+      "ac_name": "Meerut",
+      "district": "Meerut",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 49,
+      "ac_name": "Meerut South",
+      "district": "Meerut",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 50,
+      "ac_name": "Chhaprauli",
+      "district": "Baghpat",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 51,
+      "ac_name": "Baraut",
+      "district": "Baghpat",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 52,
+      "ac_name": "Bagpat",
+      "district": "Baghpat",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 53,
+      "ac_name": "Loni",
+      "district": "Ghaziabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 54,
+      "ac_name": "Muradnagar",
+      "district": "Ghaziabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 55,
+      "ac_name": "Sahibabad",
+      "district": "Ghaziabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 56,
+      "ac_name": "Ghaziabad",
+      "district": "Ghaziabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 57,
+      "ac_name": "Modinagar",
+      "district": "Ghaziabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 58,
+      "ac_name": "Dhaulana",
+      "district": "Hapur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 59,
+      "ac_name": "Hapur",
+      "district": "Hapur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 60,
+      "ac_name": "Garhmukteshwar",
+      "district": "Hapur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 61,
+      "ac_name": "Noida",
+      "district": "Gautam Buddha Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 62,
+      "ac_name": "Dadri",
+      "district": "Gautam Buddha Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 63,
+      "ac_name": "Jewar",
+      "district": "Gautam Buddha Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 64,
+      "ac_name": "Sikandrabad",
+      "district": "Bulandshahr",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 65,
+      "ac_name": "Bulandshahr",
+      "district": "Bulandshahr",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 66,
+      "ac_name": "Syana",
+      "district": "Bulandshahr",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 67,
+      "ac_name": "Anupshahr",
+      "district": "Bulandshahr",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 68,
+      "ac_name": "Debai",
+      "district": "Bulandshahr",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 69,
+      "ac_name": "Shikarpur",
+      "district": "Bulandshahr",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 70,
+      "ac_name": "Khurja",
+      "district": "Bulandshahr",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 71,
+      "ac_name": "Khair",
+      "district": "Aligarh",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 72,
+      "ac_name": "Barauli",
+      "district": "Aligarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 73,
+      "ac_name": "Atrauli",
+      "district": "Aligarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 74,
+      "ac_name": "Chharra",
+      "district": "Aligarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 75,
+      "ac_name": "Koil",
+      "district": "Aligarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 76,
+      "ac_name": "Aligarh",
+      "district": "Aligarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 77,
+      "ac_name": "Iglas",
+      "district": "Aligarh",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 78,
+      "ac_name": "Hathras",
+      "district": "Hathras",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 79,
+      "ac_name": "Sadabad",
+      "district": "Hathras",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 80,
+      "ac_name": "Sikandra Rao",
+      "district": "Hathras",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 81,
+      "ac_name": "Chhata",
+      "district": "Mathura",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 82,
+      "ac_name": "Mant",
+      "district": "Mathura",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 83,
+      "ac_name": "Goverdhan",
+      "district": "Mathura",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 84,
+      "ac_name": "Mathura",
+      "district": "Mathura",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 85,
+      "ac_name": "Baldev",
+      "district": "Mathura",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 86,
+      "ac_name": "Etmadpur",
+      "district": "Agra",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 87,
+      "ac_name": "Agra Cantt.",
+      "district": "Agra",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 88,
+      "ac_name": "Agra South",
+      "district": "Agra",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 89,
+      "ac_name": "Agra North",
+      "district": "Agra",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 90,
+      "ac_name": "Agra Rural",
+      "district": "Agra",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 91,
+      "ac_name": "Fatehpur Sikri",
+      "district": "Agra",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 92,
+      "ac_name": "Kheragarh",
+      "district": "Agra",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 93,
+      "ac_name": "Fatehabad",
+      "district": "Agra",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 94,
+      "ac_name": "Bah",
+      "district": "Agra",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 95,
+      "ac_name": "Tundla",
+      "district": "Firozabad",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 96,
+      "ac_name": "Jasrana",
+      "district": "Firozabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 97,
+      "ac_name": "Firozabad",
+      "district": "Firozabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 98,
+      "ac_name": "Shikohabad",
+      "district": "Firozabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 99,
+      "ac_name": "Sirsaganj",
+      "district": "Firozabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 100,
+      "ac_name": "Kasganj",
+      "district": "Kasganj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 101,
+      "ac_name": "Amanpur",
+      "district": "Kasganj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 102,
+      "ac_name": "Patiyali",
+      "district": "Kasganj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 103,
+      "ac_name": "Aliganj",
+      "district": "Etah",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 104,
+      "ac_name": "Etah",
+      "district": "Etah",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 105,
+      "ac_name": "Marhara",
+      "district": "Etah",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 106,
+      "ac_name": "Jalesar",
+      "district": "Etah",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 107,
+      "ac_name": "Mainpuri",
+      "district": "Mainpuri",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 108,
+      "ac_name": "Bhongaon",
+      "district": "Mainpuri",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 109,
+      "ac_name": "Kishni",
+      "district": "Mainpuri",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 110,
+      "ac_name": "Karhal",
+      "district": "Mainpuri",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 111,
+      "ac_name": "Gunnaur",
+      "district": "Sambhal",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 112,
+      "ac_name": "Bisauli",
+      "district": "Budaun",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 113,
+      "ac_name": "Sahaswan",
+      "district": "Budaun",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 114,
+      "ac_name": "Bilsi",
+      "district": "Budaun",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 115,
+      "ac_name": "Badaun",
+      "district": "Budaun",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 116,
+      "ac_name": "Shekhupur",
+      "district": "Budaun",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 117,
+      "ac_name": "Dataganj",
+      "district": "Budaun",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 118,
+      "ac_name": "Baheri",
+      "district": "Bareilly",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 119,
+      "ac_name": "Meerganj",
+      "district": "Bareilly",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 120,
+      "ac_name": "Bhojipura",
+      "district": "Bareilly",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 121,
+      "ac_name": "Nawabganj",
+      "district": "Bareilly",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 122,
+      "ac_name": "Faridpur",
+      "district": "Bareilly",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 123,
+      "ac_name": "Bithari Chainpur",
+      "district": "Bareilly",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 124,
+      "ac_name": "Bareilly",
+      "district": "Bareilly",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 125,
+      "ac_name": "Bareilly Cantt.",
+      "district": "Bareilly",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 126,
+      "ac_name": "Aonla",
+      "district": "Bareilly",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 127,
+      "ac_name": "Pilibhit",
+      "district": "Pilibhit",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 128,
+      "ac_name": "Barkhera",
+      "district": "Pilibhit",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 129,
+      "ac_name": "Puranpur",
+      "district": "Pilibhit",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 130,
+      "ac_name": "Bisalpur",
+      "district": "Pilibhit",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 131,
+      "ac_name": "Katra",
+      "district": "Shahjahanpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 132,
+      "ac_name": "Jalalabad",
+      "district": "Shahjahanpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 133,
+      "ac_name": "Tilhar",
+      "district": "Shahjahanpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 134,
+      "ac_name": "Powayan",
+      "district": "Shahjahanpur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 135,
+      "ac_name": "Shahjahanpur",
+      "district": "Shahjahanpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 136,
+      "ac_name": "Dadraul",
+      "district": "Shahjahanpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 137,
+      "ac_name": "Palia",
+      "district": "Lakhimpur Kheri",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 138,
+      "ac_name": "Nighasan",
+      "district": "Lakhimpur Kheri",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 139,
+      "ac_name": "Gola Gokrannath",
+      "district": "Lakhimpur Kheri",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 140,
+      "ac_name": "Sri Nagar",
+      "district": "Lakhimpur Kheri",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 141,
+      "ac_name": "Dhaurahra",
+      "district": "Lakhimpur Kheri",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 142,
+      "ac_name": "Lakhimpur",
+      "district": "Lakhimpur Kheri",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 143,
+      "ac_name": "Kasta",
+      "district": "Lakhimpur Kheri",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 144,
+      "ac_name": "Mohammdi",
+      "district": "Lakhimpur Kheri",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 145,
+      "ac_name": "Maholi",
+      "district": "Sitapur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 146,
+      "ac_name": "Sitapur",
+      "district": "Sitapur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 147,
+      "ac_name": "Hargaon",
+      "district": "Sitapur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 148,
+      "ac_name": "Laharpur",
+      "district": "Sitapur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 149,
+      "ac_name": "Biswan",
+      "district": "Sitapur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 150,
+      "ac_name": "Sevata",
+      "district": "Sitapur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 151,
+      "ac_name": "Mahmoodabad",
+      "district": "Sitapur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 152,
+      "ac_name": "Sidhauli",
+      "district": "Sitapur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 153,
+      "ac_name": "Misrikh",
+      "district": "Sitapur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 154,
+      "ac_name": "Sawayazpur",
+      "district": "Hardoi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 155,
+      "ac_name": "Shahabad",
+      "district": "Hardoi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 156,
+      "ac_name": "Hardoi",
+      "district": "Hardoi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 157,
+      "ac_name": "Gopamau",
+      "district": "Hardoi",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 158,
+      "ac_name": "Sandi",
+      "district": "Hardoi",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 159,
+      "ac_name": "Bilgram-Mallanwan",
+      "district": "Hardoi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 160,
+      "ac_name": "Balamau",
+      "district": "Hardoi",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 161,
+      "ac_name": "Sandila",
+      "district": "Hardoi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 162,
+      "ac_name": "Bangarmau",
+      "district": "Unnao",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 163,
+      "ac_name": "Safipur",
+      "district": "Unnao",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 164,
+      "ac_name": "Mohan",
+      "district": "Unnao",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 165,
+      "ac_name": "Unnao",
+      "district": "Unnao",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 166,
+      "ac_name": "Bhagwantnagar",
+      "district": "Unnao",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 167,
+      "ac_name": "Purwa",
+      "district": "Unnao",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 168,
+      "ac_name": "Malihabad",
+      "district": "Lucknow",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 169,
+      "ac_name": "Bakshi Kaa Talab",
+      "district": "Lucknow",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 170,
+      "ac_name": "Sarojini Nagar",
+      "district": "Lucknow",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 171,
+      "ac_name": "Lucknow West",
+      "district": "Lucknow",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 172,
+      "ac_name": "Lucknow North",
+      "district": "Lucknow",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 173,
+      "ac_name": "Lucknow East",
+      "district": "Lucknow",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 174,
+      "ac_name": "Lucknow Central",
+      "district": "Lucknow",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 175,
+      "ac_name": "Lucknow Cantonment",
+      "district": "Lucknow",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 176,
+      "ac_name": "Mohanlalganj",
+      "district": "Lucknow",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 177,
+      "ac_name": "Bachhrawan",
+      "district": "Raebareli",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 178,
+      "ac_name": "Tiloi",
+      "district": "Amethi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 179,
+      "ac_name": "Harchandpur",
+      "district": "Raebareli",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 180,
+      "ac_name": "Rae Bareli",
+      "district": "Raebareli",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 181,
+      "ac_name": "Salon",
+      "district": "Raebareli",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 182,
+      "ac_name": "Sareni",
+      "district": "Raebareli",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 183,
+      "ac_name": "Unchahar",
+      "district": "Raebareli",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 184,
+      "ac_name": "Jagdishpur",
+      "district": "Amethi",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 185,
+      "ac_name": "Gauriganj",
+      "district": "Amethi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 186,
+      "ac_name": "Amethi",
+      "district": "Amethi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 187,
+      "ac_name": "Isauli",
+      "district": "Sultanpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 188,
+      "ac_name": "Sultanpur",
+      "district": "Sultanpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 189,
+      "ac_name": "Sadar",
+      "district": "Sultanpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 190,
+      "ac_name": "Lambhua",
+      "district": "Sultanpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 191,
+      "ac_name": "Kadipur",
+      "district": "Sultanpur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 192,
+      "ac_name": "Kaimganj",
+      "district": "Farrukhabad",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 193,
+      "ac_name": "Amritpur",
+      "district": "Farrukhabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 194,
+      "ac_name": "Farrukhabad",
+      "district": "Farrukhabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 195,
+      "ac_name": "Bhojpur",
+      "district": "Farrukhabad",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 196,
+      "ac_name": "Chhibramau",
+      "district": "Kannauj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 197,
+      "ac_name": "Tirwa",
+      "district": "Kannauj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 198,
+      "ac_name": "Kannauj",
+      "district": "Kannauj",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 199,
+      "ac_name": "Jaswantnagar",
+      "district": "Etawah",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 200,
+      "ac_name": "Etawah",
+      "district": "Etawah",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 201,
+      "ac_name": "Bharthana",
+      "district": "Etawah",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 202,
+      "ac_name": "Bidhuna",
+      "district": "Auraiya",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 203,
+      "ac_name": "Dibiyapur",
+      "district": "Auraiya",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 204,
+      "ac_name": "Auraiya",
+      "district": "Auraiya",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 205,
+      "ac_name": "Rasulabad",
+      "district": "Kanpur Dehat",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 206,
+      "ac_name": "Akbarpur-Raniya",
+      "district": "Kanpur Dehat",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 207,
+      "ac_name": "Sikandra",
+      "district": "Kanpur Dehat",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 208,
+      "ac_name": "Bhognipur",
+      "district": "Kanpur Dehat",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 209,
+      "ac_name": "Bilhaur",
+      "district": "Kanpur Nagar",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 210,
+      "ac_name": "Bithoor",
+      "district": "Kanpur Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 211,
+      "ac_name": "Kalyanpur",
+      "district": "Kanpur Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 212,
+      "ac_name": "Govind Nagar",
+      "district": "Kanpur Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 213,
+      "ac_name": "Sishamau",
+      "district": "Kanpur Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 214,
+      "ac_name": "Arya Nagar",
+      "district": "Kanpur Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 215,
+      "ac_name": "Kidwai Nagar",
+      "district": "Kanpur Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 216,
+      "ac_name": "Kanpur Cantonment",
+      "district": "Kanpur Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 217,
+      "ac_name": "Maharajpur",
+      "district": "Kanpur Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 218,
+      "ac_name": "Ghatampur",
+      "district": "Kanpur Nagar",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 219,
+      "ac_name": "Madhogarh",
+      "district": "Jalaun",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 220,
+      "ac_name": "Kalpi",
+      "district": "Jalaun",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 221,
+      "ac_name": "Orai",
+      "district": "Jalaun",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 222,
+      "ac_name": "Babina",
+      "district": "Jhansi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 223,
+      "ac_name": "Jhansi Nagar",
+      "district": "Jhansi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 224,
+      "ac_name": "Mauranipur",
+      "district": "Jhansi",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 225,
+      "ac_name": "Garautha",
+      "district": "Jhansi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 226,
+      "ac_name": "Lalitpur",
+      "district": "Lalitpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 227,
+      "ac_name": "Mehroni",
+      "district": "Lalitpur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 228,
+      "ac_name": "Hamirpur",
+      "district": "Hamirpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 229,
+      "ac_name": "Rath",
+      "district": "Hamirpur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 230,
+      "ac_name": "Mahoba",
+      "district": "Mahoba",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 231,
+      "ac_name": "Charkhari",
+      "district": "Mahoba",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 232,
+      "ac_name": "Tindwari",
+      "district": "Banda",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 233,
+      "ac_name": "Baberu",
+      "district": "Banda",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 234,
+      "ac_name": "Naraini",
+      "district": "Banda",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 235,
+      "ac_name": "Banda",
+      "district": "Banda",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 236,
+      "ac_name": "Chitrakoot",
+      "district": "Chitrakoot",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 237,
+      "ac_name": "Manikpur",
+      "district": "Chitrakoot",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 238,
+      "ac_name": "Jahanabad",
+      "district": "Fatehpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 239,
+      "ac_name": "Bindki",
+      "district": "Fatehpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 240,
+      "ac_name": "Fatehpur",
+      "district": "Fatehpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 241,
+      "ac_name": "Ayah Shah",
+      "district": "Fatehpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 242,
+      "ac_name": "Husainganj",
+      "district": "Fatehpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 243,
+      "ac_name": "Khaga",
+      "district": "Fatehpur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 244,
+      "ac_name": "Rampur Khas",
+      "district": "Pratapgarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 245,
+      "ac_name": "Babaganj",
+      "district": "Pratapgarh",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 246,
+      "ac_name": "Kunda",
+      "district": "Pratapgarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 247,
+      "ac_name": "Vishwanathganj",
+      "district": "Pratapgarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 248,
+      "ac_name": "Pratapgarh",
+      "district": "Pratapgarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 249,
+      "ac_name": "Patti",
+      "district": "Pratapgarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 250,
+      "ac_name": "Raniganj",
+      "district": "Pratapgarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 251,
+      "ac_name": "Sirathu",
+      "district": "Kaushambi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 252,
+      "ac_name": "Manjhanpur",
+      "district": "Kaushambi",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 253,
+      "ac_name": "Chail",
+      "district": "Kaushambi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 254,
+      "ac_name": "Phaphamau",
+      "district": "Prayagraj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 255,
+      "ac_name": "Soraon",
+      "district": "Prayagraj",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 256,
+      "ac_name": "Phulpur",
+      "district": "Prayagraj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 257,
+      "ac_name": "Pratappur",
+      "district": "Prayagraj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 258,
+      "ac_name": "Handia",
+      "district": "Prayagraj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 259,
+      "ac_name": "Meja",
+      "district": "Prayagraj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 260,
+      "ac_name": "Karachhana",
+      "district": "Prayagraj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 261,
+      "ac_name": "Prayagraj West",
+      "district": "Prayagraj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 262,
+      "ac_name": "Prayagraj North",
+      "district": "Prayagraj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 263,
+      "ac_name": "Prayagraj South",
+      "district": "Prayagraj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 264,
+      "ac_name": "Bara",
+      "district": "Prayagraj",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 265,
+      "ac_name": "Koraon",
+      "district": "Prayagraj",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 266,
+      "ac_name": "Kursi",
+      "district": "Barabanki",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 267,
+      "ac_name": "Ram Nagar",
+      "district": "Barabanki",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 268,
+      "ac_name": "Barabanki",
+      "district": "Barabanki",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 269,
+      "ac_name": "Zaidpur",
+      "district": "Barabanki",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 270,
+      "ac_name": "Dariyabad",
+      "district": "Barabanki",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 271,
+      "ac_name": "Rudauli",
+      "district": "Ayodhya",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 272,
+      "ac_name": "Haidergarh",
+      "district": "Barabanki",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 273,
+      "ac_name": "Milkipur",
+      "district": "Ayodhya",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 274,
+      "ac_name": "Bikapur",
+      "district": "Ayodhya",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 275,
+      "ac_name": "Ayodhya",
+      "district": "Ayodhya",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 276,
+      "ac_name": "Goshainganj",
+      "district": "Ayodhya",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 277,
+      "ac_name": "Katehari",
+      "district": "Ambedkar Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 278,
+      "ac_name": "Tanda",
+      "district": "Ambedkar Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 279,
+      "ac_name": "Alapur",
+      "district": "Ambedkar Nagar",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 280,
+      "ac_name": "Jalalpur",
+      "district": "Ambedkar Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 281,
+      "ac_name": "Akbarpur",
+      "district": "Ambedkar Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 282,
+      "ac_name": "Balha",
+      "district": "Bahraich",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 283,
+      "ac_name": "Nanpara",
+      "district": "Bahraich",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 284,
+      "ac_name": "Matera",
+      "district": "Bahraich",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 285,
+      "ac_name": "Mahasi",
+      "district": "Bahraich",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 286,
+      "ac_name": "Bahraich",
+      "district": "Bahraich",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 287,
+      "ac_name": "Payagpur",
+      "district": "Bahraich",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 288,
+      "ac_name": "Kaiserganj",
+      "district": "Bahraich",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 289,
+      "ac_name": "Bhinga",
+      "district": "Shrawasti",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 290,
+      "ac_name": "Shrawasti",
+      "district": "Shrawasti",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 291,
+      "ac_name": "Tulsipur",
+      "district": "Balrampur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 292,
+      "ac_name": "Gainsari",
+      "district": "Balrampur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 293,
+      "ac_name": "Utraula",
+      "district": "Balrampur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 294,
+      "ac_name": "Balrampur",
+      "district": "Balrampur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 295,
+      "ac_name": "Mehnaun",
+      "district": "Gonda",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 296,
+      "ac_name": "Gonda",
+      "district": "Gonda",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 297,
+      "ac_name": "Katra Bazar",
+      "district": "Gonda",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 298,
+      "ac_name": "Colonelganj",
+      "district": "Gonda",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 299,
+      "ac_name": "Tarabganj",
+      "district": "Gonda",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 300,
+      "ac_name": "Mankapur",
+      "district": "Gonda",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 301,
+      "ac_name": "Gaura",
+      "district": "Gonda",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 302,
+      "ac_name": "Shohratgarh",
+      "district": "Siddharthnagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 303,
+      "ac_name": "Kapilvastu",
+      "district": "Siddharthnagar",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 304,
+      "ac_name": "Bansi",
+      "district": "Siddharthnagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 305,
+      "ac_name": "Itwa",
+      "district": "Siddharthnagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 306,
+      "ac_name": "Domariyaganj",
+      "district": "Siddharthnagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 307,
+      "ac_name": "Harraiya",
+      "district": "Basti",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 308,
+      "ac_name": "Kaptanganj",
+      "district": "Basti",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 309,
+      "ac_name": "Rudhauli",
+      "district": "Basti",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 310,
+      "ac_name": "Basti Sadar",
+      "district": "Basti",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 311,
+      "ac_name": "Mahadewa",
+      "district": "Basti",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 312,
+      "ac_name": "Menhdawal",
+      "district": "Sant Kabir Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 313,
+      "ac_name": "Khalilabad",
+      "district": "Sant Kabir Nagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 314,
+      "ac_name": "Dhanghata",
+      "district": "Sant Kabir Nagar",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 315,
+      "ac_name": "Pharenda",
+      "district": "Maharajganj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 316,
+      "ac_name": "Nautanwa",
+      "district": "Maharajganj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 317,
+      "ac_name": "Siswa",
+      "district": "Maharajganj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 318,
+      "ac_name": "Maharajganj",
+      "district": "Maharajganj",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 319,
+      "ac_name": "Paniyara",
+      "district": "Maharajganj",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 320,
+      "ac_name": "Caimpiyarganj",
+      "district": "Gorakhpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 321,
+      "ac_name": "Pipraich",
+      "district": "Gorakhpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 322,
+      "ac_name": "Gorakhpur Urban",
+      "district": "Gorakhpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 323,
+      "ac_name": "Gorakhpur Rural",
+      "district": "Gorakhpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 324,
+      "ac_name": "Sahajanwa",
+      "district": "Gorakhpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 325,
+      "ac_name": "Khajani",
+      "district": "Gorakhpur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 326,
+      "ac_name": "Chauri-Chaura",
+      "district": "Gorakhpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 327,
+      "ac_name": "Bansgaon",
+      "district": "Gorakhpur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 328,
+      "ac_name": "Chillupar",
+      "district": "Gorakhpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 329,
+      "ac_name": "Khadda",
+      "district": "Kushinagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 330,
+      "ac_name": "Padrauna",
+      "district": "Kushinagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 331,
+      "ac_name": "Tamkuhi Raj",
+      "district": "Kushinagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 332,
+      "ac_name": "Fazilnagar",
+      "district": "Kushinagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 333,
+      "ac_name": "Kushinagar",
+      "district": "Kushinagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 334,
+      "ac_name": "Hata",
+      "district": "Kushinagar",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 335,
+      "ac_name": "Ramkola",
+      "district": "Kushinagar",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 336,
+      "ac_name": "Rudrapur",
+      "district": "Deoria",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 337,
+      "ac_name": "Deoria",
+      "district": "Deoria",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 338,
+      "ac_name": "Pathardeva",
+      "district": "Deoria",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 339,
+      "ac_name": "Rampur Karkhana",
+      "district": "Deoria",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 340,
+      "ac_name": "Bhatpar Rani",
+      "district": "Deoria",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 341,
+      "ac_name": "Salempur",
+      "district": "Deoria",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 342,
+      "ac_name": "Barhaj",
+      "district": "Deoria",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 343,
+      "ac_name": "Atrauliya",
+      "district": "Azamgarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 344,
+      "ac_name": "Gopalpur",
+      "district": "Azamgarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 345,
+      "ac_name": "Sagri",
+      "district": "Azamgarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 346,
+      "ac_name": "Mubarakpur",
+      "district": "Azamgarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 347,
+      "ac_name": "Azamgarh",
+      "district": "Azamgarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 348,
+      "ac_name": "Nizamabad",
+      "district": "Azamgarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 349,
+      "ac_name": "Phoolpur Pawai",
+      "district": "Azamgarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 350,
+      "ac_name": "Didarganj",
+      "district": "Azamgarh",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 351,
+      "ac_name": "Lalganj",
+      "district": "Azamgarh",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 352,
+      "ac_name": "Mehnagar",
+      "district": "Azamgarh",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 353,
+      "ac_name": "Madhuban",
+      "district": "Mau",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 354,
+      "ac_name": "Ghosi",
+      "district": "Mau",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 355,
+      "ac_name": "Muhammadabad-Gohna",
+      "district": "Mau",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 356,
+      "ac_name": "Mau",
+      "district": "Mau",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 357,
+      "ac_name": "Belthara Road",
+      "district": "Ballia",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 358,
+      "ac_name": "Rasara",
+      "district": "Ballia",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 359,
+      "ac_name": "Sikanderpur",
+      "district": "Ballia",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 360,
+      "ac_name": "Phephana",
+      "district": "Ballia",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 361,
+      "ac_name": "Ballia Nagar",
+      "district": "Ballia",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 362,
+      "ac_name": "Bansdih",
+      "district": "Ballia",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 363,
+      "ac_name": "Bairia",
+      "district": "Ballia",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 364,
+      "ac_name": "Badlapur",
+      "district": "Jaunpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 365,
+      "ac_name": "Shahganj",
+      "district": "Jaunpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 366,
+      "ac_name": "Jaunpur",
+      "district": "Jaunpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 367,
+      "ac_name": "Malhani",
+      "district": "Jaunpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 368,
+      "ac_name": "Mungra Badshahpur",
+      "district": "Jaunpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 369,
+      "ac_name": "Machhlishahr",
+      "district": "Jaunpur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 370,
+      "ac_name": "Mariyahu",
+      "district": "Jaunpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 371,
+      "ac_name": "Zafrabad",
+      "district": "Jaunpur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 372,
+      "ac_name": "Kerakat",
+      "district": "Jaunpur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 373,
+      "ac_name": "Jakhanian",
+      "district": "Ghazipur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 374,
+      "ac_name": "Saidpur",
+      "district": "Ghazipur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 375,
+      "ac_name": "Ghazipur Sadar",
+      "district": "Ghazipur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 376,
+      "ac_name": "Jangipur",
+      "district": "Ghazipur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 377,
+      "ac_name": "Zahoorabad",
+      "district": "Ghazipur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 378,
+      "ac_name": "Mohammadabad",
+      "district": "Ghazipur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 379,
+      "ac_name": "Zamania",
+      "district": "Ghazipur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 380,
+      "ac_name": "Mughalsarai",
+      "district": "Chandauli",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 381,
+      "ac_name": "Sakaldiha",
+      "district": "Chandauli",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 382,
+      "ac_name": "Saiyadraja",
+      "district": "Chandauli",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 383,
+      "ac_name": "Chakia",
+      "district": "Chandauli",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 384,
+      "ac_name": "Pindra",
+      "district": "Varanasi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 385,
+      "ac_name": "Ajagara",
+      "district": "Varanasi",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 386,
+      "ac_name": "Shivpur",
+      "district": "Varanasi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 387,
+      "ac_name": "Rohaniya",
+      "district": "Varanasi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 388,
+      "ac_name": "Varanasi North",
+      "district": "Varanasi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 389,
+      "ac_name": "Varanasi South",
+      "district": "Varanasi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 390,
+      "ac_name": "Varanasi Cantt.",
+      "district": "Varanasi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 391,
+      "ac_name": "Sevapuri",
+      "district": "Varanasi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 392,
+      "ac_name": "Bhadohi",
+      "district": "Bhadohi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 393,
+      "ac_name": "Gyanpur",
+      "district": "Bhadohi",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 394,
+      "ac_name": "Aurai",
+      "district": "Bhadohi",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 395,
+      "ac_name": "Chhanbey",
+      "district": "Mirzapur",
+      "reserved_for": "SC"
+    },
+    {
+      "ac_no": 396,
+      "ac_name": "Mirzapur",
+      "district": "Mirzapur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 397,
+      "ac_name": "Majhawan",
+      "district": "Mirzapur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 398,
+      "ac_name": "Chunar",
+      "district": "Mirzapur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 399,
+      "ac_name": "Marihan",
+      "district": "Mirzapur",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 400,
+      "ac_name": "Ghorawal",
+      "district": "Sonbhadra",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 401,
+      "ac_name": "Robertsganj",
+      "district": "Sonbhadra",
+      "reserved_for": "General"
+    },
+    {
+      "ac_no": 402,
+      "ac_name": "Obra",
+      "district": "Sonbhadra",
+      "reserved_for": "ST"
+    },
+    {
+      "ac_no": 403,
+      "ac_name": "Duddhi",
+      "district": "Sonbhadra",
+      "reserved_for": "SC"
+    }
+  ]
+}

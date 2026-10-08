@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BoothReportWorkbookFormat",
+  "description": "Output workbook format derived from configs/mahad report-abc.xlsx (Mahad AC-194, Maharashtra). One workbook per district batch. Column letters and header tokens mirror the example; Marathi headers replaced with Hindi equivalents for UP. Known unknown: the example's exact 'Average VS Difference' column-G and zone-threshold formula could not be recovered from the file, so both are defined here explicitly (see zone_rule).",
+  "source_example": "configs/mahad report-abc.xlsx",
+  "output_dir": "output/ (NEVER data/ - data/ is input storage only)",
+  "elections": [
+    {"key": "E1", "label": "2017 Vidhansabha", "type": "VS"},
+    {"key": "E2", "label": "2019 Loksabha", "type": "LS"},
+    {"key": "E3", "label": "2022 Vidhansabha", "type": "VS"},
+    {"key": "E4", "label": "2024 Loksabha", "type": "LS"}
+  ],
+  "party_pair": {
+    "party_a": "BJP (fixed focus party)",
+    "party_b": "Top non-BJP party by AC votes IN THAT ELECTION (fixed per AC; recorded per row in the Party B column and in Methods_Zones). Mirrors example using NCP for LS blocks and INC for VS blocks.",
+    "excluded": ["NOTA (shown only via totals)", "UNMAPPED (kept out of shares; listed in Methods)"]
+  },
+  "sheets": [
+    {
+      "name": "All_ACs (single sheet for the whole batch, AC column; filter it for per-AC views)",
+      "title_row": "Row 1: 'AGRA (AC 86-94) BOOTH ANALYSIS' (batch title; Party B varies per row, see Party B column)",
+      "header_row_english": "Row 2",
+      "header_row_native": "Row 3 (Hindi; cf. example Marathi row)",
+      "columns": [
+        {"col": "A", "en": "AC number", "source": "86..94 (filter for per-AC views)", "type": "integer"},
+        {"col": "B", "en": "Polling station name", "native": "मतदान केंद्र", "source": "booth label '<ps> - <name>' (name as-is, legacy codes kept + flagged)", "type": "string"},
+        {"col": "C", "en": "Polling Station Address", "native": "मतदान केंद्र का विवरण", "source": "latest ps_name (as-is)", "type": "string"},
+        {"col": "D", "en": "E1 serial", "source": "PS number in election E1 (blank if booth absent)", "type": "integer|null"},
+        {"col": "E", "en": "E2 serial", "source": "PS number in election E2", "type": "integer|null"},
+        {"col": "F", "en": "E3 serial", "source": "PS number in election E3", "type": "integer|null"},
+        {"col": "G", "en": "E4 serial", "source": "PS number in election E4 (added; example tracks 3 elections, we track 4)", "type": "integer|null"},
+        {"col": "H", "en": "Defination (kept example spelling)", "source": "zone_rule below", "type": "string"},
+        {"col": "I", "en": "Average Diff", "source": "mean of per-election (A-B) diffs over elections with data", "type": "number", "format": "fraction 0-1 to match example scale"},
+        {"col": "J", "en": "Latest Diff", "source": "newest election diff with data (documents direction; example col-G semantics unknown, TODO verify)", "type": "number"},
+        {"col": "K", "en": "(blank separator)", "source": null},
+        {"col": "L", "en": "Party B (this row's opposition party)", "source": "top non-BJP by AC votes in latest mapped election, fixed per AC (see Methods_Zones)", "type": "string"},
+        {"col": "M/N", "en": "E1: '<A> V.%' / '<B> V.%'", "source": "party vote shares (fraction 0-1, cf. example 0.39)", "type": "number"},
+        {"col": "O", "en": "(blank)", "source": null},
+        {"col": "P", "en": "Voting.Diff E1", "source": "A-B (signed; negative means B leads)", "type": "number"},
+        {"col": "Q", "en": "(blank)", "source": null},
+        {"col": "R/S", "en": "E2 shares", "source": "same as M/N", "type": "number"},
+        {"col": "T", "en": "(blank)", "source": null},
+        {"col": "U", "en": "Voting.Diff E2", "source": "A-B", "type": "number"},
+        {"col": "V", "en": "(blank)", "source": null},
+        {"col": "W/X", "en": "E3 shares", "source": "same as M/N", "type": "number"},
+        {"col": "Y", "en": "(blank)", "source": null},
+        {"col": "Z", "en": "Voting.Diff E3", "source": "A-B", "type": "number"},
+        {"col": "AA", "en": "(blank)", "source": null},
+        {"col": "AB/AC", "en": "E4 shares", "source": "same as M/N", "type": "number"},
+        {"col": "AD", "en": "(blank)", "source": null},
+        {"col": "AE", "en": "Voting.Diff E4", "source": "A-B", "type": "number"}
+      ]
+    },
+    {
+      "name": "Booth_Votes",
+      "description": "Mirrors example Sheet6/8 pattern: alternating booth row (label/address/serials/zone) and votes row (raw vote counts under serial columns + election totals). One block per AC, AC header row between blocks.",
+      "columns": "Same A-F as AC sheets; votes row carries raw votes per election (C-F) and per-election totals in trailing columns"
+    },
+    {
+      "name": "Turnout — REMOVED 2026-10-05 (user rule: extend sheets, never add sheets)",
+      "description": "Was a separate sheet (E/M/F/O/T/TO% per election). Folded into All_ACs trailing columns (see below); sheet no longer written."
+    },
+    {
+      "name": "All_ACs trailing turnout columns (added 2026-10-05; ECI sheets + 2024 segment file)",
+      "description": "Per election E=Electors, M=Male, F=Female, O=Other turnout, T=Total polled, TO%=T/E (blank = no data; 2024 Form20 has no gender split so M/F/O blank, T=polled, TO% blank). Final column '2024 AC Electors' = per-AC constant from the ECI assembly-segment file (booth electors unknown for 2024). O (Other gender, ~always 0) is NOT the opposition — opposition is Party B / B V.%.",
+      "columns": "E2017 M2017 F2017 O2017 T2017 TO%2017 | E2019 M2019 F2019 O2019 T2019 TO%2019 | E2022 M2022 F2022 O2022 T2022 TO%2022 | E2024 M2024 F2024 O2024 T2024 TO%2024 | 2024 AC Electors"
+    },
+    {
+      "name": "All_ACs trailing 2017 modeled-demographics columns (added 2026-10-06; uprolls2017, 2017 vintage)",
+      "description": "36 data cols (religion shares, age avg/stddev overall + per religion, women%, revision/missing percents), each header-tagged '(modeled)', joined by (AC, zero-stripped PS) on the 2017 booth and shown on every row of that booth. KNOWN CALIBRATION PROBLEMS: parsi/christian/jain/sikh inflated vs Census, women% mean ~66%, age cells contain unparsed astronomic values. Treatment: R5 suppression (electors_17<200 blanks modeled cells), age gates (avg 15-100, sd 0-50), missing_percent_17 as quality signal. Admin cols (electors/missing/revision) exempt.",
+      "columns": "electors_17 (modeled) | missing_percent_17 (modeled) | age_avg_17 (modeled) | age_stddev_17 (modeled) | age_muslim_avg_17 (modeled) | ... (all 36 data cols of uprolls2017 except id/ac_id_09/booth_id_17)"
+    },
+    {
+      "name": "Zone_Counts",
+      "description": "Mirrors example Sheet3: Type of Booths / Nos — counts of Safe/Favorable/Battlefield/Difficult/Data Not sufficient across the batch.",
+      "columns": [{"col": "A", "en": "Type of Booths"}, {"col": "B", "en": "Nos"}]
+    },
+    {
+      "name": "Methods_Zones",
+      "description": "Documents zone_rule, party choices per AC, denominators, and every deviation from the example (spelling 'Defination' kept deliberately)."
+    }
+  ],
+  "zone_rule": {
+    "inputs": ["avg_diff (mean A-B over elections with data)", "latest_diff (newest election with data)", "n_elections_with_data"],
+    "outputs": ["Safe", "Favorable", "Battlefield", "Difficult", "Data Not sufficient"],
+    "rule": [
+      "n < 2 -> 'Data Not sufficient'",
+      "avg_diff > +0.10 and latest_diff > 0 -> 'Safe'",
+      "avg_diff < -0.10 and latest_diff < 0 -> 'Difficult'",
+      "avg_diff > 0 and latest_diff > 0 -> 'Favorable'",
+      "otherwise -> 'Battlefield'"
+    ],
+    "note": "Thresholds are explicit here because the example file's own zone formula is not recoverable from its values. Tune SAFE_UP/DIFF_DOWN in Scripts/output_booth_report.py."
+  },
+  "manual_only_sheets_in_example": {
+    "caste_list": "Example Sheet4 (community shares) is analyst input, not pipeline output.",
+    "village_notes": "Example Sheet7 (field intel, Marathi) is analyst input, not pipeline output."
+  },
+  "denominators": "Shares = party votes / polled (valid + NOTA). Voting.Diff = shareA - shareB in FRACTION points to match example scale (0.39 = 39%). Turnout TO% = polled-turnout-Total / electors (ECI sheets: M+F+O=T; blank where the source has no gender split, i.e. all of 2024).",
+  "never": ["No corrupt names (legacy codes flagged, never rewritten)", "No fraud language (anomaly outputs stay statistical_outlier, separate pipeline)"]
+}

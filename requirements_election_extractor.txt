@@ -1,0 +1,7 @@
+PyMuPDF
+pytesseract
+Pillow
+pandas
+openpyxl
+img2table
+opencv-python

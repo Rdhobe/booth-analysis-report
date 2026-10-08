@@ -1,0 +1,8 @@
+# Keep the serving image small: source data + local artifacts stay out.
+.venv/
+__pycache__/
+.git/
+data/
+output/
+server/servedb.sqlite
+*.pyc
