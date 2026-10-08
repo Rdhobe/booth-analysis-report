@@ -6,3 +6,4 @@ server/servedb.sqlite
 web\node_modules
 .env.example
 .env.local
+data/processed/
