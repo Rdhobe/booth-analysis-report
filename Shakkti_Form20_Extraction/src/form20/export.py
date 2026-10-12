@@ -241,6 +241,18 @@ def write_review_sheet(wb, res, pdf_path, crops_dir, with_crops=True):
     ws.freeze_panes = "A2"
 
 
+def write_boxes_sheet(wb, res):
+    """Where every row sits on its page (pixels of the deskewed page, see imaging.render_page), what the OCR plainly read
+    and which cells the arithmetic changed. batch/review_page.py cuts the scan crops of a review page from it. Hidden."""
+    ws = wb.create_sheet("Row_Boxes")
+    ws.append(["Page", "Source_Row", "Serial", "Page_Index", "X0", "Y0", "X1", "Y1", "Plain_Reading", "Changed"])
+    for r in res.rows:
+        if r.box:
+            ws.append([r.page, r.row_in_page, r.serial, *[int(v) for v in r.box],
+                       " | ".join(x or "" for x in r.primary), ",".join(str(i) for i in r.changed)])
+    ws.sheet_state = "hidden"
+
+
 def write_corrections_sheet(wb, res):
     ws = wb.create_sheet("Auto_Corrections")
     ws.append(["Page", "Serial", "PS No.", "Column", "Plain OCR reading", "Value used", "Note"])
@@ -283,6 +295,7 @@ def write_log_sheet(wb, res):
     rows = [
         ("Source file", res.pdf),
         ("Language", "Hindi (Devanagari)" if res.hindi else "English"),
+        ("Identifier columns before the candidates (serial / polling station)", res.id_cols),
         ("Pages processed", res.n_pages),
         ("Polling-station rows extracted", len(res.rows)),
         ("  read correctly first time (OK)", cnt["OK"]),
@@ -331,6 +344,7 @@ def export_workbook(res, pdf_path, out_dir, with_crops=True):
     write_form20_sheet(wb, res)
     write_tidy_sheet(wb, res)
     write_review_sheet(wb, res, pdf_path, out_dir / "review_crops" / stem, with_crops)
+    write_boxes_sheet(wb, res)
     write_corrections_sheet(wb, res)
     write_totals_sheet(wb, res)
     write_log_sheet(wb, res)

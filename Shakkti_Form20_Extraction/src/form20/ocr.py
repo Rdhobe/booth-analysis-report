@@ -25,21 +25,32 @@ ALNUM = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 # (name, target digit height in px, rendering)
 VARIANTS = (("A", 44, "binary"), ("B", 56, "gray"))
+# Cells that both variants read as blank (usually a lone 0, 4 or 1) are re-read in Tesseract's single-character mode.
+EXTRA_VARIANTS = (("C", 44, "binary"), ("D", 72, "gray"))
 PAD_Y, PAD_X = 16, 24
 
 
 CONF_MARGIN = 20   # variant B overrides A only when clearly more confident
+# The neural reader (reader.py) becomes a cell's primary reading when it is at least this confident (0-100).
+READER_PRIMARY_CONF = float(os.environ.get("FORM20_READER_CONF", "90"))
 
 
 @dataclass
 class CellRead:
     reads: dict = field(default_factory=dict)   # variant -> text
     confs: dict = field(default_factory=dict)   # variant -> confidence 0-100
+    crop: object = None                         # cleaned binary ink crop of the cell (None: no ink); used for training
 
     @property
     def primary_variant(self):
+        if self.reads.get("N") and self.confs.get("N", 0.0) >= READER_PRIMARY_CONF:
+            return "N"
         a, b = VARIANTS[0][0], VARIANTS[1][0]
         ta, tb = self.reads.get(a, ""), self.reads.get(b, "")
+        if not ta and not tb:
+            for extra, _, _ in EXTRA_VARIANTS:
+                if self.reads.get(extra):
+                    return extra
         if not ta and tb:
             return b
         if ta and tb and ta != tb and self.confs.get(b, 0) >= self.confs.get(a, 0) + CONF_MARGIN:
@@ -70,6 +81,133 @@ def remove_lines(gray, pitch):
     out = gray.copy()
     out[mask > 0] = 255
     return out
+
+
+TRACK = os.environ.get("FORM20_ROW_TRACK", "on") != "off"
+TRACK_REACH = 0.3      # a row may sit this many pitches away from where the flat grid puts it, in a given column
+TRACK_WINDOW = 0.45    # half height, in pitches, of the window whose ink centre is taken as the row's centre
+TRACK_MIN = 0.3        # a window with less ink than this share of the typical one is not trusted
+TRACK_REGULAR = 0.3    # only rows within this share of one pitch in height are tracked (the printed totals are taller)
+TRACK_OUTLIER = 0.15   # a row whose offset differs this many pitches from its neighbours' median takes theirs
+TRACK_OWN = 0.5        # a row is tracked only if its own window holds this share of the typical ink (a blank row is not)
+TRACK_LEVEL = 0.1      # a page whose rows drift less than this many pitches (across, and from row to row) is left flat
+TRACK_DRIFT = 0.12     # ... unless one in ten of its cells has its digits this many pitches off the flat grid (a cell's margin)
+
+
+def tracked_edges(clean, xs, row_edges, pitch):
+    """Row edges for every column, following the digits of that column.
+
+    On a tilted or curved scan the rows are not level: the digits of the right-hand columns sit lower (or higher) than
+    those of the left-hand ones, and a flat cell cuts them. For each column and row the centre of the ink in a window
+    around the row is found (the window is re-centred a few times, so digits that start outside it are caught), but never
+    further than TRACK_REACH from the flat position. A tilt is a straight line across the page, a curve changes slowly
+    from row to row: so the slope is the median over the rows, each row has its own offset, an offset far from the
+    median of its neighbours (a row with little ink that locked onto the next row's digits) is replaced by theirs, and
+    what is left over is taken from the neighbouring columns. Rows that are not about one pitch tall (the printed totals)
+    are not tracked at all, and an edge moves by the average shift of the two rows it separates.
+    Returns a list per column of len(row_edges) edges."""
+    n_rows, n_cols = len(row_edges) - 1, len(xs) - 1
+    flat = [(row_edges[r] + row_edges[r + 1]) / 2 for r in range(n_rows)]
+    regular = np.abs(np.diff(row_edges) - pitch) <= TRACK_REGULAR * pitch
+    reach, half, h = TRACK_REACH * pitch, TRACK_WINDOW * pitch, clean.shape[0]
+    shift = np.full((n_rows, n_cols), np.nan)
+    power = np.zeros((n_rows, n_cols))
+    for c in range(n_cols):
+        band = clean[:, xs[c] + 3:xs[c + 1] - 3] < 128
+        if band.shape[1] < 4:
+            continue
+        ink = band.sum(axis=1).astype(float)
+        own = [ink[max(0, int(flat[r] - half)):int(flat[r] + half) + 1].sum() for r in range(n_rows)]
+        typical = float(np.median([o for o, ok in zip(own, regular) if ok and o > 0] or [0.0]))
+        for r in range(n_rows):
+            if not regular[r] or own[r] < TRACK_OWN * typical:
+                continue                                  # a row with no ink of its own would slide onto the next row's
+            centre = flat[r]
+            for _ in range(3):
+                lo, hi = max(0, int(centre - half)), min(h, int(centre + half) + 1)
+                total = ink[lo:hi].sum()
+                if hi - lo < 3 or total <= 0:
+                    break
+                centre = float((np.arange(lo, hi) * ink[lo:hi]).sum() / total)
+                centre = min(max(centre, flat[r] - reach), flat[r] + reach)
+            power[r, c] = ink[max(0, int(centre - half)):min(h, int(centre + half) + 1)].sum()
+            shift[r, c] = centre - flat[r]
+    seen = power[power > 0]
+    shift[power < TRACK_MIN * (np.median(seen) if len(seen) else 0.0)] = np.nan
+    xc = np.array([(xs[c] + xs[c + 1]) / 2 for c in range(n_cols)], float)
+    xc -= xc.mean()
+    slopes = []
+    for r in range(n_rows):
+        ok = ~np.isnan(shift[r])
+        if ok.sum() >= 3 and np.ptp(xc[ok]) > 0:
+            slopes.append(((xc[ok] - xc[ok].mean()) * (shift[r, ok] - shift[r, ok].mean())).sum()
+                          / ((xc[ok] - xc[ok].mean()) ** 2).sum())
+    slope = float(np.median(slopes)) if slopes else 0.0
+    offset = np.full(n_rows, np.nan)
+    for r in range(n_rows):
+        ok = ~np.isnan(shift[r])
+        if ok.any():
+            offset[r] = float(np.median(shift[r, ok] - slope * xc[ok]))
+    for r in range(n_rows):                              # an offset far from its neighbours' is taken from them
+        near = offset[max(0, r - 2):r + 3]
+        near = near[~np.isnan(near)]
+        if len(near) >= 3 and (np.isnan(offset[r]) or abs(offset[r] - np.median(near)) > TRACK_OUTLIER * pitch):
+            offset[r] = float(np.median(near))
+    tracked = offset[~np.isnan(offset)]
+    tilt = abs(slope) * float(np.ptp(xc))                # how far the rows drift across the page
+    spread = float(np.percentile(tracked, 90) - np.percentile(tracked, 10)) if len(tracked) >= 5 else 0.0
+    moved = np.abs(shift[regular][~np.isnan(shift[regular])])         # how far the digits sit from the flat grid: a curved
+    drift = float(np.percentile(moved, 90)) if len(moved) else 0.0   # page has columns off by more than the margin of a
+    if tilt < TRACK_LEVEL * pitch and spread < TRACK_LEVEL * pitch and drift < TRACK_DRIFT * pitch:   # cell, with no tilt
+        return [[int(r) for r in row_edges] for _ in range(n_cols)]    # a level page needs no tracking (and it only risks
+    smooth = np.zeros((n_rows, n_cols))                  # making noise in header rows look like data)
+    for r in range(n_rows):
+        if not regular[r] or np.isnan(offset[r]):
+            continue                                     # untracked rows keep the flat grid
+        line = offset[r] + slope * xc
+        resid = np.where(np.isnan(shift[r]), np.nan, shift[r] - line)
+        for c in range(n_cols):
+            near = resid[max(0, c - 1):c + 2]
+            near = near[~np.isnan(near)]
+            local = float(np.median(near)) if len(near) else 0.0
+            smooth[r, c] = line[c] + (local if abs(local) <= TRACK_OUTLIER * pitch else 0.0)
+    out = []
+    for c in range(n_cols):                        # each edge keeps its place in the grid (rows differ in height: the
+        edges = [row_edges[0] + smooth[0, c]]      # printed totals are taller than a booth) and moves by the average
+        edges += [row_edges[r] + (smooth[r - 1, c] + smooth[r, c]) / 2 for r in range(1, n_rows)]   # shift of its two rows
+        edges.append(row_edges[-1] + smooth[n_rows - 1, c])
+        out.append([int(round(e)) for e in edges])
+    return out
+
+
+def _is_cut(bbox, y0, y1, inset):
+    """True when the digits found in a cell run up to its top or bottom edge, i.e. the flat cell clips them."""
+    return bbox is not None and (bbox[1] <= y0 + inset + 1 or bbox[3] >= y1 - inset - 1)
+
+
+SLIDE_STEP = 2         # px: a clipped cell is slid this far at a time along the clip
+
+def slide_uncut(clean, x0, y0, x1, y1, inset, ref_h, crop, reach):
+    """A clipped crop's cell slid, up to `reach` px, until the digits sit clear of its top and bottom edges.
+
+    The flat grid and the digits of a curved or tilted scan part by a few px in places - more in some columns than in
+    others, so a shift estimated for the page averages the clip away. Where the digits run into the cell's edge the
+    cell is moved the way they run; a crop whose digits touch neither edge has them whole (a neighbouring row's digits
+    entering the window would touch its far edge, and the crop would still count as clipped). Returns the new crop, or
+    the crop it was given when no slide frees the digits or the digits are cut at both ends (taller than a cell)."""
+    top, bottom = crop[1][1] <= y0 + inset + 1, crop[1][3] >= y1 - inset - 1
+    if top == bottom:
+        return crop
+    d = -1 if top else 1
+    for s in range(SLIDE_STEP, reach + 1, SLIDE_STEP):
+        if y0 + d * s < 0 or y1 + d * s > clean.shape[0]:
+            break
+        moved = clean_cell(clean, x0, y0 + d * s, x1, y1 + d * s, inset, ref_h=ref_h)
+        if moved[0] is None:
+            break
+        if not _is_cut(moved[1], y0 + d * s, y1 + d * s, inset):
+            return moved if moved[0].shape[0] > crop[0].shape[0] else crop
+    return crop
 
 
 def clean_cell(gray, x0, y0, x1, y1, inset, ref_h=None):
@@ -159,7 +297,40 @@ def tess_batch(imgs, psm=8, lang="eng", whitelist=DIGITS, workers=8, min_chunk=4
     return [r for p in parts for r in p]
 
 
-def read_cells(gray, grid, row_edges, alnum_cols=(), workers=8):
+DEFAULT_WORKERS = int(os.environ.get("FORM20_OCR_WORKERS", "8"))   # Tesseract processes per file; the batch runner lowers it
+
+
+def _neural_reads(table, cropped, alnum_cols):
+    """Add the neural reader's reading (variant N) of every digit cell, when a trained model is available."""
+    from .reader import get_reader
+
+    reader = get_reader()
+    if reader is None:
+        return
+    keys = [(r, c) for (r, c), (crop, _) in cropped.items() if crop is not None and c not in alnum_cols]
+    for (r, c), (text, conf) in zip(keys, reader.read([cropped[k][0] for k in keys])):
+        if text:
+            table[r][c].reads["N"] = text
+            table[r][c].confs["N"] = conf
+
+
+def _reread_blank_cells(table, cropped, clean, alnum_cols, workers):
+    """Second chance for digit cells both variants read as blank: single-character mode (psm 10) on two renderings."""
+    todo = [(r, c) for r, row in enumerate(table) for c, cell in enumerate(row)
+            if c not in alnum_cols and cell.text == "" and cropped[(r, c)][0] is not None]
+    if not todo:
+        return
+    for name, th, rendering in EXTRA_VARIANTS:
+        imgs = []
+        for r, c in todo:
+            crop, bbox = cropped[(r, c)]
+            imgs.append(render(crop, th) if rendering == "binary" else render_gray(clean, bbox, th))
+        for (r, c), (t, cf_) in zip(todo, tess_batch(imgs, psm=10, whitelist=DIGITS, workers=workers)):
+            table[r][c].reads[name] = t
+            table[r][c].confs[name] = cf_
+
+
+def read_cells(gray, grid, row_edges, alnum_cols=(), workers=DEFAULT_WORKERS):
     """Read every cell of the rows bounded by row_edges.
     Returns list[list[CellRead]] indexed [row][col]."""
     inset = max(3, int(round(0.09 * grid.pitch)))
@@ -168,11 +339,23 @@ def read_cells(gray, grid, row_edges, alnum_cols=(), workers=8):
     clean = remove_lines(gray, grid.pitch)
     table = [[CellRead() for _ in range(n_cols)] for _ in range(n_rows)]
     cropped = {}
+    per_col = tracked_edges(clean, xs, row_edges, grid.pitch) if TRACK and n_rows else None
+    ref_h = grid.pitch - 2 * inset
+    reach = int(TRACK_REACH * grid.pitch)
     for r in range(n_rows):
         for c in range(n_cols):
-            cropped[(r, c)] = clean_cell(
-                clean, xs[c], row_edges[r], xs[c + 1], row_edges[r + 1], inset, ref_h=grid.pitch - 2 * inset
-            )
+            crop = clean_cell(clean, xs[c], row_edges[r], xs[c + 1], row_edges[r + 1], inset, ref_h=ref_h)
+            if TRACK and _is_cut(crop[1], row_edges[r], row_edges[r + 1], inset):
+                # the flat cell clips this cell's digits: slide it clear of them, else take the cell that follows the
+                # column's own rows
+                slid = slide_uncut(clean, xs[c], row_edges[r], xs[c + 1], row_edges[r + 1], inset, ref_h, crop, reach)
+                if slid is not crop:
+                    crop = slid
+                elif per_col is not None:
+                    moved = clean_cell(clean, xs[c], per_col[c][r], xs[c + 1], per_col[c][r + 1], inset, ref_h=ref_h)
+                    if moved[0] is not None and (crop[0] is None or moved[0].shape[0] > crop[0].shape[0]):
+                        crop = moved
+            cropped[(r, c)] = crop
     for name, th, rendering in VARIANTS:
         for wl, cols in (
             (ALNUM, [c for c in range(n_cols) if c in alnum_cols]),
@@ -194,4 +377,8 @@ def read_cells(gray, grid, row_edges, alnum_cols=(), workers=8):
             for (r, c), (t, cf_) in zip(coords, tess_batch(imgs, whitelist=wl, workers=workers)):
                 table[r][c].reads[name] = t
                 table[r][c].confs[name] = cf_
+    for (r, c), (crop, _) in cropped.items():
+        table[r][c].crop = crop
+    _reread_blank_cells(table, cropped, clean, alnum_cols, workers)
+    _neural_reads(table, cropped, alnum_cols)
     return table

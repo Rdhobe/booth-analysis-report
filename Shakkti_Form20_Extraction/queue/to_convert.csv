@@ -1,0 +1,192 @@
+﻿priority,tier,ac,file,lang,pages,layout,size_mb,est_min,bulk_status,note
+1,A,179,179Eng.pdf,Eng,8,landscape,8.9,1.1,SCANNED,
+2,A,8,8Hin.pdf,Hin,10,landscape,5.0,1.4,SCANNED,
+3,A,127,127Hin.pdf,Hin,10,landscape,8.0,1.4,SCANNED,
+4,A,128,128Hin.pdf,Hin,10,landscape,5.9,1.4,SCANNED,
+5,A,157,157Hin.pdf,Hin,10,landscape,4.1,1.4,SCANNED,
+6,A,9,9Hin.pdf,Hin,11,landscape,7.1,1.6,SCANNED,
+7,A,10,10Hin.pdf,Hin,11,landscape,5.2,1.6,SCANNED,
+8,A,51,51Hin.pdf,Hin,11,landscape,4.6,1.6,SCANNED,
+9,A,118,118Hin.pdf,Hin,11,landscape,4.9,1.6,SCANNED,
+10,A,129,129Hin.pdf,Hin,11,landscape,6.9,1.6,SCANNED,
+11,A,130,130Hin.pdf,Hin,11,landscape,5.7,1.6,SCANNED,
+12,A,177,177Eng.pdf,Eng,11,landscape,9.4,1.6,SCANNED,
+13,A,180,180Eng.pdf,Eng,11,landscape,3.4,1.6,SCANNED,
+14,A,195,195Hin.pdf,Hin,11,landscape,3.5,1.6,SCANNED,
+15,A,299,299Hin.pdf,Hin,11,landscape,6.3,1.6,SCANNED,
+16,A,307,307Hin.pdf,Hin,11,landscape,6.6,1.6,SCANNED,
+17,A,13,13Hin.pdf,Hin,12,landscape,6.4,1.7,SCANNED,
+18,A,193,193Hin.pdf,Hin,12,landscape,9.4,1.7,SCANNED,
+19,A,308,308Hin.pdf,Hin,12,landscape,5.5,1.7,SCANNED,
+20,A,12,12Hin.pdf,Hin,13,landscape,5.3,1.8,SCANNED,
+21,A,15,15Hin.pdf,Hin,13,landscape,6.7,1.8,SCANNED,
+22,A,16,16Hin.pdf,Hin,13,landscape,6.1,1.8,SCANNED,
+23,A,36,36Eng.pdf,Eng,13,landscape,3.6,1.8,SCANNED,
+24,A,158,158Hin.pdf,Hin,13,landscape,4.3,1.8,SCANNED,
+25,A,194,194Hin.pdf,Hin,13,landscape,3.5,1.8,SCANNED,
+26,A,311,311Hin.pdf,Hin,13,landscape,5.5,1.8,SCANNED,
+27,A,6,6Eng.pdf,Eng,14,landscape,3.3,2.0,SCANNED,
+28,A,11,11Hin.pdf,Hin,14,landscape,6.0,2.0,SCANNED,
+29,A,14,14Hin.pdf,Hin,14,landscape,5.7,2.0,SCANNED,
+30,A,135,135Hin.pdf,Hin,14,landscape,3.2,2.0,SCANNED,
+31,A,153,153Hin.pdf,Hin,14,landscape,8.4,2.0,SCANNED,
+32,A,154,154Hin.pdf,Hin,14,landscape,4.3,2.0,SCANNED,
+33,A,182,182Eng.pdf,Eng,14,landscape,4.1,2.0,SCANNED,
+34,A,271,271Eng.pdf,Eng,14,landscape,3.5,2.0,SCANNED,
+35,A,275,275Eng.pdf,Eng,14,landscape,3.5,2.0,SCANNED,
+36,A,284,284Hin.pdf,Hin,14,landscape,10.1,2.0,SCANNED,
+37,A,285,285Eng.pdf,Eng,14,landscape,12.2,2.0,SCANNED,
+38,A,48,48Eng.pdf,Eng,15,landscape,7.3,2.1,SCANNED,
+39,A,273,273Eng.pdf,Eng,15,landscape,3.6,2.1,SCANNED,
+40,A,274,274Eng.pdf,Eng,15,landscape,3.6,2.1,SCANNED,
+41,A,305,305Hin.pdf,Hin,15,landscape,6.7,2.1,SCANNED,
+42,A,1,1Eng.pdf,Eng,16,landscape,3.4,2.3,SCANNED,
+43,A,5,5Eng.pdf,Eng,16,landscape,3.4,2.3,SCANNED,
+44,A,50,50Hin.pdf,Hin,16,landscape,0.8,2.3,SCANNED,
+45,A,52,52Eng.pdf,Eng,16,landscape,6.6,2.3,SCANNED,
+46,A,159,159Hin.pdf,Hin,16,landscape,5.4,2.3,SCANNED,
+47,A,189,189Eng.pdf,Eng,16,landscape,9.6,2.3,SCANNED,
+48,A,229,229Eng.pdf,Eng,16,landscape,6.1,2.3,SCANNED,
+49,A,270,270Eng.pdf,Eng,16,landscape,3.9,2.3,SCANNED,
+50,A,282,282Eng.pdf,Eng,16,landscape,5.2,2.3,SCANNED,
+51,A,283,283Eng.pdf,Eng,16,landscape,5.5,2.3,SCANNED,
+52,A,286,286Eng.pdf,Eng,16,landscape,6.0,2.3,SCANNED,
+53,A,4,4Eng.pdf,Eng,17,landscape,3.6,2.4,SCANNED,
+54,A,133,133Hin.pdf,Hin,17,landscape,1.3,2.4,SCANNED,
+55,A,162,162Eng.pdf,Eng,17,landscape,8.6,2.4,SCANNED,
+56,A,187,187Eng.pdf,Eng,17,landscape,4.3,2.4,SCANNED,
+57,A,228,228Eng.pdf,Eng,17,landscape,6.3,2.4,SCANNED,
+58,A,298,298Hin.pdf,Hin,17,landscape,8.1,2.4,SCANNED,
+59,A,309,309Hin.pdf,Hin,17,landscape,7.3,2.4,SCANNED,
+60,A,3,3Eng.pdf,Eng,18,landscape,4.3,2.5,SCANNED,
+61,A,161,161Hin.pdf,Hin,18,landscape,5.0,2.5,SCANNED,
+62,A,163,163Eng.pdf,Eng,18,landscape,7.9,2.5,SCANNED,
+63,A,164,164Eng.pdf,Eng,18,landscape,9.8,2.5,SCANNED,
+64,A,165,165Eng.pdf,Eng,18,landscape,9.6,2.5,SCANNED,
+65,A,188,188Eng.pdf,Eng,18,landscape,4.5,2.5,SCANNED,
+66,A,190,109Eng.pdf,Eng,18,landscape,4.6,2.5,SCANNED,Page header reads '190-Lambhua Assembly' - the file was labelled 109. 109Eng.REVIEW.xlsx is a failed earlier OCR attempt (4 rows from 18 pages).
+67,A,293,293Hin.pdf,Hin,18,landscape,8.3,2.5,SCANNED,
+68,A,300,300Hin.pdf,Hin,18,landscape,9.4,2.5,SCANNED,
+69,A,301,301Hin.pdf,Hin,18,landscape,9.3,2.5,SCANNED,
+70,A,310,310Hin.pdf,Hin,18,landscape,10.2,2.5,SCANNED,
+71,A,279,279Eng.pdf,Eng,19,landscape,4.7,2.7,SCANNED,
+72,A,47,47Eng.pdf,Eng,20,landscape,5.0,2.8,SCANNED,
+73,A,166,166Eng.pdf,Eng,20,landscape,5.8,2.8,SCANNED,
+74,A,167,167Eng.pdf,Eng,20,landscape,8.8,2.8,SCANNED,
+75,A,396,396Eng.pdf,Eng,20,landscape,4.1,2.8,SCANNED,
+76,A,46,46Eng.pdf,Eng,21,landscape,5.2,3.0,SCANNED,
+77,A,105,105Hin.pdf,Hin,21,landscape,1.8,3.0,SCANNED,
+78,A,131,131Hin.pdf,Hin,21,landscape,1.8,3.0,SCANNED,
+79,A,132,132Hin.pdf,Hin,21,landscape,1.8,3.0,SCANNED,
+80,A,49,49Eng.pdf,Eng,22,landscape,5.8,3.1,SCANNED,
+81,A,134,134Hin.pdf,Hin,23,landscape,4.7,3.3,SCANNED,
+82,A,136,136Hin.pdf,Hin,23,landscape,4.3,3.3,SCANNED,
+83,A,297,297Hin.pdf,Hin,23,landscape,9.8,3.3,SCANNED,
+84,A,160,160Hin.pdf,Hin,24,landscape,5.7,3.4,SCANNED,
+85,A,359,359Hin.pdf,Hin,24,landscape,4.1,3.4,SCANNED,
+86,A,104,104Hin.pdf,Hin,25,landscape,2.1,3.5,SCANNED,
+87,A,296,296Hin.pdf,Hin,26,landscape,9.5,3.7,SCANNED,
+88,A,360,360Hin.pdf,Hin,26,landscape,4.6,3.7,SCANNED,
+89,A,375,375Hin.pdf,Hin,27,landscape,6.0,3.8,SCANNED,
+90,A,361,361Hin.pdf,Hin,28,landscape,5.0,4.0,SCANNED,
+91,A,357,357Hin.pdf,Hin,29,landscape,4.7,4.1,SCANNED,
+92,A,363,363Hin.pdf,Hin,29,landscape,5.5,4.1,SCANNED,
+93,A,376,376Hin.pdf,Hin,29,landscape,5.9,4.1,SCANNED,
+94,A,374,374Hin.pdf,Hin,30,landscape,7.0,4.2,SCANNED,
+95,A,362,362Hin.pdf,Hin,31,landscape,4.2,4.4,SCANNED,
+96,A,379,379Hin.pdf,Hin,31,landscape,7.0,4.4,SCANNED,
+97,A,377,377Hin.pdf,Hin,32,landscape,5.5,4.5,SCANNED,
+98,A,398,398Eng.pdf,Eng,32,landscape,6.3,4.5,SCANNED,
+99,A,399,399Eng.pdf,Eng,32,landscape,5.9,4.5,SCANNED,
+100,A,314,314Hin.pdf,Hin,33,landscape,5.1,4.7,SCANNED,
+101,A,397,397Eng.pdf,Eng,33,landscape,6.7,4.7,SCANNED,
+102,A,373,373Hin.pdf,Hin,34,landscape,8.2,4.8,SCANNED,
+103,A,395,395Eng.pdf,Eng,34,landscape,6.7,4.8,SCANNED,
+104,A,378,378Hin.pdf,Hin,35,landscape,6.6,5.0,SCANNED,
+105,A,312,312Hin.pdf,Hin,37,landscape,6.2,5.2,SCANNED,
+106,A,313,313Hin.pdf,Hin,37,landscape,5.6,5.2,SCANNED,
+107,B,348,348Hin.pdf,Hin,8,landscape,0.5,1.1,COMPLEX_SKIP,
+108,B,346,346Hin.pdf,Hin,9,landscape,0.5,1.3,LEGACY_SKIP,
+109,B,347,347Hin.pdf,Hin,9,landscape,0.4,1.3,LEGACY_SKIP,
+110,B,349,349Hin.pdf,Hin,9,landscape,0.4,1.3,LEGACY_SKIP,
+111,B,350,350Hin.pdf,Hin,9,landscape,0.5,1.3,COMPLEX_SKIP,
+112,B,33,33Hin.pdf,Hin,10,landscape,0.2,1.4,LEGACY_SKIP,
+113,B,343,343Hin.pdf,Hin,10,landscape,0.4,1.4,COMPLEX_SKIP,
+114,B,352,352Hin.pdf,Hin,11,landscape,0.6,1.6,COMPLEX_SKIP,
+115,B,53,53Hin.pdf,Hin,12,landscape,0.5,1.7,LEGACY_SKIP,
+116,B,99,99Hin.pdf,Hin,12,landscape,0.5,1.7,LEGACY_SKIP,
+117,B,66,66Eng.pdf,Eng,13,landscape,5.0,1.8,LEGACY_SKIP,
+118,B,325,325Hin.pdf,Hin,13,landscape,0.3,1.8,LEGACY_SKIP,
+119,B,69,69Hin.pdf,Hin,14,landscape,5.5,2.0,COMPLEX_SKIP,
+120,B,98,98Hin.pdf,Hin,14,landscape,0.4,2.0,LEGACY_SKIP,
+121,B,207,207Hin.pdf,Hin,14,landscape,0.1,2.0,LEGACY_SKIP,
+122,B,19,19Hin.pdf,Hin,15,landscape,0.4,2.1,LEGACY_SKIP,
+123,B,44,44Hin.pdf,Hin,15,landscape,0.1,2.1,LEGACY_SKIP,
+124,B,25,25Hin.pdf,Hin,16,landscape,0.7,2.3,LEGACY_SKIP,
+125,B,26,26Hin.pdf,Hin,16,landscape,0.1,2.3,LEGACY_SKIP,
+126,B,27,27Hin.pdf,Hin,16,landscape,0.2,2.3,LEGACY_SKIP,
+127,B,205,205Hin.pdf,Hin,16,landscape,0.1,2.3,LEGACY_SKIP,
+128,B,393,393Hin.pdf,Hin,16,landscape,0.7,2.3,LEGACY_SKIP,
+129,B,208,208Hin.pdf,Hin,17,landscape,0.1,2.4,LEGACY_SKIP,
+130,B,96,96Hin.pdf,Hin,18,landscape,0.6,2.5,LEGACY_SKIP,
+131,B,200,200Hin.pdf,Hin,18,landscape,0.5,2.5,LEGACY_SKIP,
+132,B,206,206Hin.pdf,Hin,18,landscape,0.1,2.5,LEGACY_SKIP,
+133,B,394,394Hin.pdf,Hin,18,landscape,0.7,2.5,LEGACY_SKIP,
+134,B,28,28Hin.pdf,Hin,19,landscape,0.3,2.7,LEGACY_SKIP,
+135,B,317,317Hin.pdf,Hin,19,landscape,0.8,2.7,LEGACY_SKIP,
+136,B,392,392Hin.pdf,Hin,19,landscape,0.7,2.7,LEGACY_SKIP,
+137,B,60,60Hin.pdf,Hin,20,landscape,0.3,2.8,LEGACY_SKIP,
+138,B,201,201Hin.pdf,Hin,20,landscape,0.6,2.8,LEGACY_SKIP,
+139,B,318,318Hin.pdf,Hin,20,landscape,0.4,2.8,LEGACY_SKIP,
+140,B,199,199Hin.pdf,Hin,21,landscape,0.4,3.0,LEGACY_SKIP,
+141,B,204,204Hin.pdf,Hin,21,landscape,0.3,3.0,LEGACY_SKIP,
+142,B,316,316Hin.pdf,Hin,23,landscape,0.5,3.3,LEGACY_SKIP,
+143,B,65,65Eng.pdf,Eng,24,landscape,9.9,3.4,LEGACY_SKIP,
+144,B,41,41Hin.pdf,Hin,25,landscape,0.3,3.5,LEGACY_SKIP,
+145,B,45,45Hin.pdf,Hin,25,landscape,0.3,3.5,LEGACY_SKIP,
+146,B,319,319Hin.pdf,Hin,27,landscape,0.7,3.8,LEGACY_SKIP,
+147,B,340,340Hin.pdf,Hin,27,landscape,0.3,3.8,LEGACY_SKIP,
+148,B,39,39HIn.pdf,Hin,28,landscape,0.3,4.0,LEGACY_SKIP,
+149,B,40,40Hin.pdf,Hin,28,landscape,0.3,4.0,LEGACY_SKIP,
+150,B,42,42Hin.pdf,Hin,29,landscape,0.3,4.1,LEGACY_SKIP,
+151,B,315,315Hin.pdf,Hin,30,landscape,0.4,4.2,LEGACY_SKIP,
+152,B,221,221Eng.pdf,Eng,34,landscape,1.2,4.8,COMPLEX_SKIP,
+153,D,2,2Eng (3).pdf,Eng,8,landscape,2.2,1.1,SCANNED,copy of AC 2: keep whichever copy verifies
+154,D,2,2Eng.pdf,Eng,8,landscape,4.5,1.1,COMPLEX_SKIP,copy of AC 2: keep whichever copy verifies
+155,D,68,68Hin.pdf,Hin,9,landscape,0.6,1.3,not run,copy of AC 68: keep whichever copy verifies
+156,D,58,58Hin.pdf,Hin,10,landscape,0.6,1.4,not run,copy of AC 58: keep whichever copy verifies
+157,D,68,68Eng.pdf,Eng,11,landscape,4.2,1.6,LEGACY_SKIP,copy of AC 68: keep whichever copy verifies
+158,D,209,209RHin.pdf,Hin,13,landscape,3.3,1.8,not run,copy of AC 209: keep whichever copy verifies
+159,D,192,192Hin.pdf,Hin,14,landscape,4.5,2.0,not run,copy of AC 192: keep whichever copy verifies
+160,D,287,287Hin.pdf,Hin,14,landscape,6.9,2.0,not run,copy of AC 287: keep whichever copy verifies
+161,D,81,81Hin (2).pdf,Hin,16,landscape,5.6,2.3,not run,copy of AC 81: keep whichever copy verifies
+162,D,81,81Hin.pdf,Hin,16,landscape,5.6,2.3,not run,copy of AC 81: keep whichever copy verifies
+163,D,287,287Eng.pdf,Eng,17,landscape,5.8,2.4,SCANNED,copy of AC 287: keep whichever copy verifies
+164,D,192,192Eng.pdf,Eng,18,landscape,4.6,2.5,SCANNED,copy of AC 192: keep whichever copy verifies
+165,D,95,95Hin (2).pdf,Hin,19,landscape,0.3,2.7,not run,copy of AC 95: keep whichever copy verifies
+166,D,43,43Hin.pdf,Hin,23,landscape,0.1,3.3,not run,copy of AC 43: keep whichever copy verifies
+167,D,43,43Hin (1).pdf,Hin,24,landscape,6.9,3.4,not run,copy of AC 43: keep whichever copy verifies
+168,D,58,58Hin (1).pdf,Hin,24,landscape,8.6,3.4,not run,copy of AC 58: keep whichever copy verifies
+169,D,103,103Hin (2).pdf,Hin,24,landscape,8.7,3.4,not run,copy of AC 103: keep whichever copy verifies
+170,D,103,103Hin.pdf,Hin,25,landscape,2.1,3.5,not run,copy of AC 103: keep whichever copy verifies
+171,D,209,209Hin.pdf,Hin,25,landscape,0.5,3.5,not run,copy of AC 209: keep whichever copy verifies
+172,D,85,85Hin (2).pdf,Hin,26,landscape,7.0,3.7,not run,copy of AC 85: keep whichever copy verifies
+173,D,85,85Hin.pdf,Hin,26,landscape,7.0,3.7,not run,copy of AC 85: keep whichever copy verifies
+174,D,82,82Hin (2).pdf,Hin,29,landscape,9.3,4.1,not run,copy of AC 82: keep whichever copy verifies
+175,D,82,82Hin.pdf,Hin,29,landscape,9.3,4.1,not run,copy of AC 82: keep whichever copy verifies
+176,D,83,83Hin (2).pdf,Hin,29,landscape,7.6,4.1,not run,copy of AC 83: keep whichever copy verifies
+177,D,83,83Hin (3).pdf,Hin,29,landscape,7.6,4.1,not run,copy of AC 83: keep whichever copy verifies
+178,D,83,83Hin.pdf,Hin,29,landscape,7.6,4.1,not run,copy of AC 83: keep whichever copy verifies
+179,D,84,84Hin (2).pdf,Hin,43,landscape,8.1,6.1,not run,copy of AC 84: keep whichever copy verifies
+180,D,84,84Hin (3).pdf,Hin,43,landscape,8.1,6.1,not run,copy of AC 84: keep whichever copy verifies
+181,D,84,84Hin.pdf,Hin,43,landscape,8.1,6.1,not run,copy of AC 84: keep whichever copy verifies
+182,D,95,95Hin.pdf,Hin,46,landscape,0.5,6.5,not run,copy of AC 95: keep whichever copy verifies
+183,Q,63,63Eng.pdf,Eng,14,landscape,0.6,2.0,REVIEW,quarantined by the text-layer converter; OCR as a second opinion
+184,Q,70,70Hin.pdf,Hin,14,landscape,1.0,2.0,REVIEW,quarantined by the text-layer converter; OCR as a second opinion
+185,Q,302,302Hin.pdf,Hin,14,landscape,0.7,2.0,REVIEW,quarantined by the text-layer converter; OCR as a second opinion
+186,Q,64,64Hin.pdf,Hin,18,landscape,1.0,2.5,REVIEW,quarantined by the text-layer converter; OCR as a second opinion
+187,Q,304,304Hin.pdf,Hin,19,landscape,0.8,2.7,REVIEW,quarantined by the text-layer converter; OCR as a second opinion
+188,Q,306,306Hin.pdf,Hin,22,landscape,1.0,3.1,REVIEW,quarantined by the text-layer converter; OCR as a second opinion
+189,Q,303,303Hin.pdf,Hin,25,landscape,0.8,3.5,REVIEW,quarantined by the text-layer converter; OCR as a second opinion
+190,Q,141,141Eng.pdf,Eng,66,landscape,1.3,9.3,REVIEW,quarantined by the text-layer converter; OCR as a second opinion
+191,Q,137,137Eng.pdf,Eng,72,landscape,1.3,10.2,REVIEW,quarantined by the text-layer converter; OCR as a second opinion

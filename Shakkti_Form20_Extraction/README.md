@@ -44,6 +44,10 @@ votes" row of the sheet - an independent check that the whole file was read corr
 | 1-2 | `imaging.py` | Renders each page (honouring the scan's rotation flag), de-skews it using the table's ruling lines. |
 | 3 | `grid.py` | Finds the row lines and column lines. Scanned lines are broken, so row lines missing inside the table are re-inserted at the row pitch and the **column positions are voted over all pages of the file** and snapped to each page. |
 | 4 | `header.py` | Reads the title block (electors, segment number/name, language) and the candidate-name row. |
+| 3-5 (typed PDFs) | `textlayer.py` | When a PDF has a usable text layer (typed PDFs, searchable scans) the columns, rows and cells are taken from the numbers' positions on the page instead of by OCR: exact digits, about 100x faster. A partial layer, or one whose columns do not fit the official candidate count, is refused and the PDF is read by OCR as before. |
+| 5a | `ocr.py` (`tracked_edges`), `grid.py` (`align_to_rules`) | On a tilted or curved scan the digits of the right-hand columns sit lower than the left-hand ones. Each column's rows follow its own digit ink, and a page whose table is narrower or wider than the template (a short last page) is slid onto its vertical rules, so cells no longer cut the digits. |
+| 5b | `rescue.py` | Rows the line detector missed (faint or doubled lines, a shadow) are found from short pages and serial jumps and read from the extended grid; rows lost at the end of the last page are looked for until the official totals are made up. |
+| 6a | `discover.py` | When none of the fixed column layouts (A/B/C) fits, the column structure is found by arithmetic: a block of candidate columns, a valid column equal to their sum (or none), and valid + rejected + NOTA = total. |
 | 5 | `ocr.py` | Paints the ruling lines out, crops every cell tight to its digits and reads it with Tesseract (single-word mode, batched). Every cell is read twice with two different renderings. |
 | 6 | `validate.py`, `pipeline.py` | For each row: `sum(candidates) = valid votes` and `valid + rejected + NOTA = total`. If the plain reading fails, the cheapest combination of alternative readings (the other rendering, a leading/trailing "1" that was really a ruling line, a blank solved from the equations) that satisfies both is used. Finally the printed totals row is used to settle ambiguous rows. |
 | 7 | `export.py` | Writes the workbook, plus a cropped scan of each row that needs review. |
@@ -129,10 +133,15 @@ rows and cells that are exactly right and writes every difference to the CSV.
 
 ## Limitations - read before relying on it
 
-* **Layouts supported:** English sheets with two id columns (serial, polling station) and Hindi
-  sheets with one, 10 or more candidates, the five standard total columns. A different layout
-  (extra columns, a different order) needs a small change in `pipeline.py` (`id_cols`) and, for the
-  title block, `header.py`.
+* **Layouts supported:** landscape sheets with a ruled table, one candidate per column and the five
+  standard total columns. The number of leading identifier columns (serial / polling-station number /
+  station name) is chosen per file: the first 16 rows are read with 1, 2 and 3 id columns and the choice
+  whose rows already satisfy both vote identities wins (the language default is kept unless another choice
+  is clearly better; a blank rejected/NOTA cell is tolerated, a blank candidate cell is not).
+  **Not supported:** portrait "भाग-1" sheets, scans whose column lines are too faint to detect
+  (the table then comes out with a handful of columns), and sheets whose rows have very different
+  heights (station names wrapping onto two lines make the uniform row pitch miss rows). These show up as
+  `FAILED` / `FLAGGED` in the batch ledger.
 * **Polling-station numbers** on English sheets are assumed to run 1,2,3... with optional letter
   suffix rows (41, 41A, 42). A genuine gap in numbering would not be detected from the narrow cells.
 * **Not on these PDFs, so blank in the Excel:** electors per polling station, male/female
@@ -148,6 +157,88 @@ rows and cells that are exactly right and writes every difference to the CSV.
 * Image quality matters: the English scans are only ~100 DPI. Much worse scans will produce more
   `AUTO_CORRECTED` and `REVIEW` rows.
 
+## Batch conversion of the 2024 PDFs (`queue/` and `batch/`)
+
+The 2024 Form 20 PDFs in `data/2024/PDF` that have no Excel yet are tracked in `queue/` and converted by `batch/`:
+
+| Path | Job |
+|---|---|
+| `queue/to_convert.csv` | PDFs to OCR, in run order. Tier A = scanned, tier B = unusable text layer (legacy fonts / unmapped glyphs) |
+| `queue/to_review.csv` | ACs that need a person's decision first: duplicate PDFs, quarantined `.REVIEW.xlsx`, mislabelled or unnamed files |
+| `queue/ac_overrides.csv` | Hand-maintained: PDFs whose AC differs from their file name (e.g. `109Eng.pdf` is AC 190) |
+| `queue/conversion_ledger.csv`, `queue/review_after_conversion.csv` | Written by the converter: per-PDF results, and the subset that needs a look |
+| `batch/build_queue.py` | Regenerates `to_convert.csv`, `to_review.csv` and `queue/README.md` from the PDF/Excel folders |
+| `batch/convert_queue.py` | Runs the extractor over `to_convert.csv`; resumable; writes to `data/output/2024/` |
+
+```bash
+python batch/build_queue.py                    # refresh the lists
+python batch/convert_queue.py --dry-run        # what would run and how long
+python batch/convert_queue.py --limit 3        # pilot
+python batch/convert_queue.py                  # all of tier A (resumable; Ctrl-C is safe)
+python batch/convert_queue.py --tier A,B       # include tier B
+python batch/convert_queue.py --workers 4      # convert several PDFs at the same time
+```
+
+The converter reuses `process_pdf` / `export_workbook` unchanged, never touches `data/2024/PDF` or `EXCEL`, and
+records per PDF the row statuses, whether the column totals match the printed totals, and (English sheets) whether
+the AC printed on the page matches the expected AC. Candidate names are OCR'd and marked unverified unless the PDF
+is listed in `config/candidates.csv`. The workbooks have more sheets and columns than the existing `data/2024/EXCEL`
+files, so check the downstream loaders before filing them there.
+
+### Reading from the text layer, and the row rules that go with it
+
+`convert_queue.py` reads a PDF from its text layer when it has a usable one (`source` column of the ledger: `text layer`
+or `ocr`) and falls back to OCR when that read is refused or fails the layout gate. Set `FORM20_TEXT_LAYER=off` to force OCR.
+Rows that are not polling stations are removed before the column totals are settled:
+
+| Rule | Removes |
+|---|---|
+| `drop_index_rows` | the header's column-number row (1 2 3 ... n, or running on from the identifier columns), once per page where the header repeats |
+| `drop_impossible_rows` (text layer only) | rows with a vote count above `MAX_CELL_VOTES` (sheet totals; with exact digits that cannot be a misread) |
+| `drop_subtotal_rows` | page or running sub-totals: a row equal, in every candidate column and valid, to the sum of the rows above it |
+| `drop_duplicate_pages`, `drop_total_rows` | repeated pages; the grand total row(s) at the end |
+| `drop_official_total_rows` | a row repeating four or more of the official column totals (total row whose big cells were unreadable) |
+| `drop_excess_rows` | one stray row (or two unsure ones) that equals, in every candidate column and NOTA, exactly what the sheet holds above the official totals |
+
+Verification against the official 2024 segment-level data and the work lists:
+
+| Script | Job |
+|---|---|
+| `batch/verify_official.py` | `queue/official_check.csv`: FULL when every candidate column and NOTA equal the official totals |
+| `batch/stage_verified.py` | copies FULL workbooks, in the `data/2024/EXCEL` layout, to `data/output/staged_excel/<AC>.xlsx` (never into `data/2024/EXCEL`) |
+| `batch/split_multi_ac.py` | cuts PDFs that hold several constituencies (137Eng, 141Eng) into one workbook per AC |
+| `batch/status.py`, `batch/priority_status.py` | `queue/status.md`, and the state of the 180 ACs of `excel_pdf_map.md` with a reason for each that is not done |
+| `batch/status_report.py` | `queue/priority_180_report.md`: the plain-language report of done / not done and why |
+
+### What is left: review packs and the converted folder
+
+`data/2024/converted/` holds the workbooks that match the official totals (`batch/publish_converted.py` copies them from
+`data/output/staged_excel/` and writes `MANIFEST.csv`: every priority AC, its input PDF, its output file, how it was produced and
+why it is pending). Nothing goes into `data/2024/EXCEL` without a person's decision.
+
+For converted ACs that do not match yet, `batch/review_pack.py` writes `data/2024/review/<AC>_review.xlsx` and `REVIEW_INDEX.csv`:
+
+| Class | Meaning | Next step |
+|---|---|---|
+| `SOURCE DIFFERS` | typed PDF, exact digits, a few votes from the official data | decide whether to share it with a note |
+| `NOTA COLUMN` | every candidate column exact, NOTA off | a column-assignment fix |
+| `ROWS MISSING` / `EXTRA ROWS` | the shortfall (excess) is worth about N booths | re-read the blue-marked pages / remove the duplicate |
+| `CHECK ROWS` | digits misread in a few rows | check the flagged rows against the scan |
+| `NEEDS CODE FIX` | more than 10% off: rows, pages or columns wrong | a better reader first |
+
+A pack is the converted workbook with an `Official_Gap` sheet in front (column totals against the official ones, where votes are probably
+missing, the flagged rows with links) and blue serial cells where rows are missing. After correcting cells in its Form20 sheet,
+`python batch/recheck_reviewed.py data/2024/review/<AC>_review.xlsx --accept` recomputes the totals from the booth rows and, when every
+candidate column and NOTA match the official 2024 totals, files the workbook into `data/2024/converted/` and updates the manifest.
+
+**Review page (faster than editing the workbook).** `python batch/review_page.py --ac 190` writes `data/2024/review/190_review.html`, one
+self-contained file (the scan crops are embedded; nothing is uploaded): the rows the extractor flagged, most doubtful first, each
+with its scan crop and editable cells, the plain OCR reading under any cell the solver changed, and a table at the top of every
+candidate column and NOTA against the official total that updates as you type. Press *Download corrections*, then
+`python batch/apply_review.py corrections_190.json --accept` applies them to a copy of the workbook, re-checks it against the official
+totals and, if every column matches, files it into `data/2024/converted/`. The page needs the workbook to have been made by the
+current converter (it saves each row's position in a hidden `Row_Boxes` sheet).
+
 ## Tests
 
 ```bash
@@ -158,8 +249,11 @@ PYTHONPATH=src python -m unittest discover -s tests -v
 
 ```
 run_form20.py        launcher
-src/form20/          imaging, grid, header, ocr, validate, pipeline, export, __main__
+src/form20/          imaging, grid, header, ocr, reader, textlayer, discover, validate, pipeline, export, __main__
 config/candidates.csv
+queue/               2024 work lists: to_convert, to_review, overrides, conversion ledger
+batch/               build_queue.py, convert_queue.py (batch runner over the queue), verify_official.py, stage_verified.py, status reports,
+                     review_pack.py, review_page.py, apply_review.py, recheck_reviewed.py, publish_converted.py
 tessdata/            Tesseract models (English, Hindi, orientation)
 data/input/          the three sample PDFs
 data/output/         generated workbooks (+ review crops)

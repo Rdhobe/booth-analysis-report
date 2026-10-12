@@ -20,6 +20,8 @@ from dataclasses import dataclass, field
 COST_B = 1.0          # reading from the other OCR variant
 COST_STRIP = 1.5      # drop a leading / trailing "1" (line residue)
 COST_FREE = 3.0       # value solved from the equations instead of read
+COST_BLANK_ZERO = 0.6 # a blank candidate cell taken as 0 (when a row has several blanks, they are almost always zeros)
+MAX_CELL_VOTES = 3000 # no booth has more votes than this in one cell (a polling station has at most about 1,500 electors)
 MAX_COMBOS = 4000
 AMBIGUITY_GAP = 0.25  # best fix must beat the runner-up by this much
 ALT_GAP = 3.0         # alternatives kept for column-total reconciliation
@@ -59,10 +61,12 @@ def cell_alternatives(cell):
             continue
         add(_to_int(t), 0.0 if k == 0 else COST_B)
         if len(t) > 1:
-            if t[0] == "1":
+            big = (_to_int(t) or 0) > MAX_CELL_VOTES          # an impossible reading: a stray digit is more likely
+            if t[0] == "1" or big:
                 add(_to_int(t[1:]), COST_STRIP)
-            if t[-1] == "1":
+            if t[-1] == "1" or big:
                 add(_to_int(t[:-1]), COST_STRIP)
+    out = {v: c for v, c in out.items() if v <= MAX_CELL_VOTES}   # impossible values are never offered
     return sorted(out.items(), key=lambda kv: kv[1])
 
 
@@ -103,6 +107,10 @@ def enumerate_solutions(cells, nc, max_extra=2):
     n = nc + 5
     alts = [cell_alternatives(c) for c in cells]
     scales = [cell_scale(c) for c in cells]
+    blank_cands = [i for i in range(nc) if not alts[i]]
+    if len(blank_cands) >= 2:                 # a single blank is solved from the equations; several cannot be
+        for i in blank_cands:
+            alts[i] = [(0, COST_BLANK_ZERO)]
 
     def search(free_set):
         found = {}
@@ -145,20 +153,49 @@ def enumerate_solutions(cells, nc, max_extra=2):
     return sorted(((c, list(k)) for k, c in best.items()), key=lambda t: t[0])
 
 
+def read_as_printed(r, nc, extra_blank=()):
+    """True when a row holds what the scan prints: read first time, or only unread cells were filled in - blank
+    rejected / NOTA / tendered cells solved from the equations (zero votes are often printed as an empty cell) and
+    blank cells that came out as 0. r: RowResult or RowOut."""
+    if r.status == "OK":
+        return True
+    blanks = {nc + 1, nc + 2, nc + 4} | set(extra_blank)      # extra_blank: a column the sheet does not print at all
+    return r.status == "AUTO_CORRECTED" and bool(r.changed) and all(
+        r.primary[i] == "" and (i in blanks or r.values[i] == 0) for i in r.changed)
+
+
+def plain_reading(cells, nc, blank_ok=(), blank_zero=0, no_zero=()):
+    """The plain first reading of a row as a value list if it already satisfies both identities, else None.
+
+    Only the tendered-votes cell may be blank (read as 0), plus the indices in blank_ok, whose blank value is then
+    solved from the equations - sheets often print zero rejected votes / NOTA as an empty cell."""
+    base = [(a[0][0] if a and a[0][1] == 0.0 else None) for a in (cell_alternatives(c) for c in cells)]
+    blank_cands = [i for i in range(nc) if base[i] is None]
+    # probes: a few unread candidate cells are taken as 0 (see COST_BLANK_ZERO) - but never in a column that is blank
+    # in (nearly) every row, which is a text column (station name), not a zero-vote candidate (no_zero). Only an empty cell
+    # is a zero: digits that cannot be a vote count ('5000' in a station-number column) are not.
+    if (0 < len(blank_cands) <= blank_zero and not any(i in no_zero for i in blank_cands)
+            and not any(cells[i].text for i in blank_cands)):
+        for i in blank_cands:
+            base[i] = 0
+    allowed = set(blank_ok) | {nc + 4}
+    if any(base[i] is None and i not in allowed for i in range(nc + 4)):
+        return None
+    full = list(base)
+    if full[nc + 4] is None:
+        full[nc + 4] = 0
+    return _solve(full[: nc + 4] + [full[nc + 4]], nc)
+
+
 def solve_row(cells, nc):
     """cells: list of CellRead for the nc+5 numeric columns -> RowResult."""
     n = nc + 5
-    alts = [cell_alternatives(c) for c in cells]
     primary = [c.text for c in cells]
-    base = [(a[0][0] if a and a[0][1] == 0.0 else None) for a in alts]
 
     # Fast path: the plain primary reading already satisfies both identities.
-    if None not in base[: nc + 4]:
-        full = list(base)
-        if full[nc + 4] is None:
-            full[nc + 4] = 0
-        if _solve(full[: nc + 4] + [full[nc + 4]], nc) == full:
-            return RowResult(values=full, status="OK", primary=primary)
+    full = plain_reading(cells, nc)
+    if full is not None:
+        return RowResult(values=full, status="OK", primary=primary)
 
     found = enumerate_solutions(cells, nc, max_extra=2)
     if found:
@@ -172,5 +209,6 @@ def solve_row(cells, nc):
             )
         return RowResult(vals, "AUTO_CORRECTED", "", changed, primary, alternatives=others)
 
-    prim_vals = [_to_int(p) if p else None for p in primary]
+    prim_vals = [(_to_int(p) if p else None) for p in primary]
+    prim_vals = [v if v is None or v <= MAX_CELL_VOTES else None for v in prim_vals]   # keep no impossible value
     return RowResult(prim_vals, "REVIEW", "arithmetic cannot be satisfied", [], primary)

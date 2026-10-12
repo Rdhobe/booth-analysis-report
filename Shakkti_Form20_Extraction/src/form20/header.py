@@ -12,6 +12,8 @@ _DEVANAGARI = re.compile(r"[ऀ-ॿ]")
 def title_text(gray, grid, lang="eng+hin"):
     """OCR of everything above the table."""
     top = max(0, grid.header_top - 4)
+    if top < 8:        # the table starts at the very top of the page: there is no title block to read
+        return ""
     crop = gray[:top, :]
     return pytesseract.image_to_string(crop, lang=lang, config="--oem 1 --psm 6")
 
