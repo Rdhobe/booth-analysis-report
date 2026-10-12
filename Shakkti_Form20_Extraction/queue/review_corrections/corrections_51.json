@@ -1,0 +1,9 @@
+{"ac": 51,
+ "workbook": "D:/booth-test/Shakkti_Form20_Extraction/data/output/2024/51Hin_Form20.xlsx",
+ "edits": [],
+ "added": [
+  {"page": 5, "after": 31, "values": [39, 5, 0, 5, 369, 3, 0, 421, 0, 2, 423, 0]},
+  {"page": 7, "after": 0,  "values": [124, 45, 17, 6, 307, 6, 1, 506, 0, 3, 509, 0]},
+  {"page": 9, "after": 0,  "values": [232, 44, 3, 2, 320, 0, 0, 601, 0, 0, 601, 0]}
+ ],
+ "removed": []}

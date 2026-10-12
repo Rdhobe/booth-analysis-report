@@ -13,10 +13,10 @@ from . import header
 from .discover import discover
 from .grid import align_to_rules, apply_template, build_col_template, detect_lines, unruled_tail
 from .imaging import load_page, page_count
-from .inkcolumns import choose_columns, page_tokens
+from .inkcolumns import choose_columns, ink_template, page_tokens
 from .ocr import CellRead, read_cells, remove_lines
-from .rescue import (fits_shortfall, follow_rows, holding_rows, ink_profile, plan_missing_rows, reference_peak,
-                     rescue_edges, shortfall)
+from .rescue import (TAIL_TOLERANCE, fits_shortfall, follow_rows, holding_rows, ink_profile, plan_missing_rows,
+                     reference_peak, rescue_edges, shortfall)
 from .textlayer import open_text_doc
 from .validate import ALT_GAP, MAX_CELL_VOTES, RowResult, enumerate_solutions, plain_reading, read_as_printed, solve_row
 
@@ -381,16 +381,34 @@ def _place(gray, pl, template, ink=False):
     return align_to_rules(gray, grid) if gray is not None else grid
 
 
-def _digit_columns(pdf_path, lines, template, allowed_cols):
-    """The column template, replaced by one found from where the digits sit when the column lines do not fit the
-    official candidate count or cut through the numbers (see inkcolumns.choose_columns). Returns (template, from_digits,
-    why)."""
+def _page_tokens(pdf_path, lines):
+    """The numbers of every page's data rows (inkcolumns.page_tokens), for the column finder."""
     pages = []
     for p, pl in enumerate(lines):
         if pl is not None:
             g, _ = load_page(pdf_path, p)
             pages.append(page_tokens(remove_lines(g, pl.pitch), pl))
-    return choose_columns(pages, template, allowed_cols)
+    return pages
+
+
+def _digit_columns(pdf_path, lines, template, allowed_cols, pages=None):
+    """The column template, replaced by one found from where the digits sit when the column lines do not fit the
+    official candidate count or cut through the numbers (see inkcolumns.choose_columns). Returns (template, from_digits,
+    why). `pages` are the numbers of every page when the caller has them already."""
+    return choose_columns(pages if pages is not None else _page_tokens(pdf_path, lines), template, allowed_cols)
+
+
+RETRY_BELOW = 0.5      # no layout fits this share of the probe rows with the column lines' template: try the digits' columns
+RETRY_GAIN = 0.2       # and the digits' columns must fit this much more of the probe, and ...
+RETRY_ACCEPT = 0.6     # ... at least this share of it
+
+
+def prefer_digit_columns(share_lines, share_digits):
+    """True when the layout probe fits so badly with the column lines' template (no hypothesis reaches RETRY_BELOW of the
+    rows) and so much better with the digits' columns that the lines' template must have a column too many or too few
+    (a stray ink mark read as a rule through a number column cuts every digit in it: the cells read blank and no layout
+    can fit). A file whose layout is found with the lines is never touched."""
+    return (share_lines < RETRY_BELOW and share_digits >= RETRY_ACCEPT and share_digits >= share_lines + RETRY_GAIN)
 
 
 def _rescue_tail(pdf_path, lines, pages_rows, template, make_row, progress, stem, id_cols, alnum, official, layout, ink=False):
@@ -440,6 +458,90 @@ def _rescue_tail(pdf_path, lines, pages_rows, template, make_row, progress, stem
             r["row_in_page"] = i + 1
         progress(f"[{stem}] page {last + 1}: {len(kept)} row(s) recovered below the last one read "
                  "(votes missing against the official totals)")
+        _assign_serials(pages_rows)
+
+
+RESCUE_ENDS_MIN = 100     # votes still missing against the official totals (all columns together) for page ends to be searched
+RESCUE_ENDS_MAX = 6       # rows looked for at each end of a page
+RESCUE_ENDS_SMALL = 0.08  # a row recovered at a page's edge holds at least this share of a typical booth's votes
+
+
+def _rescue_ends(pdf_path, lines, pages_rows, template, make_row, progress, stem, id_cols, alnum, official, layout, ink=False):
+    """Booths lost at the top or bottom of any page. The line detector can drop a page's first or last booth (a faint
+    ruling line, a header that runs into the first row), and nothing in the page count or serial numbers says where.
+    The official totals do say how many votes are still missing, so when that is enough for a booth or more, the bands
+    above and below every page's rows are read, nearest first, and a row is kept only if it adds up (make_row) and does
+    not overshoot what is still missing in any column - the same test the tail rescue uses. A band that holds a row
+    already read (an earlier rescue got it) is skipped; the search at an end stops at the first band that is no booth
+    (the header's column numbers, a totals row, a stray line)."""
+    if official is None or not any(pages_rows):
+        return
+    b = layout.startswith("B")
+    votes = list(official["candidates"]) + ([official["nota"]] if b else [])
+    values = [r["res"].values for rows in pages_rows for r in rows]
+    sizes = [sum((v[i] or 0) for i in range(len(votes))) for v in values]
+    typical = sorted(sizes)[len(sizes) // 2]
+    # printed totals rows and rows of column numbers (1 2 3 ...) are still among the rows at this point (the clean-up
+    # that removes them comes later), and they would spoil what is missing: a row several times the size of a booth, or
+    # one whose candidate cells are exactly 1..n, is not a booth
+    numbers = list(range(1, len(votes) + 1))
+    values = [v for v, size in zip(values, sizes) if size <= 4 * typical and list(v[:len(votes)]) != numbers]
+    missing = shortfall(values, votes)
+    if not missing or min(missing.values()) < -TAIL_SLACK:
+        return
+    booth = sum(sum((v[c] or 0) for c in missing) for v in values) / max(len(values), 1)
+    left = sum(max(v, 0) for v in missing.values())
+    if not booth or left < RESCUE_ENDS_MIN:
+        return
+    wanted = min(int(round(left / booth)) + 1, RESCUE_ENDS_MAX)
+    total_kept = 0
+    for p, pl in enumerate(lines):
+        if pl is None or not pages_rows[p] or not any(v > TAIL_TOLERANCE for v in missing.values()):
+            continue
+        g, _ = load_page(pdf_path, p)
+        grid = _place(g, pl, template, ink)
+        pitch = float(np.median(np.diff(grid.data_edges)))
+        clean = remove_lines(g, pitch)
+        profile = ink_profile(clean, grid, id_cols, pitch)
+        ref = reference_peak(profile, grid.data_edges)
+        taken = [(r["box"][2], r["box"][4]) for r in pages_rows[p]]
+
+        def occupied(y0, y1):
+            return any(min(y1, t1) - max(y0, t0) > 0.5 * (y1 - y0) for t0, t1 in taken)
+
+        added = []
+        for direction in (-1, +1):
+            anchor = grid.data_edges[0] if direction < 0 else grid.data_edges[-1]
+            k = wanted + sum(1 for t0, t1 in taken if (t1 <= anchor + 4 if direction < 0 else t0 >= anchor - 4))
+            far = follow_rows(anchor, pitch, k, direction, pl.row_lines, profile, ref)
+            n = holding_rows(clean, grid, id_cols, anchor, far, direction)
+            prev = anchor
+            for y in far[:n]:
+                y0, y1 = (y, prev) if direction < 0 else (prev, y)
+                prev = y
+                if occupied(y0, y1):
+                    continue
+                row = read_cells(g, grid, [y0, y1], alnum_cols=alnum)[0]
+                made = make_row(p, grid, row, y0, y1)
+                if not isinstance(made, dict):
+                    break
+                size = sum((made["res"].values[c] or 0) for c in missing)
+                if size < RESCUE_ENDS_SMALL * typical:
+                    break                                 # a blank row or a stray line is not a booth missing votes
+                if made["res"].status == "REVIEW" or not fits_shortfall(made["res"].values, missing):
+                    break
+                for c in missing:
+                    missing[c] -= made["res"].values[c] or 0
+                made["notes"].append("row recovered at the edge of the page, to make up votes missing against the official totals")
+                added.append(made)
+        if added:
+            pages_rows[p] = sorted(pages_rows[p] + added, key=lambda r: r["box"][2])
+            for i, r in enumerate(pages_rows[p]):
+                r["row_in_page"] = i + 1
+            total_kept += len(added)
+            progress(f"[{stem}] page {p + 1}: {len(added)} row(s) recovered at the top or bottom "
+                     "(votes missing against the official totals)")
+    if total_kept:
         _assign_serials(pages_rows)
 
 
@@ -569,9 +671,11 @@ def process_pdf(pdf_path, candidates_csv=DEFAULT_CANDIDATES, progress=print, nam
     n_cols = len(template) - 1
     if vote:
         progress(f"[{stem}] column vote loosened to tol={vote[0]}, min_frac={vote[1]}: {n_cols} columns")
-    ink = False
+    ink, ink_pages, allowed_cols = False, None, None
     if td is None and expected_cols:
-        template, ink, why = _digit_columns(pdf_path, lines, template, set(expected_cols) | {c - 1 for c in expected_cols})
+        allowed_cols = set(expected_cols) | {c - 1 for c in expected_cols}
+        ink_pages = _page_tokens(pdf_path, lines)
+        template, ink, why = _digit_columns(pdf_path, lines, template, allowed_cols, ink_pages)
         if ink:
             n_cols = len(template) - 1
             progress(f"[{stem}] columns found from the digits instead of the column lines: {why}")
@@ -594,6 +698,17 @@ def process_pdf(pdf_path, candidates_csv=DEFAULT_CANDIDATES, progress=print, nam
         id_cols, layout, id_share = detect_layout(first_gray, grid0, id_cols, None, n_off,
                                                   td.reader(0) if td is not None else None,
                                                   TEXT_PROBE_ROWS if td is not None else PROBE_ROWS, nota_ratio, more)
+        if td is None and not ink and ink_pages is not None and max(id_share.values(), default=0.0) < RETRY_BELOW:
+            alt = ink_template(ink_pages, allowed_cols)
+            if alt is not None and len(alt) != len(template):
+                pl0 = next(pl for pl in lines if pl)
+                grid_alt = _place(None, pl0, alt, True)
+                more_alt = [(g1, _place(g1, lines[1], alt, True))] if more else []
+                got = detect_layout(first_gray, grid_alt, 1 if hindi else 2, None, n_off, None, PROBE_ROWS, nota_ratio, more_alt)
+                if prefer_digit_columns(max(id_share.values(), default=0.0), max(got[2].values(), default=0.0)):
+                    progress(f"[{stem}] no layout fits the column lines' {n_cols} columns; the digits' {len(alt) - 1} columns do")
+                    template, ink, n_cols, grid0 = alt, True, len(alt) - 1, grid_alt
+                    id_cols, layout, id_share = got
     if id_share:
         shares = ", ".join(f"{h[0]}{h[1]}: {v:.0%}" for h, v in sorted(id_share.items()) if v >= 0.05) or "none above 5%"
         progress(f"[{stem}] identifier columns: {id_cols}, layout {layout} (share of probe rows consistent: {shares})")
@@ -648,9 +763,13 @@ def process_pdf(pdf_path, candidates_csv=DEFAULT_CANDIDATES, progress=print, nam
         grid = _place(g, pl, template, ink)
         tab = (td.reader(p) if td is not None else read_cells)(g, grid, grid.data_edges, alnum_cols=alnum)
         outside = unruled_tail(g, grid) if td is None and not ink else 0   # footer lines below the table's own rules
+        cut = len(tab) - outside
+        labels = label_tail(tab, grid.col_edges, None if pl.variable else grid.data_edges) if td is None else None    # subtotal rows closing the page
+        if labels is not None:
+            cut = min(cut, labels)
         rows = []
         for r, row in enumerate(tab):
-            made = "non_data" if r >= len(tab) - outside else make_row(p, grid, row, grid.data_edges[r], grid.data_edges[r + 1])
+            made = "non_data" if r >= cut else make_row(p, grid, row, grid.data_edges[r], grid.data_edges[r + 1])
             if made == "non_data":
                 dropped.append((p + 1, r + 1))   # not a data row (stray line / border / footer)
             elif isinstance(made, dict):
@@ -675,6 +794,7 @@ def process_pdf(pdf_path, candidates_csv=DEFAULT_CANDIDATES, progress=print, nam
         _rescue_missing_rows(pdf_path, lines, pages_rows, template, make_row, progress, stem, id_cols, alnum, ink,
                              official, layout)
         _rescue_tail(pdf_path, lines, pages_rows, template, make_row, progress, stem, id_cols, alnum, official, layout, ink)
+        _rescue_ends(pdf_path, lines, pages_rows, template, make_row, progress, stem, id_cols, alnum, official, layout, ink)
     flat = [r for rows in pages_rows for r in rows]
     ps_agree, ps_total = _assign_ps(flat, not has_ps_col)
 
@@ -875,6 +995,39 @@ def drop_summary_rows(res):
     gone = [(t.page, t.serial) for t in dropped]
     res.meta["dropped_summary_rows"] = gone
     return gone
+
+
+LABEL_WIDTH = 0.5       # the first cell of a row holds a text label when its ink fills this share of the cell ...
+LABEL_TIMES = 2.5       # ... and this many times what a booth's serial number fills
+LABEL_TAIL = 6          # only the last rows of a page can be the page's subtotal rows
+LABEL_MIN_ROWS = 5      # booth rows above the first label for it to count
+TALL_ROW = (1.15, 1.6)  # a closing row this many times a booth row's height (a merged pair of rows is about 2)
+
+
+def label_tail(tab, xs, edges=None):
+    """Index of the first row of a page's tail of subtotal rows, or None.
+
+    Some sheets close every page with rows such as "total of this page", "total of the previous pages" and "running
+    total". They are read as booths (their five-digit cells are garbage to the digit reader) and add junk votes. What
+    sets them apart is the first cell: a booth serial is a short number, the label is text that fills most of the cell -
+    or, on a page whose only closing row is "total of this page", is a taller row (TALL_ROW times a booth's height).
+    The first row among the page's last LABEL_TAIL that is such a label or such a tall row starts the tail; it and
+    everything below it are not booths. `edges` are the row edges of tab (for the heights)."""
+    if not tab or len(xs) < 2 or all(r[0].crop is None for r in tab):
+        return None
+    width = xs[1] - xs[0]
+    ratios = [r[0].crop.shape[1] / width if r[0].crop is not None else None for r in tab]
+    known = sorted(x for x in ratios if x is not None)
+    if len(known) < LABEL_MIN_ROWS + 1:
+        return None
+    limit = max(LABEL_WIDTH, LABEL_TIMES * known[len(known) // 2])
+    heights = [edges[i + 1] - edges[i] for i in range(len(tab))] if edges is not None and len(edges) > len(tab) else None
+    typical = sorted(heights)[len(heights) // 2] if heights else None
+    for i in range(max(LABEL_MIN_ROWS, len(tab) - LABEL_TAIL), len(tab)):
+        tall = typical and TALL_ROW[0] * typical <= heights[i] <= TALL_ROW[1] * typical
+        if (ratios[i] is not None and ratios[i] >= limit) or tall:
+            return i
+    return None
 
 
 def drop_subtotal_rows(res):

@@ -110,3 +110,21 @@ class InkColumnTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PreferDigitColumnsTests(unittest.TestCase):
+    def test_a_probe_that_fits_nothing_with_the_lines_but_well_with_the_digits_switches(self):
+        from form20.pipeline import prefer_digit_columns
+        self.assertTrue(prefer_digit_columns(0.0, 0.9))
+        self.assertTrue(prefer_digit_columns(0.3, 0.8))
+
+    def test_a_layout_found_with_the_lines_is_never_given_up(self):
+        from form20.pipeline import prefer_digit_columns
+        self.assertFalse(prefer_digit_columns(0.5, 1.0))      # the lines fit half the rows: leave them
+        self.assertFalse(prefer_digit_columns(0.9, 1.0))
+        self.assertFalse(prefer_digit_columns(0.95, 0.95))
+
+    def test_the_digits_must_fit_clearly_better_and_well_in_themselves(self):
+        from form20.pipeline import prefer_digit_columns
+        self.assertFalse(prefer_digit_columns(0.0, 0.5))      # not good enough in itself
+        self.assertFalse(prefer_digit_columns(0.45, 0.6))     # not clearly better (needs +0.2)

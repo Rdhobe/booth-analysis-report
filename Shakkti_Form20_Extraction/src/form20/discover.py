@@ -39,6 +39,7 @@ def discover(table, n_off, max_ids=MAX_IDS, nota_ratio=None):
     best, best_key = None, None
     for a in range(0, min(max_ids, m - n_off - 2) + 1):
         block = mat[:, a:a + n_off]
+        empty = int(np.isnan(block).all(axis=0).sum())      # candidate columns with no number in any row: a name column
         seen = ~np.isnan(block).all(axis=1)
         sums = np.where(seen, np.nansum(block, axis=1), np.nan)
         cols = list(range(a + n_off, m))
@@ -60,7 +61,9 @@ def discover(table, n_off, max_ids=MAX_IDS, nota_ratio=None):
                             ref = np.nansum(base)
                             if not (ref > 0 and col_sum[n] > 0 and 1 / NOTA_BAND <= (col_sum[n] / ref) / nota_ratio <= NOTA_BAND):
                                 continue                     # not the size NOTA must be: never a NOTA column
-                        key = (round(share, 4), v is not None, in_order, r is not None, n < t, -a)
+                        # a block that swallows an empty column (the station-name column) and drops a real candidate into
+                        # 'rejected' satisfies the identities just as well, so a block without one always wins
+                        key = (-empty, round(share, 4), v is not None, in_order, r is not None, n < t, -a)
                         if share >= MIN_SHARE and (best_key is None or key > best_key):
                             best_key, best = key, (a, v, r, n, t, share)
     if best is None:

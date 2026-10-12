@@ -26,7 +26,7 @@
   main { padding:0 16px 60px; display:grid; gap:12px; }
   .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
   .card.done { opacity:0.55; }
-  .card.review { border-left:4px solid var(--bad); } .card.unusual { border-left:4px solid var(--warn); } .card.auto { border-left:4px solid var(--accent); } .card.added { border-left:4px solid var(--ok); }
+  .card.review { border-left:4px solid var(--bad); } .card.unusual { border-left:4px solid var(--warn); } .card.auto { border-left:4px solid var(--accent); } .card.added { border-left:4px solid var(--ok); } .card.removed { opacity:.45; } .card.removed .scan { filter:grayscale(1); }
   .head { display:flex; flex-wrap:wrap; gap:10px; align-items:baseline; margin-bottom:6px; }
   .head b { font-size:15px; }
   .tag { font-size:12px; padding:1px 8px; border-radius:10px; background:var(--badbg); color:var(--bad); }
@@ -73,7 +73,7 @@ const DATA = __DATA__;
 const NC = DATA.candidates.length;
 const COLS = DATA.candidates.map(c => c.label).concat(["Valid", "Rejected", "NOTA", "Total", "Tendered"]);
 const KEY = "form20-review-" + DATA.ac;
-let state = { values: {}, checked: {}, added: [], hideDone: false, byPage: false };
+let state = { values: {}, checked: {}, added: [], removed: {}, hideDone: false, byPage: false };
 try { const s = JSON.parse(localStorage.getItem(KEY) || "null"); if (s) state = Object.assign(state, s); } catch (e) {}
 
 const rowsById = {};
@@ -81,7 +81,7 @@ DATA.rows.forEach(r => { rowsById[r.key] = r; if (!state.values[r.key]) state.va
 
 function num(v) { return v === null || v === "" || v === undefined || isNaN(Number(v)) ? null : Number(v); }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); document.getElementById("saved").textContent = "saved in this browser"; } catch (e) { document.getElementById("saved").textContent = "not saved (browser storage is off)"; } }
-function allRows() { return DATA.rows.map(r => ({ key: r.key, kind: "row", values: state.values[r.key] })).concat(state.added.map((a, i) => ({ key: "add" + i, kind: "added", values: a.values }))); }
+function allRows() { return DATA.rows.filter(r => !state.removed[r.key]).map(r => ({ key: r.key, kind: "row", values: state.values[r.key] })).concat(state.added.map((a, i) => ({ key: "add" + i, kind: "added", values: a.values }))); }
 
 function sums() {
   const cand = DATA.candidates.map(c => c.base), nota = DATA.nota.base;
@@ -126,7 +126,7 @@ function renderRows() {
 
 function card(r, values, key, kind) {
   const el = document.createElement("div");
-  el.className = "card " + (kind === "added" ? "added" : r.status === "REVIEW" ? "review" : r.status === "UNUSUAL" ? "unusual" : "auto") + (state.checked[key] ? " done" : "");
+  el.className = "card " + (kind === "added" ? "added" : r.status === "REVIEW" ? "review" : r.status === "UNUSUAL" ? "unusual" : "auto") + (state.checked[key] ? " done" : "") + (state.removed[key] ? " removed" : "");
   const tag = kind === "added" ? "" : `<span class="tag ${r.status === "UNUSUAL" ? "unusual" : r.status === "REVIEW" ? "" : "auto"}">${esc(r.status)}</span>`;
   el.innerHTML = `<div class="head"><b>Page ${r.page}, row ${r.row}</b><span>serial ${esc(r.serial)}</span>${tag}<span class="note">${esc(r.note || "")}</span></div>` +
     (r.img ? `<img class="scan" src="${r.img}" alt="scan of page ${r.page} row ${r.row}">` : "") + `<div class="cells"></div><div class="actions"></div>`;
@@ -148,6 +148,12 @@ function card(r, values, key, kind) {
   const chk = document.createElement("label"); chk.innerHTML = `<input type="checkbox" ${state.checked[key] ? "checked" : ""}> I have checked this row`;
   chk.querySelector("input").onchange = e => { state.checked[key] = e.target.checked; save(); refresh(); };
   act.append(b, fill, chk);
+  if (kind === "row") {
+    const gone = document.createElement("button"); gone.className = "gone";
+    gone.textContent = state.removed[key] ? "Put this row back" : "Not a booth - remove this row";
+    gone.onclick = () => { if (state.removed[key]) delete state.removed[key]; else state.removed[key] = true; save(); refresh(); };
+    act.appendChild(gone);
+  }
   function badge() { const h = identitiesHold(values); b.className = "badge " + (h ? "ok" : "bad"); b.textContent = h === null ? "incomplete" : h ? "adds up" : "does not add up"; }
   badge();
   const img = el.querySelector(".scan"); if (img) img.onclick = () => img.classList.toggle("big");
@@ -175,8 +181,9 @@ document.getElementById("add-row").onclick = () => {
 document.getElementById("reset").onclick = () => { if (confirm("Discard all your edits for this AC?")) { localStorage.removeItem(KEY); location.reload(); } };
 document.getElementById("download").onclick = () => {
   const edits = [];
-  DATA.rows.forEach(r => { const v = state.values[r.key]; if (JSON.stringify(v) !== JSON.stringify(r.values)) edits.push({ page: r.page, row: r.row, values: v }); });
-  const out = { ac: DATA.ac, workbook: DATA.workbook, edits, added: state.added.map(a => ({ page: a.page, after: a.after, values: a.values })) };
+  DATA.rows.forEach(r => { const v = state.values[r.key]; if (!state.removed[r.key] && JSON.stringify(v) !== JSON.stringify(r.values)) edits.push({ page: r.page, row: r.row, values: v }); });
+  const removed = DATA.rows.filter(r => state.removed[r.key]).map(r => ({ page: r.page, row: r.row }));
+  const out = { ac: DATA.ac, workbook: DATA.workbook, edits, added: state.added.map(a => ({ page: a.page, after: a.after, values: a.values })), removed };
   const text = JSON.stringify(out, null, 1);
   document.getElementById("json").value = text;
   const link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([text], { type: "application/json" })); link.download = "corrections_" + DATA.ac + ".json"; link.click();

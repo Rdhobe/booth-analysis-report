@@ -4,7 +4,7 @@
     python batch/apply_review.py corrections_190.json --accept   # and files it into data/2024/converted/ when it matches
 
 The AC's converted workbook is copied (the original is never changed); the corrected rows are written into the copy's Form20
-sheet, a booth added by hand is inserted after the row it follows, and the copy is re-checked with batch/recheck_reviewed.py:
+sheet, a booth added by hand is inserted after the row it follows, a row marked "not a booth" is deleted, and the copy is re-checked with batch/recheck_reviewed.py:
 verified when every candidate column and NOTA equal the official 2024 totals.
 """
 import argparse
@@ -53,19 +53,34 @@ def apply_corrections(workbook, corrections, out_path):
         write(row, e["values"], "corrected by a person (review page)")
         changed += 1
     added = 0
-    for a in sorted(corrections.get("added", []), key=lambda a: -where.get((int(a["page"]), int(a["after"])), 0)):
-        after = where.get((int(a["page"]), int(a["after"])))
-        if after is None:                                          # "0" = before the page's first row
+
+    def after_row(a):
+        """The sheet row (as in the original workbook) a booth is inserted after; "0" = before the page's first row."""
+        row = where.get((int(a["page"]), int(a["after"])))
+        if row is None:
             first = min((r for (p, _), r in where.items() if p == int(a["page"])), default=None)
             if first is None:
                 raise SystemExit(f"page {a['page']} has no rows in {workbook}")
-            after = first - 1
+            row = first - 1
+        return row
+
+    # inserted from the bottom of the sheet upwards, so an insertion never moves the place of one still to come
+    for a in sorted(corrections.get("added", []), key=lambda a: -after_row(a)):
+        after = after_row(a)
         ws.insert_rows(after + 1)
         write(after + 1, a["values"], "added by a person (review page): a booth the extractor missed")
         ws.cell(after + 1, col_page, int(a["page"]))
         ws.cell(after + 1, col_prow, f"added after {a['after']}")
         added += 1
-    if added:                                                     # keep the printed 'Computed' SUM row pointing at the booth rows
+    removed = 0
+    for rm in corrections.get("removed", []):                      # a row that is not a booth (a header or footer read as one)
+        hit = [r for r in range(head + 1, ws.max_row + 1)
+               if str(ws.cell(r, col_page).value or "") == str(int(rm["page"])) and str(ws.cell(r, col_prow).value or "") == str(int(rm["row"]))]
+        if len(hit) != 1:
+            raise SystemExit(f"page {rm['page']} row {rm['row']} is not a single booth row in {workbook}")
+        ws.delete_rows(hit[0])
+        removed += 1
+    if added or removed:                                          # keep the printed 'Computed' SUM row pointing at the booth rows
         rows = [r for r in range(head + 2, ws.max_row + 1)
                 if isinstance(ws.cell(r, col_page).value, (int, float)) or str(ws.cell(r, col_page).value or "").isdigit()]
         for r in range(1, ws.max_row + 1):
@@ -91,7 +106,7 @@ def main(argv=None):
     changed, added = apply_corrections(corrections["workbook"], corrections, path)
     official = load_official()
     _, chk, form = recheck(path, official)
-    print(f"AC {ac}: {changed} row(s) corrected, {added} added -> {path}")
+    print(f"AC {ac}: {changed} row(s) corrected, {added} added, {len(corrections.get('removed', []))} removed -> {path}")
     print(f"    {chk['verdict']}: {chk['matched']}/{chk['cols_official']} candidate columns exact, NOTA {chk['nota_sheet']} vs official "
           f"{chk['nota_official']}" + (f"\n    still off: {chk['detail']}" if chk["detail"] else ""))
     if chk["verdict"] == "FULL" and args.accept:

@@ -17,6 +17,9 @@ ROW_LINE_FRAC = 0.30     # a row line must cover this fraction of the table widt
 COL_LINE_FRAC = 0.20     # a column line must cover this fraction of the data height
 ROW_TOL = 0.28           # spacing tolerance (fraction of pitch) inside the regular run
 MIN_RUN = 4
+VAR_MIN_ROWS = 10        # a page of rows of unequal height needs at least this many rows
+VAR_SPAN = (0.6, 2.6)    # row heights, as multiples of the page's median spacing, that still count as one row
+VAR_GAIN = 1.6           # the unequal-height run must hold this many times the rows of the regular run to replace it
 
 
 @dataclass
@@ -29,6 +32,7 @@ class PageLines:
     col_candidates: list = field(default_factory=list)
     pitch: float = 0.0
     row_lines: list = field(default_factory=list)   # every detected horizontal line (y)
+    variable: bool = False               # the rows are of unequal height (names that wrap onto a second line)
 
 
 @dataclass
@@ -107,6 +111,28 @@ def _regular_run(lines, min_run=MIN_RUN, pitch=None):
     return out, pitch, best[1]
 
 
+def _variable_run(lines):
+    """Longest run of consecutive lines whose spacings stay within VAR_SPAN of the median spacing, for tables whose rows
+    differ in height (a school name that wraps onto a second line makes its row half as tall again). The regular run
+    insists on one pitch and keeps a handful of rows of such a page. Returns (lines_in_run, pitch, end_idx) or None."""
+    if len(lines) < VAR_MIN_ROWS + 1:
+        return None
+    sp = np.diff(lines)
+    ref = float(np.median(sp))
+    ok = [VAR_SPAN[0] * ref <= s <= VAR_SPAN[1] * ref for s in sp]
+    best, start = (0, 0), None
+    for i, k in enumerate(ok + [False]):
+        if k and start is None:
+            start = i
+        elif not k and start is not None:
+            if i - start > best[1] - best[0]:
+                best = (start, i)
+            start = None
+    if best[1] - best[0] < VAR_MIN_ROWS:
+        return None
+    return list(lines[best[0]:best[1] + 1]), _pitch(sp[best[0]:best[1]]), best[1]
+
+
 def detect_lines(gray, min_run=MIN_RUN, pitch_hint=None):
     bw = binarize(gray)
     h, w = bw.shape
@@ -120,6 +146,11 @@ def detect_lines(gray, min_run=MIN_RUN, pitch_hint=None):
     rowsum = (hor[:, left:right] > 0).sum(axis=1)
     row_lines = _cluster(np.nonzero(rowsum > ROW_LINE_FRAC * width)[0], gap=5)
     run = _regular_run(row_lines, min_run, pitch_hint)
+    variable = False
+    if min_run == MIN_RUN:                       # the file-wide pass; a short last page is found with its own pitch
+        var = _variable_run(row_lines)
+        if var is not None and (run is None or len(var[0]) - 1 >= VAR_GAIN * (len(run[0]) - 1)):
+            run, variable = var, True
     if run is None:
         return None
     data_lines, pitch, end_idx = run
@@ -143,6 +174,7 @@ def detect_lines(gray, min_run=MIN_RUN, pitch_hint=None):
         col_candidates=cols,
         pitch=pitch,
         row_lines=[int(round(y)) for y in row_lines],
+        variable=variable,
     )
 
 

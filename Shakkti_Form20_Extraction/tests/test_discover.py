@@ -42,6 +42,16 @@ class DiscoverTests(unittest.TestCase):
         self.assertIsNone(spec[1])               # rejected not printed
         self.assertEqual(spec[2:4], (6, 7))
 
+    def test_an_empty_name_column_is_not_taken_for_a_candidate(self):
+        def build(rng):                          # serial, name (no digits) | cands | NOTA, total incl. NOTA, tendered
+            c = votes(5, rng); nota = rng.randint(1, 9)
+            return [rng.randint(1, 500), None] + c + [nota, sum(c) + nota, 0]
+        a, nc, spec, share = discover(rows_for(build), 5)
+        # shifted one column left, the blank name column is candidate 1 and the last candidate plays 'rejected':
+        # the identities hold just the same, but the real block starts after the name column
+        self.assertEqual((a, nc), (2, 5))
+        self.assertEqual(spec[2:4], (5, 6))
+
     def test_several_leading_columns(self):
         def build(rng):
             c = votes(5, rng); v = sum(c); nota = rng.randint(0, 9)

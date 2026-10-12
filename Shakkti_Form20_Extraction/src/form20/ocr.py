@@ -84,6 +84,7 @@ def remove_lines(gray, pitch):
 
 
 TRACK = os.environ.get("FORM20_ROW_TRACK", "on") != "off"
+RULE_TRACK = os.environ.get("FORM20_RULE_TRACK", "on") != "off"
 TRACK_REACH = 0.3      # a row may sit this many pitches away from where the flat grid puts it, in a given column
 TRACK_WINDOW = 0.45    # half height, in pitches, of the window whose ink centre is taken as the row's centre
 TRACK_MIN = 0.3        # a window with less ink than this share of the typical one is not trusted
@@ -178,6 +179,66 @@ def tracked_edges(clean, xs, row_edges, pitch):
         edges.append(row_edges[-1] + smooth[n_rows - 1, c])
         out.append([int(round(e)) for e in edges])
     return out
+
+
+RULE_TRACK_MIN = 0.65    # rules must drift this many pitches across the page before they replace the flat rows (verified
+                         # files have pages that drift up to 0.6 and read right as they are; a bowed page drifts 0.7 and more)
+RULE_REACH = 0.45        # a rule is matched to the previous column's within this many pitches
+RULE_COVER = 0.5         # a column's rule must cover this share of the column's width
+
+
+def _column_rules(bw, x0, x1):
+    """y of every horizontal rule within one column's x-range (rules are the long horizontal ink)."""
+    band = bw[:, x0:x1]
+    width = x1 - x0
+    if width < 12:
+        return []
+    # a sloping rule drifts several pixels along a column: thicken it vertically so that the opening keeps it whole
+    thick = cv2.dilate(band, cv2.getStructuringElement(cv2.MORPH_RECT, (1, 7)))
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (max(10, int(0.5 * width)), 1))
+    hor = cv2.morphologyEx(thick, cv2.MORPH_OPEN, kernel)
+    ys = np.nonzero((hor > 0).sum(axis=1) > RULE_COVER * width)[0]
+    out, cur = [], []
+    for y in ys:
+        if cur and y - cur[-1] > 4:
+            out.append(float(np.mean(cur)))
+            cur = []
+        cur.append(int(y))
+    if cur:
+        out.append(float(np.mean(cur)))
+    return out
+
+
+def rule_tracked_edges(gray, xs, row_edges, pitch):
+    """Row edges for every column, followed along the table's own horizontal rules, for a page whose rows run
+    downhill or uphill so far across the page that a flat cell (or the ink tracker, limited to a third of a row) reads
+    the neighbouring row's digits in the right-hand columns. Starting from the flat edges in the first column, each
+    column takes, for every edge, the nearest rule of its own within RULE_REACH of the previous column's edge - the
+    drift between neighbouring columns is small even where it adds up to several rows across the page. An edge with no
+    rule near it keeps the previous column's place. Returns a list per column of len(row_edges) edges, or None when no
+    column strays from the flat edges by RULE_TRACK_MIN pitches (the page is level enough for the flat grid)."""
+    if len(row_edges) < 3 or len(xs) < 3 or pitch <= 0:
+        return None
+    from .imaging import binarize
+    bw = binarize(gray)
+    n_cols = len(xs) - 1
+    prev = [float(y) for y in row_edges]
+    out = []
+    for c in range(n_cols):
+        rules = _column_rules(bw, xs[c] + 4, xs[c + 1] - 4)
+        cur = []
+        for y in prev:
+            near = [v for v in rules if abs(v - y) <= RULE_REACH * pitch]
+            cur.append(min(near, key=lambda v: abs(v - y)) if near else y)
+        for i in range(1, len(cur)):                       # two edges never collapse onto one rule
+            if cur[i] <= cur[i - 1] + 0.3 * pitch:
+                cur[i] = prev[i] + (cur[i - 1] - prev[i - 1])
+        out.append(cur)
+        prev = cur
+    drift = max(abs(out[c][r] - row_edges[r]) for c in range(n_cols) for r in range(len(row_edges)))
+    if drift < RULE_TRACK_MIN * pitch:
+        return None
+    return [[int(round(v)) for v in col] for col in out]
 
 
 def _is_cut(bbox, y0, y1, inset):
@@ -339,11 +400,16 @@ def read_cells(gray, grid, row_edges, alnum_cols=(), workers=DEFAULT_WORKERS):
     clean = remove_lines(gray, grid.pitch)
     table = [[CellRead() for _ in range(n_cols)] for _ in range(n_rows)]
     cropped = {}
-    per_col = tracked_edges(clean, xs, row_edges, grid.pitch) if TRACK and n_rows else None
+    ruled = rule_tracked_edges(gray, xs, row_edges, grid.pitch) if TRACK and RULE_TRACK and n_rows else None
+    per_col = ruled or (tracked_edges(clean, xs, row_edges, grid.pitch) if TRACK and n_rows else None)
     ref_h = grid.pitch - 2 * inset
     reach = int(TRACK_REACH * grid.pitch)
     for r in range(n_rows):
         for c in range(n_cols):
+            if ruled:                                  # a strongly curved page: every cell follows its own column's rules
+                crop = clean_cell(clean, xs[c], ruled[c][r], xs[c + 1], ruled[c][r + 1], inset, ref_h=ref_h)
+                cropped[(r, c)] = crop
+                continue
             crop = clean_cell(clean, xs[c], row_edges[r], xs[c + 1], row_edges[r + 1], inset, ref_h=ref_h)
             if TRACK and _is_cut(crop[1], row_edges[r], row_edges[r + 1], inset):
                 # the flat cell clips this cell's digits: slide it clear of them, else take the cell that follows the

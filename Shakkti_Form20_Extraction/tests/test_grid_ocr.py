@@ -65,3 +65,30 @@ class OcrTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class VariableRowTests(unittest.TestCase):
+    def table(self, heights, w=2600, x0=200, colw=300, cols=6, y0=300):
+        img = np.full((y0 + sum(heights) + 400, w), 255, np.uint8)
+        xs = [x0 + i * colw for i in range(cols + 1)]
+        ys = [y0]
+        for h in heights:
+            ys.append(ys[-1] + h)
+        for y in ys:
+            cv2.line(img, (xs[0], y), (xs[-1], y), 0, 2)
+        for x in xs:
+            cv2.line(img, (x, ys[0]), (x, ys[-1]), 0, 2)
+        return img, ys
+
+    def test_rows_of_unequal_height_are_all_found(self):
+        heights = [38, 38, 56, 38, 38, 75, 38, 56, 38, 38, 38, 56, 38, 38, 56, 38] * 2      # names wrapping onto 2-3 lines
+        img, ys = self.table(heights)
+        pl = detect_lines(img)
+        self.assertTrue(pl.variable)
+        self.assertGreaterEqual(len(pl.data_edges) - 1, len(heights) - 1)
+
+    def test_a_regular_table_is_left_to_the_regular_detector(self):
+        img, ys = self.table([40] * 24)
+        pl = detect_lines(img)
+        self.assertFalse(pl.variable)
+        self.assertEqual(len(pl.data_edges) - 1, 24)
