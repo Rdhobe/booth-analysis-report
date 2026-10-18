@@ -24,3 +24,16 @@
 
 ## Licensing
 Record license/ToS and access date for each source in `data/SOURCES_LOG.csv`. Do not redistribute raw roll data.
+
+## Booth-sheet readers and the 2022 `.xlsx` files (added 2026-10-17)
+- The 176 files `data/2022/AC<n>.xlsx` marked `HINDI_XLSX_SKIP` above are **English ECI sheets** in the same layout as the `.xls`
+  files; xlrd cannot open `.xlsx`. They are read through an openpyxl adapter in `Scripts/ml/ac_booth_totals.py`
+  (`build_state_report.py` still skips them).
+- The header label is spelled "Votes Secured", "Voters Secured", "Voter Secured", "Votes  Secured", "Votes Se cured" or "Votes Se-cured"
+  (`VOTES_SECURED_RE` in `agra_pipeline.py`).
+- Sheets with other column positions are read by `Scripts/ml/booth_sheets_generic.py` (finds columns by label). Output of both readers
+  passes the same gates: turnout between 30% and 95%, electors present on 90% of booths, booth votes within 0.96-1.02 of the official
+  AC total (2017, 2022) or seat total (Lok Sabha 2019).
+- Still unread by design: Form 20 results sheets (no per-booth electors), counting-round sheets, a postal-vote sheet and one
+  password-protected workbook (`2017/192.xls`). Per-file reasons: `output/ml/model_card.json` -> `data_coverage`.
+- Output tables (git-ignored): `data/processed/ac_booth_sums.csv`, `ac_booth_party_votes.csv`, `ac_booth_coverage.csv`.

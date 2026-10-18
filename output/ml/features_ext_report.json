@@ -1,0 +1,113 @@
+{
+  "turnout_and_electors": {
+    "VS2017_reconcile": {
+      "compared": 375,
+      "within_range": 369,
+      "median_ratio": 0.9908
+    },
+    "VS2017_turnout": {
+      "acs_read": 387,
+      "trusted": 362,
+      "of_which_electors_from_form20_preamble": 0,
+      "dropped": {
+        "booth votes differ from official total; ": 15,
+        "turnout outside range; electors missing on >10% of booths; ": 5,
+        "turnout outside range; ": 2,
+        "turnout outside range; booth votes differ from official total; ": 2,
+        "turnout outside range; electors missing on >10% of booths; booth votes differ from official total; ": 1
+      }
+    },
+    "LS2019_turnout": {
+      "acs_read": 395,
+      "trusted": 393,
+      "of_which_electors_from_form20_preamble": 0,
+      "dropped": {
+        "turnout outside range; electors missing on >10% of booths; ": 2
+      }
+    },
+    "VS2022_reconcile": {
+      "compared": 394,
+      "within_range": 387,
+      "median_ratio": 0.989
+    },
+    "VS2022_turnout": {
+      "acs_read": 401,
+      "trusted": 390,
+      "of_which_electors_from_form20_preamble": 5,
+      "dropped": {
+        "booth votes differ from official total; ": 9,
+        "turnout outside range; electors missing on >10% of booths; ": 1,
+        "turnout outside range; ": 1
+      }
+    },
+    "electors_17_roll_vs_sheet_median_ratio": 0.998
+  },
+  "ls2019_fronts": {
+    "acs_read": 389,
+    "trusted": 372,
+    "dropped_party_names_unreadable": 17,
+    "party_from_official_candidate_list_vote_share": 0.8213,
+    "sheet_and_official_party_disagree_vote_share": 0.0574,
+    "still_unreadable_vote_share": 0.0091,
+    "set_to_missing_because_seat_failed_official_check": 70,
+    "acs_in_seats_that_passed_official_check": 318
+  },
+  "ls2019_vs_official_by_parliamentary_seat": {
+    "complete_pcs": 77,
+    "total_votes_within_tol": 68,
+    "bjp_votes_within_tol": 64,
+    "both_within_tol": 63,
+    "median_total_ratio": 0.994,
+    "median_bjp_ratio": 1.0,
+    "failed_pcs": [
+      10,
+      13,
+      14,
+      20,
+      41,
+      46,
+      58,
+      60,
+      63,
+      65,
+      71,
+      76,
+      79,
+      80
+    ]
+  },
+  "official_lok_sabha_by_seat": {
+    "seats": 80,
+    "years": [
+      2009,
+      2014,
+      2019,
+      2024
+    ]
+  },
+  "candidates": {
+    "VS2017": {
+      "incumbent_recontests": 239,
+      "of": 403,
+      "recontest_under_new_party": 35,
+      "recontesting_incumbents_who_won": 67
+    },
+    "VS2022": {
+      "incumbent_recontests": 231,
+      "of": 403,
+      "recontest_under_new_party": 36,
+      "recontesting_incumbents_who_won": 161
+    }
+  },
+  "coverage_non_missing": {
+    "turnout_17_best": 403,
+    "turnout_19": 393,
+    "turnout_22": 390,
+    "turnout_24": 403,
+    "nda_19": 322,
+    "ls14_nda": 403,
+    "ls19_nda": 403,
+    "elector_growth_17_24": 403,
+    "inc_recontests_22": 403
+  }
+}

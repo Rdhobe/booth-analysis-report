@@ -39,3 +39,12 @@
 6. **Stability:** rerun with bootstrap seeds. Flag only booths flagged in ≥70% of runs.
 7. **Language:** output name is `statistical_outlier`. Include "benign explanations" checklist: booth merge/split, new colony, migration, caste-cluster voting, candidate switch, boundary shift.
 **Validation:** inject synthetic anomalies into history, then measure recall and false-positive rate, and review sample flags manually.
+
+## 5. Phase 1 implementation at AC level (2026-10-17)
+Implemented in `Scripts/ml/` (config `configs/ml_config.json`); differs from the plan above as follows:
+- **Level:** constituency (403 ACs), not booth. Booth versions wait for a crosswalk that passes a check.
+- **Fronts:** vote shares are per front (BJP-led, SP/INC, BSP, others), with allied codes summed per election.
+- **Typology:** PCA(3) + k-means (not described above); k by silhouette + bootstrap stability.
+- **Surprise:** peers = 25 ACs most similar on 2012+2017; modified z + Isolation Forest agreement (or z >= 5). Peer expectation replaces the AC-median residualisation; small-N shrinkage is not needed at AC level.
+- **Baseline:** "same as last election" with the 80% error band of 2017->2022, stress band pooled with 2012->2017. A learned forecaster must beat it on every front before it is shown (it did not).
+- Outputs and checks: `output/ml/model_card.json`.

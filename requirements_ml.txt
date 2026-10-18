@@ -1,0 +1,6 @@
+# Phase 1 AC-level models (Scripts/ml). pandas / numpy / openpyxl come from requirements.txt.
+# Install: .venv/Scripts/python.exe -m pip install -r requirements_ml.txt
+scikit-learn==1.6.1   # k-means, PCA, Isolation Forest, ridge, gradient boosting
+joblib==1.4.2         # saves the fitted typology
+pytest==7.4.3         # Scripts/ml/test_ml.py
+# Scripts/ml/ac_booth_totals.py also needs xlrd==2.0.2 (already pinned in requirements.txt) to read the legacy .xls booth sheets.

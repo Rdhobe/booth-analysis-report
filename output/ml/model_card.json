@@ -1,0 +1,514 @@
+{
+  "name": "UPBI AC insights",
+  "version": "0.1.0",
+  "created_utc": "2026-10-17T14:17:07+00:00",
+  "seed": 42,
+  "versions": {
+    "python": "3.13.5",
+    "scikit-learn": "1.6.1",
+    "numpy": "2.1.3",
+    "pandas": "2.2.3"
+  },
+  "scope": "Constituency level only. Assembly 2012, 2017, 2022 and Lok Sabha 2024 by assembly segment (EVM votes). No booth data, no news, no demographics.",
+  "data_checks": {
+    "acs_per_election": {
+      "VS2012": 403,
+      "VS2017": 403,
+      "VS2022": 403,
+      "LS2024": 403
+    },
+    "low_coverage_ac_elections": [
+      {
+        "ac": 73,
+        "election": "VS2012",
+        "coverage": 0.525
+      },
+      {
+        "ac": 269,
+        "election": "VS2012",
+        "coverage": 0.549
+      },
+      {
+        "ac": 343,
+        "election": "VS2012",
+        "coverage": 0.475
+      },
+      {
+        "ac": 374,
+        "election": "VS2012",
+        "coverage": 0.451
+      }
+    ],
+    "excluded_from_fitting": [
+      73,
+      269,
+      343,
+      374
+    ],
+    "turnout_suspicious_acs": [],
+    "alliance_overlap_acs": {
+      "VS2012": {
+        "INC": 1
+      },
+      "VS2017": {
+        "NDA": 1,
+        "SPF": 25
+      },
+      "VS2022": {
+        "NDA": 0,
+        "SPF": 4
+      },
+      "LS2024": {
+        "NDA": 0,
+        "SPF": 0
+      }
+    },
+    "seats_by_camp": {
+      "VS2012": {
+        "NDA": 47,
+        "SPF": 224,
+        "BSP": 80,
+        "INC": 37,
+        "OTH": 15
+      },
+      "VS2017": {
+        "NDA": 325,
+        "SPF": 54,
+        "BSP": 19,
+        "INC": 0,
+        "OTH": 5
+      },
+      "VS2022": {
+        "NDA": 273,
+        "SPF": 125,
+        "BSP": 1,
+        "INC": 2,
+        "OTH": 2
+      },
+      "LS2024": {
+        "NDA": 174,
+        "SPF": 224,
+        "BSP": 0,
+        "INC": 0,
+        "OTH": 5
+      }
+    },
+    "seats_by_party_top8": {
+      "VS2012": {
+        "SP": 224,
+        "BSP": 80,
+        "BJP": 47,
+        "INC": 28,
+        "RLD": 9,
+        "IND": 6,
+        "PECP": 4,
+        "QED": 2
+      },
+      "VS2017": {
+        "BJP": 312,
+        "SP": 47,
+        "BSP": 19,
+        "ADS": 9,
+        "INC": 7,
+        "SBSP": 4,
+        "IND": 3,
+        "RLD": 1
+      },
+      "VS2022": {
+        "BJP": 255,
+        "SP": 111,
+        "ADS": 12,
+        "RLD": 8,
+        "SBSP": 6,
+        "NISHAD": 6,
+        "INC": 2,
+        "JDL": 2
+      },
+      "LS2024": {
+        "SP": 183,
+        "BJP": 162,
+        "INC": 40,
+        "RLD": 8,
+        "ASPKR": 5,
+        "ADAL": 4,
+        "AITC": 1
+      }
+    },
+    "ac_name_match_rate_ls2024_vs_config": 0.96,
+    "inputs_sha256": {
+      "Uttar_Pradesh.csv": "1d4fa2bbc0f48dc5909436e3f5f1598c64f08f1ddf0f00efeaf747c6a1d99671",
+      "assembly-segment-level-voting-data-for-all-constituencies-2024.csv": "472464328b744f24a5eaae630e4f36fbff4482fb1b784b410e5e28c826f4822c",
+      "ac_format.json": "233c23769ab7a1db3c6858f2ea3a65375ca9a446973240faed9049d38830ac65",
+      "ml_config.json": "ef9ff87048ea79b7ced0886e25f59f10031846609bae6e447c8aaf3cb7ef87e2"
+    }
+  },
+  "data_coverage": {
+    "note": "Booth sheets summed to constituency level. A value is kept only if it passes its checks; otherwise it is left missing, never guessed.",
+    "by_election": [
+      {
+        "election": "VS2017",
+        "label": "Assembly 2017",
+        "files": 401,
+        "acs_read": 387,
+        "trusted_turnout": 362,
+        "first_run": {
+          "read": 328,
+          "trusted_turnout": 300
+        },
+        "readers": {
+          "main": 345,
+          "generic": 42
+        },
+        "unread": [
+          {
+            "reason": "Form 20 results sheet: votes per polling station but no electors",
+            "files": [
+              "162",
+              "163",
+              "164",
+              "165",
+              "166",
+              "167",
+              "317"
+            ]
+          },
+          {
+            "reason": "counting-round sheets, no booth table",
+            "files": [
+              "31",
+              "32",
+              "33",
+              "111"
+            ]
+          },
+          {
+            "reason": "layout not recognised",
+            "files": [
+              "108"
+            ]
+          },
+          {
+            "reason": "password-protected workbook",
+            "files": [
+              "192"
+            ]
+          },
+          {
+            "reason": "postal-vote sheet, no booth table",
+            "files": [
+              "259"
+            ]
+          }
+        ]
+      },
+      {
+        "election": "LS2019",
+        "label": "Lok Sabha 2019",
+        "files": 400,
+        "acs_read": 395,
+        "trusted_turnout": 393,
+        "first_run": {
+          "read": 321,
+          "trusted_turnout": 298
+        },
+        "readers": {
+          "main": 352,
+          "generic": 43
+        },
+        "unread": [
+          {
+            "reason": "Form 20 results sheet: votes per polling station but no electors",
+            "files": [
+              "34",
+              "35",
+              "36",
+              "37",
+              "38"
+            ]
+          }
+        ]
+      },
+      {
+        "election": "VS2022",
+        "label": "Assembly 2022",
+        "files": 401,
+        "acs_read": 401,
+        "trusted_turnout": 390,
+        "first_run": {
+          "read": 205,
+          "trusted_turnout": 175
+        },
+        "readers": {
+          "main": 340,
+          "generic": 56,
+          "form20_preamble": 5
+        },
+        "unread": [
+          {
+            "reason": "Form 20 results sheet: votes per polling station but no electors",
+            "files": [
+              "87",
+              "88",
+              "89",
+              "90",
+              "91",
+              "92",
+              "93",
+              "94",
+              "167"
+            ]
+          }
+        ]
+      }
+    ],
+    "checks": {
+      "vs2017_votes_vs_official": {
+        "compared": 375,
+        "within_range": 369,
+        "median_ratio": 0.9908
+      },
+      "vs2022_votes_vs_official": {
+        "compared": 394,
+        "within_range": 387,
+        "median_ratio": 0.989
+      },
+      "ls2019_seats_vs_official": {
+        "complete_pcs": 77,
+        "both_within_tol": 63
+      },
+      "ls2019_constituencies_in_verified_seats": 318
+    },
+    "filled": "Turnout for 2017 is available for all 403: from the booth sheet where it passes the checks, otherwise official votes over the 2017 roll file."
+  },
+  "typology": {
+    "selection": [
+      {
+        "k": 3,
+        "silhouette": 0.252,
+        "stability_ari_mean": 0.606,
+        "stability_ari_min": 0.27,
+        "smallest_group": 112,
+        "score": 0.858
+      },
+      {
+        "k": 4,
+        "silhouette": 0.272,
+        "stability_ari_mean": 0.618,
+        "stability_ari_min": 0.291,
+        "smallest_group": 30,
+        "score": 0.89
+      },
+      {
+        "k": 5,
+        "silhouette": 0.287,
+        "stability_ari_mean": 0.534,
+        "stability_ari_min": 0.259,
+        "smallest_group": 22,
+        "score": 0.821
+      },
+      {
+        "k": 6,
+        "silhouette": 0.246,
+        "stability_ari_mean": 0.426,
+        "stability_ari_min": 0.273,
+        "smallest_group": 20,
+        "score": 0.672
+      },
+      {
+        "k": 7,
+        "silhouette": 0.269,
+        "stability_ari_mean": 0.417,
+        "stability_ari_min": 0.254,
+        "smallest_group": 2,
+        "score": 0.686
+      },
+      {
+        "k": 8,
+        "silhouette": 0.253,
+        "stability_ari_mean": 0.552,
+        "stability_ari_min": 0.305,
+        "smallest_group": 3,
+        "score": 0.805
+      }
+    ],
+    "chosen_k": 4,
+    "chosen": {
+      "k": 4,
+      "silhouette": 0.272,
+      "stability_ari_mean": 0.618,
+      "stability_ari_min": 0.291,
+      "smallest_group": 30,
+      "score": 0.89
+    },
+    "pca_components": 3,
+    "pca_variance_explained": 0.591,
+    "honest_reading": "ACs form a continuum rather than separate clusters (silhouette is modest). Groups are convenient slices, re-checked for stability by resampling.",
+    "group_sizes": {
+      "1": 100,
+      "2": 116,
+      "3": 157,
+      "4": 30
+    },
+    "note": "Group labels are generated from average vote shares and need review by a person."
+  },
+  "surprise": {
+    "rule": "flag if (modified z >= z_flag and Isolation Forest agrees) or modified z >= z_extreme",
+    "thresholds": {
+      "z_flag": 3.5,
+      "z_extreme": 5.0,
+      "isolation_forest_bottom_pct": 5.0,
+      "peers": 25
+    },
+    "flag_rate": 0.0501,
+    "flagged": 20,
+    "injected_anomaly_test": [
+      {
+        "shift_pts": 10,
+        "recall": 0.11,
+        "false_flag_rate": 0.042
+      },
+      {
+        "shift_pts": 15,
+        "recall": 0.205,
+        "false_flag_rate": 0.036
+      },
+      {
+        "shift_pts": 20,
+        "recall": 0.39,
+        "false_flag_rate": 0.028
+      }
+    ],
+    "wording": "Flags are statistical outliers. They are not evidence of anything improper."
+  },
+  "baseline": {
+    "definition": "Expected share = share at the base election; band = 80% quantile of absolute error of 'same as last election' over the listed transitions.",
+    "transitions": [
+      [
+        "VS2012",
+        "VS2017"
+      ],
+      [
+        "VS2017",
+        "VS2022"
+      ]
+    ],
+    "bands": {
+      "NDA": {
+        "band_pooled": 0.2968,
+        "mae_pooled": 0.1557,
+        "band_last": 0.0741,
+        "mae_last": 0.0486
+      },
+      "OPP": {
+        "band_pooled": 0.2047,
+        "mae_pooled": 0.1398,
+        "band_last": 0.1647,
+        "mae_last": 0.1167
+      },
+      "BSP": {
+        "band_pooled": 0.1265,
+        "mae_pooled": 0.0806,
+        "band_last": 0.148,
+        "mae_last": 0.0982
+      }
+    }
+  },
+  "learned_forecaster_vs_baseline": {
+    "train_transition": [
+      "VS2012",
+      "VS2017"
+    ],
+    "test_transition": [
+      "VS2017",
+      "VS2022"
+    ],
+    "rows": [
+      {
+        "camp": "NDA",
+        "method": "Same as last election",
+        "mae_pts": 4.86,
+        "within_80pct_pts": 7.41
+      },
+      {
+        "camp": "NDA",
+        "method": "Last election plus true state swing (ceiling, only known afterwards)",
+        "mae_pts": 4.61,
+        "within_80pct_pts": 7.1
+      },
+      {
+        "camp": "NDA",
+        "method": "Ridge on previous shares",
+        "mae_pts": 6.46,
+        "within_80pct_pts": 9.65
+      },
+      {
+        "camp": "NDA",
+        "method": "Gradient boosting on previous shares",
+        "mae_pts": 7.89,
+        "within_80pct_pts": 12.06
+      },
+      {
+        "camp": "OPP",
+        "method": "Same as last election",
+        "mae_pts": 11.67,
+        "within_80pct_pts": 16.47
+      },
+      {
+        "camp": "OPP",
+        "method": "Last election plus true state swing (ceiling, only known afterwards)",
+        "mae_pts": 5.87,
+        "within_80pct_pts": 8.83
+      },
+      {
+        "camp": "OPP",
+        "method": "Ridge on previous shares",
+        "mae_pts": 11.35,
+        "within_80pct_pts": 16.04
+      },
+      {
+        "camp": "OPP",
+        "method": "Gradient boosting on previous shares",
+        "mae_pts": 11.97,
+        "within_80pct_pts": 17.3
+      },
+      {
+        "camp": "BSP",
+        "method": "Same as last election",
+        "mae_pts": 9.82,
+        "within_80pct_pts": 14.8
+      },
+      {
+        "camp": "BSP",
+        "method": "Last election plus true state swing (ceiling, only known afterwards)",
+        "mae_pts": 5.14,
+        "within_80pct_pts": 7.77
+      },
+      {
+        "camp": "BSP",
+        "method": "Ridge on previous shares",
+        "mae_pts": 6.77,
+        "within_80pct_pts": 10.84
+      },
+      {
+        "camp": "BSP",
+        "method": "Gradient boosting on previous shares",
+        "mae_pts": 6.09,
+        "within_80pct_pts": 9.78
+      }
+    ],
+    "promoted_by_camp": {
+      "NDA": false,
+      "OPP": true,
+      "BSP": true
+    },
+    "decision": "Baseline stays: no learned forecaster beat 'same as last election' on every camp"
+  },
+  "limits": [
+    "Only three assembly elections and one Lok Sabha election feed these models; ranges are wide on purpose.",
+    "Expected ranges say what a repeat of the last result would look like, with the error seen in past transitions. They are not predictions of 2027.",
+    "The second transition (2012 to 2017) includes a one-off jump in BJP-led vote share, which widens the pooled band.",
+    "Camps combine allied party codes per election (see configs/ml_config.json); small allies not listed fall into Others.",
+    "Lok Sabha 2024 figures are EVM votes only (postal ballots excluded) and are not assembly results.",
+    "Type labels are automatic descriptions of average vote shares, not findings about why people vote."
+  ]
+}

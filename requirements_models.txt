@@ -1,0 +1,11 @@
+# Only needed to REBUILD the models (Scripts/ml) or run the tests. NOT needed to run the website.
+# Install:  .venv\Scripts\python.exe -m pip install -r requirements_models.txt     (Windows)
+#           .venv/bin/python -m pip install -r requirements_models.txt              (macOS / Linux)
+pandas==2.2.3
+numpy==2.1.3
+scikit-learn==1.6.1     # k-means, PCA, Isolation Forest, ridge, gradient boosting
+joblib==1.4.2           # saves the fitted typology
+openpyxl==3.1.5
+xlrd==2.0.2
+pytest==7.4.3
+httpx==0.28.1           # FastAPI test client used by server/test_insights.py

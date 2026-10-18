@@ -13,8 +13,11 @@ Legend: `[ ]` todo, `[~]` in progress, `[x]` done. Each task has acceptance crit
 - [~] **T1.2** PDF parser (pdfplumber) + OCR fallback. *AC: ≥98% of pages parsed or queued for review.* — `Scripts/convert_form20.py` (single) + `Scripts/bulk_convert_form20.py` (batch: dynamic 7–26 candidates; Parliament 2-col, Assembly 3-col, single-serial 1-col layouts; mirrored-text restore; footer-decontamination incl. `<n> Page <p>`, `<n> Pag`, `serial e p`+fused-pair variants since 2026-10-05). Two queues remain: Hindi legacy-font PDFs → `LEGACY_SKIP` (need DevLys decoder); scanned-image PDFs (~133, e.g. Ayodhya) → `SCANNED` (need OCR path). REVIEW triage: `Scripts/review47.py` + `data/2024/review47.md` (27/47 with verified retry path; 20 manual — see CHANGELOG 2026-10-05). See CHANGELOG 2026-10-02.
 - [~] **T1.3** Schema + validators (`pandera`). *AC: AC totals reconcile within 0.5%.* — row-sum + EVM-total + post-save checks implemented in bulk script (no pandera yet); `bulk_convert_report.csv` per run.
 - [ ] **T1.4** Load Lok Dhaba AC-level data + candidate/party metadata. *AC: join keys documented.*
-- [ ] **T1.5** Party-group mapping per election. *AC: reviewed lookup file.*
+- [~] **T1.5** Party-group mapping per election. *AC: reviewed lookup file.* — AC-level fronts in `configs/ml_config.json` (2026-10-17; seat counts match published results; small allies TODO(verify), needs review).
 - [ ] **T1.6** Extend to second election, then statewide. *AC: coverage report.* — Agra done 2026-10-03 (VS2017+LS2019+VS2022+LS2024, 14,777 booths, 36/36 totals reconcile; see `data/processed/agra_*`, CHANGELOG).
+
+- [~] **T1.7** Constituency electors / turnout / Lok Sabha 2019 from the ECI booth sheets, with gates. *AC: booth sums reconcile to official totals within 0.5-4%; failures become missing.* — done 2026-10-17: read 2017 387 / 2019 395 / 2022 401 ACs, turnout passing the checks 362 / 393 / 390 (2017 filled to all 403 from the roll file). 28 files stay unread by design (Form 20, counting rounds, postal, one password-protected).
+- [~] **T1.8** Forward backtest with Lok Sabha + candidate features. *AC: learned model beats the best rule on every front.* — run 2026-10-17: not met (best learned 8.1 vs rule 8.8 average miss, worse for the BJP-led front). The unknown statewide swing accounts for about 3.6 points of the error.
 
 ## Phase 2: Geospatial
 - [ ] **T2.1** Booth list + geocoding with confidence. *AC: ≥90% points inside correct AC.*
@@ -33,9 +36,9 @@ Legend: `[ ]` todo, `[~]` in progress, `[x]` done. Each task has acceptance crit
 ## Phase 4: Anomaly engine
 - [ ] **T4.1** Feature builder (swing, turnout Δ, NOTA Δ, margin Δ). *AC: golden-test math.* — Agra done 2026-10-03 (hand-verified booth math; `agra_swing.csv`).
 - [ ] **T4.2** Residualization + EB shrinkage. *AC: small-booth flag rate not > large-booth flag rate by >2×.* — Agra done 2026-10-03 (w=n/(n+200) on min side; small under-flagged, gate passes).
-- [ ] **T4.3** IsolationForest + robust-z ensemble + stability filter. *AC: seeded, deterministic.* — Agra partial: MAD robust-z only (no sklearn); deterministic ✓; IF pending.
+- [~] **T4.3** IsolationForest + robust-z ensemble + stability filter. *AC: seeded, deterministic.* — Agra partial: MAD robust-z only (no sklearn); deterministic ✓; IF pending. AC level done 2026-10-17 (`Scripts/ml/models.py`, seeded, repeatable).
 - [ ] **T4.4** Explanations table. *AC: top-3 contributing features per flag.* — Agra done 2026-10-03 (top-2 + benign checklist; `agra_anomaly.csv`).
-- [ ] **T4.5** Synthetic-anomaly validation. *AC: recall ≥0.8 at FPR ≤2% on injected shifts.*
+- [~] **T4.5** Synthetic-anomaly validation. *AC: recall ≥0.8 at FPR ≤2% on injected shifts.* — AC level measured 2026-10-17: 11% / 21% / 39% found for 10 / 15 / 20 pt shifts at about 3-4% other flags (target not met).
 
 ## Phase 5: Sentiment
 - [ ] **T5.1** Choose sources + compliant collectors. *AC: ToS check per source.*
@@ -53,6 +56,7 @@ Legend: `[ ]` todo, `[~]` in progress, `[x]` done. Each task has acceptance crit
 - [ ] **T6.4** Anomaly tab + booth drill-down.
 - [ ] **T6.5** Methods & caveats tab; Compliance Mode.
 - [ ] **T6.6** Export (aggregates only) with audit log.
+- [~] **T6.7** Insights tab in the Next.js app (types, unusual results, expected range). *AC: served from `/api/insights/*`; Compliance Mode honoured by the server.* — built 2026-10-17 (`web/app/insights`, `server/insights.py`); needs a real `npm run build` check.
 
 ## Phase 7: Hardening & release
 - [ ] **T7.1** Docker, CI/CD, monitoring (feed volume, model drift).

@@ -183,6 +183,11 @@ def ingest_2024(files: list[Path], party_map: dict) -> tuple[list, list, list]:
 
 # ---------------------------------------------------------------- ingest ECI xls
 
+# The ECI sheets spell the label 'Votes Secured', 'Voters Secured', 'Voter Secured' or 'Votes  Secured' (two
+# spaces). Matching only the first spelling left about 70 files per election unread (2026-10-17).
+VOTES_SECURED_RE = re.compile(r"vot(?:e|er)s?\s+secured", re.I)
+
+
 def find_vote_header(sh) -> tuple[int, list[int]] | None:
     """Header row index + 'Votes Secured' column indices (any sheet). Picks
     the row with the MOST hits: the sub-header row repeats the label per
@@ -191,7 +196,7 @@ def find_vote_header(sh) -> tuple[int, list[int]] | None:
     best = None
     for r in range(min(12, sh.nrows)):
         cols = [c for c in range(sh.ncols)
-                if "Votes Secured" in str(sh.cell(r, c).value)]
+                if VOTES_SECURED_RE.search(str(sh.cell(r, c).value))]
         if cols and (best is None or len(cols) > len(best[1])):
             best = (r, cols)
     return best

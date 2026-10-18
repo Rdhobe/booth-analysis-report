@@ -4,6 +4,168 @@ All notable changes to this project. Newest first.
 Rule (see `brain/RULES.md`): every code change updates this file **and**
 the relevant `brain/` doc in the same sitting.
 
+## 2026-10-18 - Handoff report and local setup package
+
+- **New (untracked) in `output/handoff/`:** `UPBI_Phase1_Models_and_Setup_Guide.docx` and `.pdf` (28 pages: the three models with inputs, algorithms,
+  outputs, quality and annotated screenshots; how the output is generated; data and tools; a setup guide; pending work) and `UPBI_local_package.zip`
+  (website, API, precomputed model results, model code, the two input CSVs, `README_SETUP.md`, `run_api`/`run_web` scripts for Windows and bash; no logos,
+  no secrets, no node_modules).
+- **Verified in a clean copy** (extracted into an empty folder, new Python 3.13 environment, pinned packages, `npm ci`, build, both scripts started on spare
+  ports): pages show the expected content, 24 tests pass, a rebuild reproduces the model numbers. This found three problems, now fixed: the server crashed without
+  `server/assets/` (mount is now optional), `httpx` was missing from the test instructions (`requirements_models.txt` in the package), and the seat page crashed
+  when the planted-shift test was absent (`--quick` build).
+- **Gap found:** the source and licence of `data/Uttar_Pradesh.csv` are not recorded anywhere in the repository (the columns do not match the Lok Dhaba format); the
+  report lists it as pending.
+- Not tested: macOS, Linux, Python 3.10 to 3.12, Docker.
+
+## 2026-10-18 - Neutral UI: no party or organisation branding, all-parties landing page
+
+- **Removed** from the Next.js app: the BJP logo, the "Namaskar ... Ji" greeting, the two leader portraits in the header and on the home page,
+  the slogan banner, and the party icons next to party names in bar lists (`PartyIcon`, `partyIcon`, `API_IMG`). The header now shows only the product's
+  plain-text name and navigation.
+- **Theme** changed from saffron-and-cream to neutral greys (`web/app/globals.css`; variables renamed `--saf` to `--accent`). The old religion colours
+  (Hindu saffron, Muslim green) are gone: religion, gender and turnout bars use one neutral colour so colour never encodes a community or party.
+- **Routes.** `/` now redirects to `/insights` (all parties side by side). The old single-party booth dashboard moved to `/booths`; it and `/ac/[ac]` and
+  `/zone/[zone]` carry a "Single-party view" banner because their shares, zones and "Party B" comparison are the BJP's (`server/DASHBOARD_LOGIC.md`).
+  Navigation: "Insights (all parties)" and "Booth dashboard".
+- **Insights Overview.** The tile "BJP-led front seats" now reads "Seats won by front" and lists every front equally (web page and `Scripts/ml/templates/insights_demo.html`;
+  `output/ml/insights_demo.html` regenerated). The Districts table now shows BJP-led, SP/INC and BSP shares for both 2022 and Lok Sabha 2024 (it showed BSP for neither).
+- **Robustness.** The seat page no longer crashes when the planted-shift test is missing from the results file (what `build_insights.py --quick` produces); it shows a short note instead (web page and demo template).
+- **Server.** `server/app.py` now mounts `/assets` only if `server/assets/` exists, so a copy of the server without the old logo and portrait files starts normally.
+- **Not changed:** `server/assets/` still holds the old logo and portrait files; nothing in the UI loads them. The booth dashboard's analysis is still BJP-centred; making it
+  party-selectable needs server changes (zones are computed for one party).
+
+## 2026-10-17 - Data gaps cleaned: more booth sheets read, turnout and coverage shown
+
+- **What was wrong (the repo notes had two causes wrong).**
+  1. `find_vote_header` in the shared `Scripts/report/agra_pipeline.py` matched only the literal "Votes Secured". The ECI
+     sheets also spell it "Voters Secured", "Voter Secured", "Votes  Secured" (two spaces), "Votes Se cured" and
+     "Votes Se-cured". Fixed with `VOTES_SECURED_RE`. **This is a change to shared code:** a rebuild with
+     `build_state_report.py` / `build_store.py` will now read those files too. Regression check: 852 of the 854
+     constituencies read before are identical; the other 2 (2017 AC 277 and 315) now capture all candidate columns (AC 277
+     valid votes 83,068 -> 230,763 against 232,990 polled).
+  2. The 176 "Hindi" 2022 `.xlsx` files are **not Hindi**: they are the same English ECI layout, saved as `.xlsx`, which the
+     parser (xlrd) cannot open. `Scripts/ml/ac_booth_totals.py` now opens them through an openpyxl adapter.
+  3. About 90 further sheets are the same table with shifted columns (a blank leading column, electors split over four
+     columns, the party written in the header row, the polling-station number inside the name, "voter turn out" / "voters yurn
+     out" / "voter cast men/women" labels, repeated booth numbers such as 4 and 4A). New fallback reader
+     `Scripts/ml/booth_sheets_generic.py` finds columns by label. It is used when the standard parser finds no table, and when
+     the standard result fails basic checks and the label-based one passes for more constituencies.
+  4. Form 20 sheets state the constituency's total electors in the preamble; `form20_preamble_electors` reads it (5 ACs in 2022).
+- **Result (of 403 constituencies, first run -> now).** Read: 2017 328 -> 387, 2019 321 -> 395, 2022 205 -> 401. Turnout that
+  passes its checks: 300 -> 362, 298 -> 393, 175 -> 390. 2017 turnout exists for all 403 (booth sheet where it passes, otherwise
+  official votes over the 2017 roll file). Lok Sabha 2019 party shares are used only where the parliamentary seat matches the
+  official EVM votes: 188 -> 318 constituencies. Statewide turnout from the cleaned data is 61.0% / 59.1% / 60.8% / 56.8%
+  (2017 / 2019 / 2022 / 2024), in line with the published figures.
+- **Checks.** Booth vote totals vs official: 2017 369 of 375 within 4% (median 99.1%), 2022 387 of 394 (median 98.9%). The upper
+  bound of the reconcile gate moved from 1.005 to 1.02: booth sheets also count NOTA and tendered votes, official totals include
+  postal ballots, so a few percent either way is normal. LS 2019 party names are now resolved from the official candidate list of
+  the seat first (82% of votes), then from the sheet's party text (5.7% disagree, 0.9% unreadable).
+- **Still unread (reason checked from the file, not assumed).** 2017: 7 Form 20 sheets (162-167, 317), 4 counting-round sheets
+  (31, 32, 33, 111), 1 password-protected (192), 1 postal-vote sheet (259), 1 legacy-Hindi layout (108). 2019: 5 Form 20 sheets
+  (34-38). 2022: 9 Form 20 sheets (87-94 Agra, 167). They hold no per-booth electors.
+- **Effect on the backtest.** The forward test is unchanged (it does not use these features). In the district-grouped check inside
+  2022, the constituency-level extras now lower the average miss by 0.14 (ridge, 4.20 -> 4.06) and 0.25 points (gradient
+  boosting, 4.34 -> 4.09); this is not a forward test.
+- **UI.** The insights outputs carry turnout and electors per constituency (`turnout_block`), statewide turnout per election
+  (`overview.turnout`) and a `data_coverage` section in the model card. The demo page and the Next.js page show a
+  "Turnout by election" card, turnout chips on each constituency, and "Data cleaning" cards in Method and checks.
+- **Tests.** 53 in total (`test_booth_sheets_generic.py` 15, `test_features_ext.py` 17, `test_ml.py` 11, `server/test_insights.py` 10).
+
+## 2026-10-17 - Prediction groundwork: booth sheets to AC level, extra features, extended backtest
+
+- **`Scripts/ml/ac_booth_totals.py` (new):** sums the ECI booth `.xls` sheets (2017, 2019, 2022: 1,026 files, about
+  1 minute with 4 workers) to constituency level with the repo's own `ingest_eci`. Writes
+  `data/processed/ac_booth_{sums,party_votes,coverage}.csv`. Needs `xlrd==2.0.2` (pinned in `requirements.txt`,
+  installed here). Repairs AC numbers the sheet parser gets wrong: in files such as `2017/170.xls` and `312.xls`
+  every booth serial was read as an AC number (95 phantom ACs before the fix). Coverage: 2017 = 328 ACs,
+  2019 = 321, 2022 = 205 (the 176 Hindi 2022 `.xlsx` are still not parsed).
+- **`Scripts/ml/features_ext.py` (new):** gated constituency features, written to
+  `data/processed/ac_features_ext.csv` (403 ACs x 67 columns) and `output/ml/features_ext_report.json`.
+  Booth votes reconcile to the official AC totals at a median 99% (the gap is postal ballots); ACs outside
+  0.96-1.005, with turnout outside 0.30-0.95, or with electors missing on over 10% of booths are set to missing,
+  never guessed. Trusted AC-level turnout: 2017 = 300, 2019 = 298, 2022 = 175; 2017 is filled for all 403 from
+  `uprolls2017.csv` and 2024 comes from the segment file. 2019 front shares from booth sheets: 252 ACs, of which
+  188 sit in parliamentary seats that match official `parliament.csv` EVM votes (46 of 49 complete seats match
+  on total votes, 37 on BJP votes; the 12 failing seats are set to missing). Party names on the sheets are messy
+  (`B.J.P.`, `S.P.`, `,,`, legacy-font text) so `canon_party` maps only what it can read and drops the rest.
+  New: official Lok Sabha shares per parliamentary seat for 2009, 2014, 2019, 2024 copied to each AC (all 403
+  covered), and incumbency features from candidate names (59% of 2012 winners stood again in 2017, 36 of the 2022
+  recontesting incumbents changed party).
+- **`Scripts/ml/backtest_ext.py` (new):** like-for-like forward test, fixed in advance and not tuned on the test:
+  train on assembly 2012 + Lok Sabha 2009/2014 -> assembly 2017, test on assembly 2017 + Lok Sabha 2014/2019 ->
+  assembly 2022 (399 ACs). Result (average miss per AC, points): "same as last assembly election" 8.8 is still the
+  best simple rule; Lok Sabha swing added to it is much worse (14.7); the best learned model (gradient boosting, history +
+  Lok Sabha) reaches 8.1 but is better only for BSP (6.2 vs 9.8) and worse for the BJP-led front (6.3 vs 4.9), so it is
+  not promoted. **With the true statewide swing the error would be 5.2**, so about 3.6 of the 8.8 points is the unknown
+  statewide swing, which needs polls or news, not a better constituency model. District-grouped CV inside 2022 gives
+  about 4.2 and shows turnout/electors/2019 booth fronts add at most 0.14 points (this check is not a forward test).
+  Report: `output/ml/backtest_ext_report.{json,md}`.
+- **Tests:** `Scripts/ml/test_features_ext.py` (13: party-name mapping, name matching, AC-number repair, seat-level
+  shares, no feature depends on the target election, baselines in range).
+- **Not done:** parse the 176 Hindi 2022 `.xlsx` sheets (turnout for the rest of 2022); 2017 files with a non-triplet layout
+  (73 files unread); recover party names behind `,,` and single letters on some 2019 sheets; the swing model itself
+  (needs a current-mood signal: polls or news).
+
+## 2026-10-17 - Insights wired into the server and the Next.js app
+
+- **Server:** new `server/insights.py` (FastAPI router) mounted in `server/app.py`:
+  `GET /api/insights/meta|overview|types|acs|ac/{ac}|surprises|card`. It serves static JSON written
+  by `Scripts/ml/build_insights.py` (`server/insights_data/`, or `INSIGHTS_DIR`, or `output/ml/`), so it
+  needs no database. Same `X-API-Key` middleware as the rest of `/api/*`. `COMPLIANCE_MODE=on` removes
+  the forward-looking `expected` range from every AC response on the server, so the switch holds even if
+  a client ignores it. `python Scripts/ml/build_insights.py --export-server` refreshes
+  `server/insights_data/`; the Dockerfile copies `insights.py` and that folder.
+- **Web:** new `/insights` page (Overview, Constituency, Types, Unusual results, Method and checks),
+  `web/components/insights.jsx` (hand-rolled SVG charts, validated colour-blind-safe palette),
+  `.ins-*` styles in `globals.css`, and an Insights link in `Header.jsx` (`hideSelectors` prop hides the
+  election selectors on pages where they do not apply). The existing `/api/*` proxy route already attaches
+  the API key, so no proxy change was needed.
+- **Tests:** `server/test_insights.py` (10 tests: shapes, 404, filters, API key, Compliance Mode, 503 when
+  data is missing): `python -m pytest server/test_insights.py -q`. The React page was compiled with Babel and
+  run in headless Chrome against the live API: all five tabs render with no console errors, and tab switching,
+  the picker, member lists and district sort/filter work.
+- **Not verified:** `npm install` / `next build` were not run (Node is not installed on this machine). Run
+  `cd web && npm install && npm run dev` and open `/insights`.
+- **Known gap:** `server/entrypoint.sh` still refuses to start without the main store (`STORE_URL` / `DB_PATH`),
+  even though the insights endpoints do not use it.
+
+## 2026-10-17 - Phase 1 AC-level models + Insights demo (new `Scripts/ml/`)
+
+- New `Scripts/ml/`: `features.py` (AC x election table), `models.py` (typology, surprise,
+  baseline range, learned-vs-baseline gate), `build_insights.py` (writes `output/ml/`),
+  `build_demo_page.py` + `templates/insights_demo.html` (single-file UI, data inlined),
+  `test_ml.py` (11 tests, pass). Config in `configs/ml_config.json` (seed, thresholds, party
+  fronts). Dependencies in `requirements_ml.txt`. Run: `python Scripts/ml/build_insights.py`
+  then `python Scripts/ml/build_demo_page.py`.
+- Scope is constituency level only (403 ACs): VS 2012/2017/2022 from `data/Uttar_Pradesh.csv`
+  and LS 2024 by assembly segment from the ECI segment file. No booth data, news or demographics.
+- **Party fronts** (`configs/ml_config.json`): allied party codes are summed per election, so an
+  Apna Dal (S) / Nishad / SBSP seat is not shown as "BJP 0%" (27 ACs in 2022, 19 in 2017).
+  Seat counts by front reproduce the published results (2012 SP 224/BSP 80/BJP 47;
+  2017 NDA 325/SP+INC 54/BSP 19; 2022 NDA 273/SP alliance 125). The models use SP+INC combined
+  (OPP) because INC is inside the SP alliance in 2017 and 2024 but alone in 2012 and 2022.
+  Memberships of small allies are TODO(verify); unlisted ones fall into Others.
+- **Data findings:** AC 73, 269, 343, 374 have incomplete 2012 rows (45-55% of votes polled) and
+  are kept out of fitting. Gotcha: matching the 2024 file's state with `contains("Uttar")` also
+  pulls in Uttarakhand, whose AC numbers 1-70 collide with UP; the loader uses an exact match
+  (4,288 UP candidate rows) and a test guards it.
+- **Models (Phase 1):** typology = standardise 16 share columns, PCA(3), k-means; k chosen by
+  silhouette + bootstrap stability (chosen k=4, silhouette 0.272, stability 0.62: modest, ACs
+  form a continuum). Surprise = 2017->2022 change vs the 25 ACs most similar on 2012+2017,
+  modified z (flag 3.5) with Isolation Forest agreement, or z >= 5 alone: 20 of 399 flagged (5.0%).
+  Injected-anomaly test (T4.5) finds 11% / 21% / 39% of artificial 10 / 15 / 20 pt shifts, so the
+  AC-level detector only catches large departures and misses the 80% recall / 2% FPR target.
+  Baseline = "same as last election" with the 80% error band of the 2017->2022 transition
+  (BJP-led +/-7.4, SP/INC +/-16.5, BSP +/-14.8 pts); the pooled 2012->2017 band (BJP-led +/-29.7)
+  is shown as a stress range. Ridge / gradient boosting do not beat the baseline on every front
+  (better for BSP, worse for BJP-led), so the baseline stays.
+- Reproducible: seeded; two fresh builds give identical `ac_insights.json`.
+- **Not done / next:** rebuild `data/processed/` + `servedb.sqlite` (missing on this machine);
+  `GET /api/insights/*` in `server/app.py` and an Insights tab in `web/`; booth-level models are
+  blocked until the booth crosswalk passes a check (Agra pilot: same-booth BJP share correlates
+  only 0.06-0.30 across elections).
+
 ## 2026-10-07 - OCR manual gate + rotation/verify hardening
 
 - New `Scripts/ocr/manual_check.py`: interactive per-PDF questionnaire
