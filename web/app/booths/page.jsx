@@ -5,12 +5,10 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import { Donut, Gauge, TrendChart } from "@/components/charts";
 import {
-  API_IMG,
   YR,
   ZGLYPH,
   RELS,
   RELABEL,
-  RELCOLOR,
   get,
   inr,
   pct1,
@@ -50,6 +48,10 @@ export default function Home() {
     <>
       <Header election={election} vs={vs} onElection={setElection} onVs={setVs} />
       <main className="wrap">
+        <div className="warnbox">
+          <b>Single-party view.</b> Every share, zone and trend on the booth pages is the BJP&apos;s, compared with its strongest
+          opponent in each booth. It is not a view of all parties. For all parties side by side, use <Link href="/insights">Insights</Link>.
+        </div>
         {err ? (
           <div className="panel err">
             API unreachable: {err} (is the FastAPI server running? See web/README.)
@@ -100,18 +102,6 @@ function Dashboard({ d, election, vs }) {
 
   return (
     <>
-      <div className="hero">
-        <div className="slogan">
-          ❝ Sabka Saath Sabka Vikas
-          <br />
-          Sabka Vishwas Sabka Prayas<small>— Narendra Modi</small>
-        </div>
-        <div className="leaders">
-          <img src={`${API_IMG}/assets/portraits/yogi_adityanath.png`} alt="Yogi Adityanath" />
-          <img src={`${API_IMG}/assets/portraits/narendra_modi.png`} alt="Narendra Modi" />
-        </div>
-      </div>
-
       <div className="kpirow">
         <div className="kcard seats">
           <div>
@@ -214,7 +204,7 @@ function Dashboard({ d, election, vs }) {
             <div className="relrow" key={t.e}>
               <span>{YR[t.e]}</span>
               <span className="reltrack">
-                <i style={{ width: `${((t.pct || 0) / tmax) * 100}%`, background: "#2456a6" }} />
+                <i style={{ width: `${((t.pct || 0) / tmax) * 100}%`, background: "#5b6b7c" }} />
               </span>
               <b>{t.pct != null ? `${t.pct.toFixed(1)}%` : "—"}</b>
             </div>
@@ -232,8 +222,8 @@ function Dashboard({ d, election, vs }) {
             <Donut
               size={96}
               segs={[
-                ["Male", o.voter.male_pct || 0, "#2456a6"],
-                ["Female", o.voter.female_pct || 0, "#e0508a"],
+                ["Male", o.voter.male_pct || 0, "#5b6b7c"],
+                ["Female", o.voter.female_pct || 0, "#a9b4c0"],
               ]}
             />
             <div>
@@ -255,11 +245,9 @@ function Dashboard({ d, election, vs }) {
           </div>
           {RELS.map((r) => (
             <div className="relrow" key={r}>
-              <span>
-                <span style={{ color: RELCOLOR[r] }}>●</span> {RELABEL[r]}
-              </span>
+              <span>{RELABEL[r]}</span>
               <span className="reltrack">
-                <i style={{ width: `${Math.min(100, o.religion[r] || 0)}%`, background: RELCOLOR[r] }} />
+                <i style={{ width: `${Math.min(100, o.religion[r] || 0)}%`, background: "#5b6b7c" }} />
               </span>
               <b>{pct1(o.religion[r])}</b>
             </div>

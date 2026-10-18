@@ -60,6 +60,9 @@ export default function ZonePage({ params, searchParams }) {
     <>
       <Header election={election} vs={vs} onElection={setElection} onVs={setVs} />
       <main className="wrap">
+        <div className="warnbox">
+          <b>Single-party view.</b> Zones and shares here are the BJP&apos;s. For all parties side by side, use <Link href="/insights">Insights</Link>.
+        </div>
         {err ? (
           <div className="panel err">API unreachable: {err}</div>
         ) : !o ? (
@@ -67,7 +70,7 @@ export default function ZonePage({ params, searchParams }) {
         ) : (
           <div className="panel">
             <h2>
-              <Link href="/" className="backbtn" title="back to dashboard">
+              <Link href="/booths" className="backbtn" title="back to booth dashboard">
                 ←
               </Link>{" "}
               {zone} ACs ({rows.length})

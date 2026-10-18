@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
 import { PartyBars, SexPie } from "@/components/charts";
-import { ELECTIONS, YR, ZONES, RELS, RELABEL, RELCOLOR, get, inr, zclass } from "@/lib/upbi";
+import { ELECTIONS, YR, ZONES, RELS, RELABEL, get, inr, zclass } from "@/lib/upbi";
 
 const GROUPS = {
   results: ["ps", "name", "zone", "avg_diff", "latest_diff", "party_b", "a2017", "b2017", "d2017", "a2019", "b2019", "d2019", "a2022", "b2022", "d2022", "a2024", "b2024", "d2024"],
@@ -69,6 +69,9 @@ export default function ACPage({ params }) {
     <>
       <Header election={election} vs={vs} onElection={setElection} onVs={setVs} />
       <main className="wrap">
+        <div className="warnbox">
+          <b>Single-party view.</b> Booth shares, zones and the &quot;Party B&quot; comparison here are the BJP&apos;s against its strongest opponent in each booth. For all parties side by side, use <Link href="/insights">Insights</Link>.
+        </div>
         {err ? (
           <div className="panel err">{err}</div>
         ) : !head ? (
@@ -76,7 +79,7 @@ export default function ACPage({ params }) {
         ) : (
           <div className="panel">
             <h2>
-              <Link href="/" className="backbtn" title="back to dashboard">
+              <Link href="/booths" className="backbtn" title="back to booth dashboard">
                 ←
               </Link>{" "}
               {head.name}{" "}
@@ -141,10 +144,10 @@ function OverviewTab({ ac }) {
       {RELS.map((r) => (
         <div className="relrow" key={r}>
           <span>
-            <span style={{ color: RELCOLOR[r] }}>●</span> {RELABEL[r]}
+            {RELABEL[r]}
           </span>
           <span className="reltrack">
-            <i style={{ width: `${Math.min(100, data.rel.religion[r] || 0)}%`, background: RELCOLOR[r] }} />
+            <i style={{ width: `${Math.min(100, data.rel.religion[r] || 0)}%`, background: "#5b6b7c" }} />
           </span>
           <b>{data.rel.religion[r] != null ? `${data.rel.religion[r].toFixed(1)}%` : "—"}</b>
         </div>
