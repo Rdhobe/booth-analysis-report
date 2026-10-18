@@ -104,6 +104,14 @@ app.add_middleware(
     allow_methods=["GET"],
     allow_headers=["*"])
 
+# Phase 1 model output (types, unusual results, expected ranges): static
+# JSON written by Scripts/ml/build_insights.py, no database needed.
+try:                                  # uvicorn server.app:app
+    from .insights import router as insights_router
+except ImportError:                   # uvicorn app:app (run inside server/)
+    from insights import router as insights_router
+app.include_router(insights_router)
+
 
 def db() -> sqlite3.Connection:
     if not os.path.exists(DB_PATH):
@@ -977,8 +985,10 @@ def api_methods():
         con.close()
 
 
-app.mount("/assets", StaticFiles(directory=HERE / "assets"),
-          name="assets")
+# Optional: the web UI loads no images, so a deployment may leave this folder out.
+if (HERE / "assets").is_dir():
+    app.mount("/assets", StaticFiles(directory=HERE / "assets"),
+              name="assets")
 
 
 @app.get("/", include_in_schema=False)

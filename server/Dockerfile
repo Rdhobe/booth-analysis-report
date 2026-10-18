@@ -11,6 +11,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl \
 COPY server/requirements.txt ./server/requirements.txt
 RUN pip install --no-cache-dir -r server/requirements.txt
 COPY server/app.py ./server/app.py
+COPY server/insights.py ./server/insights.py
+# Phase 1 model output (static JSON). Refresh with:
+#   python Scripts/ml/build_insights.py --export-server
+COPY server/insights_data ./server/insights_data
 COPY server/frontend/docs.html ./server/frontend/docs.html
 COPY server/assets ./server/assets
 COPY server/entrypoint.sh ./server/entrypoint.sh

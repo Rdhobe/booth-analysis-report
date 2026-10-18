@@ -38,6 +38,19 @@ const page = await (await fetch(`${API}/api/booths?ac=88&amp;sort=latest_diff&am
   { headers: KEY ? { "x-api-key": KEY } : {} })).json();</pre>
 <p class="small muted">CORS: <code>GET</code> from any origin is allowed by default. Tighten with <code>ALLOWED_ORIGINS="https://app.vercel.app"</code> on public deploys. All responses are gzip-encoded JSON (orjson). Every endpoint opens its own read-only SQLite connection — safe to call in parallel.</p></div>
 
+<div class="panel"><h2>Insights (Phase 1 models)</h2>
+<p class="small muted">Static model output from <code>Scripts/ml/build_insights.py</code>; no database needed. Shares are fractions 0&ndash;1. Fronts: <code>NDA</code> (BJP-led), <code>OPP</code> (SP + INC with allies), <code>BSP</code>, <code>OTH</code>.</p>
+<table class="data"><thead><tr><th>Endpoint</th><th>Returns</th></tr></thead><tbody>
+<tr><td><code>GET /api/insights/meta</code></td><td>data/model version, front labels, error bands, <code>compliance_mode</code>, counts, limits</td></tr>
+<tr><td><code>GET /api/insights/overview</code></td><td>statewide shares and seats per election, <code>turnout</code> per election with the number of constituencies behind it, top-ten lists, district table</td></tr>
+<tr><td><code>GET /api/insights/types</code></td><td>types with average shares, typical ACs, flagged count, member list</td></tr>
+<tr><td><code>GET /api/insights/acs</code></td><td>one light row per AC (<code>ac, name, district, type, clean, strength</code>)</td></tr>
+<tr><td><code>GET /api/insights/ac/{ac}</code></td><td>history (4 elections), <code>turnout_block</code> (turnout and electors for 2017, 2019, 2022, 2024; missing values are <code>null</code>), type, 5 look-alikes, <code>surprise</code> (flag, strength, z, drivers), <code>expected</code> (usual and wide range per front). <code>404</code> unknown AC</td></tr>
+<tr><td><code>GET /api/insights/surprises?min_strength=moderate|strong</code></td><td>flagged ACs, strongest first, with the rule used</td></tr>
+<tr><td><code>GET /api/insights/card</code></td><td>model card: input hashes, checks, <code>data_coverage</code> (booth sheets read, checks, unread files and why), selection tables, backtests, limits</td></tr>
+</tbody></table>
+<p class="small muted"><b>Compliance Mode:</b> with <code>COMPLIANCE_MODE=on</code> the <code>expected</code> field of <code>/ac/{ac}</code> is <code>null</code> and <code>expected_hidden</code> explains why. <code>503</code> means the data files are missing: run <code>python Scripts/ml/build_insights.py --export-server</code>. Same <code>x-api-key</code> rule as every other <code>/api/*</code> route.</p></div>
+
 <div class="panel"><h2>Auth</h2>
 <table class="data"><thead><tr><th>Rule</th><th>Detail</th></tr></thead><tbody>
 <tr><td>Header</td><td><code>x-api-key: &lt;API_KEY&gt;</code> on every <code>/api/*</code> call. Missing/wrong → <code>401 {"detail": "invalid or missing API key"}</code>.</td></tr>

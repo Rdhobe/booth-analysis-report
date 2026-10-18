@@ -6,6 +6,9 @@ the Next.js app in `../web/`, which proxies this API.
 | File | Purpose |
 |---|---|
 | `app.py` | API: `/api/meta|acs|booths|booth/{ac}/{ps}|ac/{ac}/votes|ac/{ac}/sexratio|ac/{ac}/religion|ac/{ac}/ages|ac/{ac}/averages|ac/{ac}/past|overview|trend|margins|zones|coverage|methods` + `/` (pointer JSON) + `/assets` + `/docs` |
+| `insights.py` | Router for `/api/insights/meta|overview|types|acs|ac/{ac}|surprises|card`: serves the Phase 1 model output (types, unusual results, expected ranges). Reads static JSON, no database. `COMPLIANCE_MODE=on` removes the expected range server-side |
+| `insights_data/` | `ac_insights.json` + `model_card.json` written by `python Scripts/ml/build_insights.py --export-server` (baked into the image) |
+| `test_insights.py` | API tests: `python -m pytest server/test_insights.py -q` |
 | `frontend/docs.html` | Static offline API reference (Next.js contract companion) |
 | `DASHBOARD_LOGIC.md` | Formula contract for every dashboard number (seats, shares, zones, voter, religion) — the Next.js source of truth |
 | `assets/parties/` | Party logos (`<code>.png`, lowercase) → `/assets/parties/bjp.png` |
