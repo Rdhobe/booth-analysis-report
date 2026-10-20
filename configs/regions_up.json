@@ -1,0 +1,12 @@
+{
+  "status": "DRAFT - needs sign-off by someone who knows UP's political geography",
+  "note": "Six regions used by the what-if simulator to move vote shares together. District names match data/Uttar_Pradesh.csv and configs/ac_format.json (current names). Regions follow common usage; boundaries between Braj, central Doab and Awadh, and where Fatehpur, Pratapgarh and Kaushambi sit, are judgement calls. Changing this file changes the simulator's regional swings; rebuild with Scripts/ml/build_extra.py.",
+  "regions": {
+    "Western UP": ["Saharanpur", "Muzaffarnagar", "Shamli", "Meerut", "Baghpat", "Ghaziabad", "Gautam Buddha Nagar", "Bulandshahr", "Hapur"],
+    "Rohilkhand": ["Bijnor", "Moradabad", "Sambhal", "Rampur", "Amroha", "Bareilly", "Pilibhit", "Budaun", "Shahjahanpur"],
+    "Braj and central Doab": ["Aligarh", "Hathras", "Mathura", "Agra", "Firozabad", "Mainpuri", "Etah", "Kasganj", "Etawah", "Auraiya", "Farrukhabad", "Kannauj", "Kanpur Nagar", "Kanpur Dehat"],
+    "Awadh": ["Lucknow", "Unnao", "Raebareli", "Hardoi", "Sitapur", "Lakhimpur Kheri", "Barabanki", "Amethi", "Sultanpur", "Ayodhya", "Ambedkar Nagar", "Bahraich", "Shrawasti", "Balrampur", "Gonda"],
+    "Bundelkhand": ["Jhansi", "Jalaun", "Lalitpur", "Hamirpur", "Mahoba", "Banda", "Chitrakoot"],
+    "Purvanchal": ["Prayagraj", "Kaushambi", "Pratapgarh", "Fatehpur", "Varanasi", "Chandauli", "Bhadohi", "Mirzapur", "Sonbhadra", "Jaunpur", "Ghazipur", "Ballia", "Mau", "Azamgarh", "Gorakhpur", "Maharajganj", "Deoria", "Kushinagar", "Basti", "Sant Kabir Nagar", "Siddharthnagar"]
+  }
+}

@@ -6,10 +6,15 @@ import { useEffect, useMemo, useState } from "react";
 import Header from "@/components/Header";
 import { get, inr } from "@/lib/upbi";
 import { ELABEL, ESHORT, FRONT, Legend, LineChart, RangeChart, RankBars, ShareBars, pct } from "@/components/insights";
+import { AlliancesTab, ExtraMethod, SeatExtraPanels, TurnoutTab, WatchTab, WhatIfTab } from "@/components/insights_extra";
 
 const TABS = [
   ["overview", "Overview"],
   ["ac", "Constituency"],
+  ["watch", "Battlegrounds"],
+  ["whatif", "What-if"],
+  ["turnout", "Turnout"],
+  ["alliances", "Alliances"],
   ["types", "Types"],
   ["surprises", "Unusual results"],
   ["method", "Method and checks"],
@@ -336,6 +341,7 @@ function AcTab({ boot, acNo, setAcNo }) {
           </ul>
         </div>
       </div>
+      <SeatExtraPanels ac={ac} boot={boot} />
     </>
   );
 }
@@ -613,8 +619,9 @@ export default function InsightsPage({ searchParams }) {
       <Header hideSelectors />
       <main className="wrap">
         <div className="warnbox">
-          <b>What this is.</b> A working slice of Phase 1: constituency results (assembly 2012, 2017, 2022 and Lok Sabha 2024 by assembly segment) turned into types,
-          unusual-result flags and an expected range. There are no booth-level results, no news and no prediction here. Types are automatic descriptions of vote history, not reasons people vote.
+          <b>What this is.</b> Constituency results (assembly 2012, 2017, 2022 and Lok Sabha 2024 by assembly segment) turned into types, unusual-result flags, expected ranges,
+          a seat watch list, a what-if calculator, expected turnout, alliance estimates and 2024 booth segments. There is no news, no poll and no forecast of who will win:
+          where a number looks ahead, it is a calculator or a ranking, and it says how well the same method worked in the past.
         </div>
         {boot && boot.meta.compliance_mode === "on" ? (
           <div className="warnbox"><b>Compliance Mode is on.</b> Forward-looking numbers are hidden.</div>
@@ -632,12 +639,23 @@ export default function InsightsPage({ searchParams }) {
           <OverviewTab boot={boot} />
         ) : tab === "ac" ? (
           <AcTab boot={boot} acNo={acNo} setAcNo={setAcNo} />
+        ) : tab === "watch" ? (
+          <WatchTab openAc={openAc} />
+        ) : tab === "whatif" ? (
+          <WhatIfTab openAc={openAc} />
+        ) : tab === "turnout" ? (
+          <TurnoutTab openAc={openAc} />
+        ) : tab === "alliances" ? (
+          <AlliancesTab />
         ) : tab === "types" ? (
           <TypesTab boot={boot} openAc={openAc} />
         ) : tab === "surprises" ? (
           <SurprisesTab boot={boot} openAc={openAc} />
         ) : (
-          <MethodTab boot={boot} />
+          <>
+            <MethodTab boot={boot} />
+            <ExtraMethod card={boot.card} />
+          </>
         )}
         <footer className="site">Data version {boot ? boot.meta.data_version : "…"} {"·"} public election results, constituency level.</footer>
       </main>

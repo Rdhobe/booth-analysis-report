@@ -13,6 +13,9 @@ Data folder, first match wins:
 
 Compliance Mode: when ``COMPLIANCE_MODE`` is on / 1 / true / yes, the forward-looking
 "expected" range is removed from every AC response, so the switch holds even if a client ignores it.
+
+The additional models (seat watch list, expected turnout, alliance transfer, what-if simulator, booth segments) live in
+``insights_extra.py`` and are mounted on this router; their files come from ``Scripts/ml/build_extra.py``.
 """
 from __future__ import annotations
 
@@ -22,6 +25,11 @@ import os
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Query
+
+try:
+    from .insights_extra import build_router as _build_extra_router
+except ImportError:  # run as a script from server/
+    from insights_extra import build_router as _build_extra_router
 
 log = logging.getLogger("upbi.insights")
 
@@ -81,6 +89,7 @@ def insights_meta():
         "counts": {"acs": len(s["data"]["acs"]), "types": len(s["data"]["types"]), "flagged": flagged},
         "limits": card.get("limits", []),
         "scope": card.get("scope", ""),
+        "extra_available": _extra.extra_meta_available(),
     }
 
 
@@ -111,7 +120,9 @@ def insights_ac(ac: int):
     rec = _load()["by_ac"].get(ac)
     if rec is None:
         raise HTTPException(404, f"unknown constituency: {ac}")
-    return _public_ac(rec)
+    out = dict(_public_ac(rec))
+    out["extra"] = _extra.for_ac(ac)                       # watch score, expected turnout, booth availability (None when not built)
+    return out
 
 
 @router.get("/surprises")
@@ -128,5 +139,12 @@ def insights_surprises(min_strength: str = Query("moderate", pattern="^(moderate
 
 @router.get("/card")
 def insights_card():
-    """The model card: input hashes, checks, selection tables, backtests and limits."""
-    return _load()["card"]
+    """The model card: input hashes, checks, selection tables, backtests and limits (plus the additional models' card when built)."""
+    card = _load()["card"]
+    extra = _extra.extra_card()
+    return {**card, "extra_models": extra} if extra else card
+
+
+# The additional models share this prefix and the Compliance Mode switch.
+_extra = _build_extra_router(compliance_on, _data_dir)
+router.include_router(_extra)

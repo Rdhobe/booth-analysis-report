@@ -204,5 +204,76 @@
     },
     "electors17_source_scale": 0.979,
     "reconcile_note": "Booth votes are EVM only. Official totals include postal ballots (official higher) while booth sheets also count NOTA and tendered votes (booth higher), so a gap of a few percent either way is normal."
+  },
+  "extra": {
+    "note": "Settings for the additional seat-level models (Scripts/ml/models_extra.py, build_extra.py). Each model has a backtest and a promotion gate; a model that does not clear its gate is reported but not used.",
+    "regions_file": "configs/regions_up.json",
+    "watch": {
+      "note": "Seat watch score: a fixed rule (nothing fitted). A learned logistic regression is evaluated against it and reported.",
+      "mood_weight": 0.25,
+      "band_top_fractions": [
+        0.1,
+        0.25,
+        0.5
+      ],
+      "band_names": [
+        "Highest",
+        "High",
+        "Moderate",
+        "Lower"
+      ],
+      "eval_top_k": [
+        50,
+        100
+      ],
+      "logistic_C": 0.3,
+      "promotion_margin_pts": 5.0
+    },
+    "turnout": {
+      "note": "Expected turnout from other elections and seat facts, scored with out-of-fold predictions (5 folds, whole districts held out).",
+      "targets": [
+        "VS2022",
+        "LS2024"
+      ],
+      "ridge_alpha": 3.0,
+      "cv_folds": 5,
+      "promotion_margin_pts": 0.2,
+      "flag_z": -1.5
+    },
+    "alliance": {
+      "note": "Ecological regression of an alliance's vote share on the partners' earlier shares, by parliamentary seat; bootstrap intervals over seats.",
+      "bootstrap": 500,
+      "interval": 0.8,
+      "min_seats": 8
+    },
+    "simulator": {
+      "note": "What-if seat simulator. Seats are led by the front with the highest share after the chosen swing; no random noise (hindcasts show noise makes seat counts worse).",
+      "base": "VS2022",
+      "toss_up_pp": 5.0,
+      "margin_bands_pp": [
+        3,
+        6,
+        10,
+        15
+      ],
+      "hindcast_pairs": [
+        [
+          "VS2017",
+          "VS2022"
+        ],
+        [
+          "VS2012",
+          "VS2017"
+        ]
+      ]
+    },
+    "booths": {
+      "note": "Booth segments from the 2024 Form 20 workbooks whose candidate columns all equal the official totals.",
+      "dir": "data/2024/converted",
+      "strong_pp": 25.0,
+      "lean_pp": 10.0,
+      "min_votes": 50,
+      "fronts_election": "LS2024"
+    }
   }
 }
