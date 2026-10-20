@@ -10,3 +10,5 @@ data/processed/
 # 94 MB generated booth workbook (Scripts/report/build_state_report.py); rebuilt, not committed
 output/up_booth_report.xlsx
 output/servedb.sqlite-*
+# loose images in the top folder are scratch output (old ones are in Shakkti_Form20_Extraction/scratch_archive)
+/*.png
