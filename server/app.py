@@ -9,6 +9,7 @@ Health: GET /api/meta
 """
 from __future__ import annotations
 
+import json
 import logging
 import os
 import sqlite3
@@ -145,9 +146,96 @@ def valid_cols() -> set[str]:
     return _VALID_COLS
 
 
+# --- Party-selectable booth view -------------------------------------------------------------------------------------
+# The booth dashboard used to be the BJP's view only. `party` (default BJP) now picks whose side the shares, opponent,
+# differences and zones are shown from. They come from the `booth_party` table (Scripts/serve/booth_party.py); a store
+# built before that table existed still serves the BJP from the original workbook columns and refuses other parties.
+PARTY_DEFAULT = "BJP"
+# booth_row columns that depend on the viewing party; every other booth_row column is party-neutral
+PARTY_COLS = ("zone", "avg_diff", "latest_diff", "party_b",
+              "a2017", "b2017", "d2017", "a2019", "b2019", "d2019",
+              "a2022", "b2022", "d2022", "a2024", "b2024", "d2024")
+# the opponent actually used in each election (booth_party only): the reference opponent where it stood, else the strongest other party
+OPP_COLS = ("opp2017", "opp2019", "opp2022", "opp2024")
+_STORE_FLAGS: dict = {}
+PARTY_RULE_TEXT = (
+    "Booth views are seen from one party's side (the party picker). For a "
+    "booth, the share is the party's votes divided by votes polled, and the "
+    "comparison party is the strongest other party in that seat (from the "
+    "2022 assembly votes; the latest other election if 2022 has no data). "
+    "In an election where that party did not stand (an ally took the seat) "
+    "the strongest other party in that election is used instead. "
+    "The difference is the party's share minus the comparison party's share. Zones: "
+    "Safe = average difference above +10 points and latest above 0; "
+    "Difficult = average below -10 and latest below 0; Favorable = both "
+    "above 0; Battlefield = the rest; Data Not sufficient = fewer than two "
+    "elections with a difference. A party counts in a seat and election only "
+    "if it stood there (at least 1% of the seat's votes); where it did not, "
+    "nothing is shown (not 0%).")
+
+
+def party_table(con: sqlite3.Connection) -> bool:
+    """True when the store has the party-selectable booth view."""
+    if "party_table" not in _STORE_FLAGS:
+        _STORE_FLAGS["party_table"] = con.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' "
+            "AND name='booth_party'").fetchone() is not None
+    return _STORE_FLAGS["party_table"]
+
+
+def party_options(con: sqlite3.Connection) -> list:
+    """Parties the booth views can be seen from (store meta), else just the default."""
+    if "parties" not in _STORE_FLAGS:
+        opts = [PARTY_DEFAULT]
+        raw = meta_get(con, "parties", "") if party_table(con) else ""
+        if raw:
+            opts = [p["party"] for p in json.loads(raw)]
+        _STORE_FLAGS["parties"] = opts
+    return _STORE_FLAGS["parties"]
+
+
+def resolve_party(con: sqlite3.Connection, party: str) -> str:
+    p = (party or PARTY_DEFAULT).strip().upper()
+    opts = party_options(con)
+    if p not in opts:
+        hint = "" if party_table(con) else (
+            " (this store has no party view yet: run "
+            "Scripts/serve/add_booth_party.py)")
+        raise HTTPException(400, f"party must be one of {opts}{hint}")
+    return p
+
+
+def party_sql(con: sqlite3.Connection, party: str):
+    """(join SQL, join args, col) to read the party-dependent booth columns of booth_row `r` for `party`.
+
+    col(name) is the SQL expression for that column. Booths the party never stood in have no booth_party row and
+    read as 'Data Not sufficient' with empty shares."""
+    if party_table(con):
+        def col(c):
+            return ("COALESCE(p.zone, 'Data Not sufficient')"
+                    if c == "zone" else f"p.{c}")
+        return ("LEFT JOIN booth_party p ON p.party = ? AND p.ac = r.ac "
+                "AND p.ps = r.ps", [party], col)
+    return "", [], (lambda c: f"r.{c}")
+
+
+def party_scan(con: sqlite3.Connection, party: str):
+    """Index-friendly source for whole-state rollups of one party: (table SQL, WHERE prefix, args, col, ac, ps).
+
+    Reads booth_party directly (every booth has a row for each listed party); an old store reads booth_row."""
+    if party_table(con):
+        return ("booth_party p", "p.party = ? AND ", [party],
+                (lambda c: f"p.{c}"), "p.ac", "p.ps")
+    return ("booth_row r", "", [], (lambda c: f"r.{c}"), "r.ac", "r.ps")
+
+
+def party_votes(roll, party: str) -> dict:
+    """{ac: votes} for one party from an election rollup (per_ac keyed by (ac, party code))."""
+    return {a: v for (a, n), v in roll[0].items() if n == party}
+
+
 @app.get("/api/meta")
 def api_meta():
-    import json
     if "meta" in _CACHE:
         return _CACHE["meta"]
     con = db()
@@ -170,6 +258,16 @@ def api_meta():
                                                  "[]")),
                 "demo_cols": json.loads(meta_get(con, "demo_cols",
                                                  "[]")),
+                "party_view": party_table(con),
+                "default_party": PARTY_DEFAULT,
+                "parties": party_options(con),
+                "party_coverage": json.loads(
+                    meta_get(con, "party_coverage", "{}")),
+                # seats left out per election: unreadable party labels
+                "label_flags": {
+                    e: len(v) for e, v in json.loads(
+                        meta_get(con, "label_flags", "{}")).items()},
+                "zone_rule": json.loads(meta_get(con, "zone_rule", "{}")),
                 "compliance_mode": os.environ.get(
                     "COMPLIANCE_MODE", "off")}
         _CACHE["meta"] = out
@@ -209,73 +307,91 @@ def api_booths(
         ac: int | None = None,
         zone: str = "",
         q: str = "",
-        party: str = "",
+        opponent: str = "",
+        party: str = PARTY_DEFAULT,
         sort: str = "ps",
         order: str = "asc",
         page: int = Query(1, ge=1),
         page_size: int = Query(PAGE_DEFAULT, ge=1, le=PAGE_MAX)):
-    """Booth grid. Always scoped: requires ac or q (never full-table)."""
+    """Booth grid seen from `party`'s side (shares, opponent, differences, zone). Always scoped: requires ac or q
+    (never full-table). `opponent` keeps only booths where that party is the strongest opponent."""
     if ac is None and not q.strip():
         raise HTTPException(400, "scope required: ?ac=<no> or ?q=<text>")
     col = sort if sort in valid_cols() else SORT_ALIASES.get(sort, "ps")
     if col not in valid_cols():
         col = "ps"
     direction = "DESC" if order.lower() == "desc" else "ASC"
-    where, args = ["1=1"], []
-    if ac is not None:
-        where.append("r.ac = ?")
-        args.append(ac)
-    if zone:
-        where.append("r.zone = ?")
-        args.append(zone)
-    if party:
-        where.append("r.party_b = ?")
-        args.append(party.upper())
-    join = ""
-    if q.strip():
-        join = ("JOIN (SELECT rowid FROM booth_fts "
-                "WHERE booth_fts MATCH ?) f ON f.rowid = r.rowid")
-        args.append(q.strip() + "*")
     con = db()
     try:
+        party = resolve_party(con, party)
+        pjoin, pargs, pcol = party_sql(con, party)
+        # placeholders are bound in the order they appear in the SQL text:
+        # FROM ... [search join] [party join] WHERE ...
+        join, args = "", []
+        if q.strip():
+            join = ("JOIN (SELECT rowid FROM booth_fts "
+                    "WHERE booth_fts MATCH ?) f ON f.rowid = r.rowid ")
+            args.append(q.strip() + "*")
+        join += pjoin
+        args += pargs
+        where = ["1=1"]
+        if ac is not None:
+            where.append("r.ac = ?")
+            args.append(ac)
+        if zone:
+            where.append(f"{pcol('zone')} = ?")
+            args.append(zone)
+        if opponent:
+            where.append(f"{pcol('party_b')} = ?")
+            args.append(opponent.upper())
         # Religion-wise columns live in booth_row but outside ROW_COLS -
         # include them so the group view and tooltips have values.
-        base_cols = {c.strip() for c in ROW_COLS.split(",")}
-        extra = sorted(valid_cols() - base_cols)
-        sel = ROW_COLS + "".join(f', r."{c}"' for c in extra)
+        base_cols = [c.strip() for c in ROW_COLS.split(",")]
+        extra = sorted(valid_cols() - set(base_cols))
+        sel = ", ".join(
+            f"{pcol(c)} AS {c}" if c in PARTY_COLS else f"r.{c}"
+            for c in base_cols) + "".join(f', r."{c}"' for c in extra)
+        if party_table(con):
+            sel += "".join(f", p.{c} AS {c}" for c in OPP_COLS)
         base = f"FROM booth_row r {join} WHERE {' AND '.join(where)}"
         total = con.execute(f"SELECT COUNT(*) c {base}", args
                             ).fetchone()["c"]
         # NULL/empty serials sort last for ps; numeric-aware via CAST
-        order_by = (f"CAST(r.ps AS INTEGER) {direction}, r.ps {direction}"
-                    if col == "ps" else f'r."{col}" {direction}')
+        if col == "ps":
+            order_by = f"CAST(r.ps AS INTEGER) {direction}, r.ps {direction}"
+        elif col in PARTY_COLS:
+            order_by = f"{pcol(col)} {direction}"
+        else:
+            order_by = f'r."{col}" {direction}'
         cur = con.execute(
             f"SELECT {sel} {base} ORDER BY {order_by} "
             f"LIMIT ? OFFSET ?", args + [page_size, (page - 1)
                                          * page_size])
-        rows = []
-        for r in cur:
-            d = dict(r)
-            rows.append(d)
+        rows = [dict(r) for r in cur]
         return {"total": total, "page": page, "page_size": page_size,
-                "rows": rows, "demo_cols": extra}
+                "party": party, "rows": rows, "demo_cols": extra}
     finally:
         con.close()
 
 
 @app.get("/api/booth/{ac}/{ps}")
-def api_booth(ac: int, ps: str):
+def api_booth(ac: int, ps: str, party: str = PARTY_DEFAULT):
     con = db()
     try:
+        party = resolve_party(con, party)
+        pjoin, pargs, pcol = party_sql(con, party)
         demo_names = [c[1] for c in
                       con.execute("PRAGMA table_info(booth_row)")]
-        extra = [c for c in demo_names
-                 if c not in set(ROW_COLS.replace(" ", "").split(","))]
-        r = con.execute(f"SELECT {ROW_COLS}"
-                        + (", " + ", ".join(f'"{c}"' for c in extra)
-                           if extra else "")
-                        + " FROM booth_row WHERE ac=? AND ps=?",
-                        (ac, ps)).fetchone()
+        base_cols = [c.strip() for c in ROW_COLS.split(",")]
+        extra = [c for c in demo_names if c not in set(base_cols)]
+        sel = ", ".join(
+            f"{pcol(c)} AS {c}" if c in PARTY_COLS else f"r.{c}"
+            for c in base_cols) + "".join(f', r."{c}"' for c in extra)
+        if party_table(con):
+            sel += "".join(f", p.{c} AS {c}" for c in OPP_COLS)
+        r = con.execute(f"SELECT {sel} FROM booth_row r {pjoin} "
+                        "WHERE r.ac=? AND r.ps=?",
+                        pargs + [ac, ps]).fetchone()
         if not r:
             raise HTTPException(404, "booth not found")
         elec = [dict(x) for x in con.execute(
@@ -287,7 +403,8 @@ def api_booth(ac: int, ps: str):
                 "SELECT candidate, party, votes FROM vote "
                 "WHERE booth_uid=? ORDER BY votes DESC LIMIT 15",
                 (e["booth_uid"],))]
-        return {"row": dict(r), "elections": elec, "votes": votes}
+        return {"party": party, "row": dict(r), "elections": elec,
+                "votes": votes}
     finally:
         con.close()
 
@@ -329,6 +446,19 @@ MIN_VOTES = 2000
 # One heavy join-scan per election, then every overview pair composes
 # from these in ms. Warmed at startup (see lifespan).
 _ROLL: dict = {}
+# Seats whose party labels are not usable in an election, per election: more than BAD_LABEL_SHARE of the seat's
+# votes sit under IND, blank or unmapped labels (in the booth sheets that is a party column that failed to read:
+# the winner's votes end up under "IND"). Such a seat has no winner and no party share; it is reported, not guessed.
+_BAD: dict = {}
+BAD_LABELS = ("", "IND", "UNMAPPED")
+BAD_LABEL_SHARE = 0.25
+# a party stood in a seat only if it holds at least this share of the seat's votes (a few stray votes under a party's
+# label are mis-read rows, not a candidate); same rule as Scripts/serve/booth_party.py
+STOOD_SHARE = 0.01
+
+
+def _stood(votes, total) -> bool:
+    return bool(total) and votes > 0 and votes / total >= STOOD_SHARE
 
 
 def _election_rollup(e):
@@ -348,10 +478,13 @@ def _election_rollup(e):
                 "JOIN booth_election b ON v.booth_uid = b.booth_uid "
                 "WHERE b.election=? GROUP BY b.ac, v.party", (e,))]
             nota = 0
-        per_ac, labels, ac_tot = {}, {}, {}
+        per_ac, labels, ac_tot, bad_votes = {}, {}, {}, {}
         for r in rows:
             ac_tot[r["ac"]] = ac_tot.get(r["ac"], 0) + (r["v"] or 0)
             n = _norm_party(r["party"])
+            if n in BAD_LABELS:
+                bad_votes[r["ac"]] = (bad_votes.get(r["ac"], 0)
+                                      + (r["v"] or 0))
             if not n or n == "NOTA":
                 continue  # counted in totals, never a winner/label
             key = (r["ac"], n)
@@ -361,14 +494,17 @@ def _election_rollup(e):
                 labels[n] = [lbl, r["v"] or 0]
             elif (r["v"] or 0) > labels[n][1]:
                 labels[n] = [lbl, r["v"] or 0]
+        bad = {a for a, bv in bad_votes.items()
+               if ac_tot.get(a) and bv / ac_tot[a] >= BAD_LABEL_SHARE}
         ac_bjp, win = {}, {}
         for (ac, n), v in per_ac.items():
             if n == "BJP":
                 ac_bjp[ac] = ac_bjp.get(ac, 0) + v
-            if ac_tot.get(ac, 0) >= MIN_VOTES and (
+            if ac_tot.get(ac, 0) >= MIN_VOTES and ac not in bad and (
                     ac not in win or v > win[ac][1]):
                 win[ac] = (n, v)
         out = (per_ac, ac_tot, ac_bjp, win, labels, nota)
+        _BAD[e] = bad
         _ROLL[e] = out
         return out
     finally:
@@ -376,29 +512,46 @@ def _election_rollup(e):
 
 
 @app.get("/api/overview")
-def api_overview(election: str = "LS2024", vs: str = "VS2022"):
-    """Homepage rollup for the selected election vs a comparison one.
+def api_overview(election: str = "LS2024", vs: str = "VS2022",
+                 party: str = PARTY_DEFAULT):
+    """Homepage rollup for the selected election vs a comparison one,
+    seen from `party`'s side.
 
     Seats = per-AC plurality winner (NOTA never wins; ACs with no
     usable votes are reported as gaps, not seats). VS years use booth
     sums; LS2024 uses official segment totals. Shares/zone/best-worst
-    derive from the same rollups - see server/DASHBOARD_LOGIC.md."""
+    derive from the same rollups - see server/DASHBOARD_LOGIC.md. The
+    seat table lists every party; the share, zones, best/worst and top
+    booths are the chosen party's."""
     elecs = ("VS2017", "LS2019", "VS2022", "LS2024")
     if election not in elecs or vs not in elecs:
         raise HTTPException(400, "election/vs must be one of %s"
                             % (elecs,))
-    ck = ("overview", election, vs)
+    con = db()
+    try:
+        party = resolve_party(con, party)
+    finally:
+        con.close()
+    ck = ("overview", election, vs, party)
     if ck in _CACHE:
         return _CACHE[ck]
     con = db()
     try:
-        _, tot_e, bjp_e, win_e, labels, nota_e = _election_rollup(
-            election)
-        _, tot_v, bjp_v, _, _, _ = _election_rollup(vs)
-        tot_all_e = sum(tot_e.values()) + nota_e
-        tot_all_v = sum(tot_v.values())
-        bjp_all_e = sum(bjp_e.values())
-        bjp_all_v = sum(bjp_v.values())
+        pjoin, pargs, pcol = party_sql(con, party)
+        roll_e = _election_rollup(election)
+        _, tot_e, _bjp, win_e, labels, nota_e = roll_e
+        roll_v = _election_rollup(vs)
+        _, tot_v, _bjp_v, _, _, _ = roll_v
+        bjp_e = party_votes(roll_e, party)   # the chosen party's votes
+        bjp_v = party_votes(roll_v, party)   # (name kept from the BJP-only version)
+        # seats whose party labels are unreadable in an election are left
+        # out of every share (see _BAD)
+        bad_e, bad_v = _BAD.get(election, set()), _BAD.get(vs, set())
+        tot_all_e = sum(v for a, v in tot_e.items()
+                        if a not in bad_e) + nota_e
+        tot_all_v = sum(v for a, v in tot_v.items() if a not in bad_v)
+        bjp_all_e = sum(v for a, v in bjp_e.items() if a not in bad_e)
+        bjp_all_v = sum(v for a, v in bjp_v.items() if a not in bad_v)
 
         wins = {}
         for ac, (n, _) in win_e.items():
@@ -422,17 +575,24 @@ def api_overview(election: str = "LS2024", vs: str = "VS2022"):
                 return "Favorable"
             return "Battlefield"
 
+        tbl, pre, targs, tc, tac, tps = party_scan(con, party)
         ac_zone = {}
         for r in con.execute(
-                "SELECT ac, AVG(avg_diff) a, AVG(latest_diff) l, "
-                "COUNT(avg_diff) n FROM booth_row GROUP BY ac"):
+                f"SELECT {tac} ac, AVG({tc('avg_diff')}) a, "
+                f"AVG({tc('latest_diff')}) l, "
+                f"COUNT({tc('avg_diff')}) n "
+                f"FROM {tbl} WHERE {pre}1=1 GROUP BY {tac}", targs):
             ac_zone[r["ac"]] = _ac_zone(r["a"], r["l"], r["n"])
 
         zones = []
         for z in _PARTY_ORDER:
             members = [a for a, zz in ac_zone.items() if zz == z]
+            # best/least performing: only seats where the party stood
             shr = [(a, bjp_e.get(a, 0) / tot_e[a])
-                   for a in members if tot_e.get(a, 0) >= MIN_VOTES]
+                   for a in members
+                   if tot_e.get(a, 0) >= MIN_VOTES
+                   and _stood(bjp_e.get(a, 0), tot_e.get(a, 0))
+                   and a not in bad_e]
             shr.sort(key=lambda x: x[1])
             def acinfo(a):
                 nm = con.execute(
@@ -442,11 +602,13 @@ def api_overview(election: str = "LS2024", vs: str = "VS2022"):
                         "ac_name": nm["ac_name"] if nm else "",
                         "district": nm["district"] if nm else "",
                         "share": round(100.0 * bjp_e.get(a, 0)
-                                       / tot_e[a], 1) if tot_e.get(a)
-                        else None,
+                                       / tot_e[a], 1)
+                        if _stood(bjp_e.get(a, 0), tot_e.get(a, 0))
+                        and a not in bad_e else None,
                         "share_vs":
                         round(100.0 * bjp_v.get(a, 0) / tot_v[a], 1)
-                        if tot_v.get(a) else None}
+                        if _stood(bjp_v.get(a, 0), tot_v.get(a, 0))
+                        and a not in bad_v else None}
             zones.append({
                 "zone": z, "acs": len(members), "members": members,
                 "best": acinfo(shr[-1][0]) if shr else None,
@@ -458,15 +620,18 @@ def api_overview(election: str = "LS2024", vs: str = "VS2022"):
         yvs = {"VS2017": "a2017", "LS2019": "a2019",
                "VS2022": "a2022", "LS2024": "a2024"}[vs]
         booth_zones = []
+        zone_n = {r["zone"]: r["n"] for r in con.execute(
+            f"SELECT {tc('zone')} zone, COUNT(*) n FROM {tbl} "
+            f"WHERE {pre}1=1 GROUP BY {tc('zone')}", targs)}
         for z in _PARTY_ORDER:
-            n = con.execute("SELECT COUNT(*) c FROM booth_row "
-                            "WHERE zone=?", (z,)).fetchone()["c"]
+            n = zone_n.get(z, 0)
             top = None
             for r in con.execute(
-                    f'SELECT ac, ps, name, "{ycol}" s, "{yvs}" sv '
-                    f"FROM booth_row "
-                    f"WHERE zone=? AND \"{ycol}\" IS NOT NULL "
-                    f"ORDER BY \"{ycol}\" DESC LIMIT 12", (z,)):
+                    f"SELECT {tac} ac, {tps} ps, "
+                    f"{tc(ycol)} s, {tc(yvs)} sv "
+                    f"FROM {tbl} "
+                    f"WHERE {pre}{tc('zone')}=? AND {tc(ycol)} IS NOT NULL "
+                    f"ORDER BY {tc(ycol)} DESC LIMIT 12", targs + [z]):
                 hit = con.execute(
                     "SELECT ps_name FROM booth_election WHERE ac=? "
                     "AND ps=? AND election=? LIMIT 1",
@@ -481,9 +646,12 @@ def api_overview(election: str = "LS2024", vs: str = "VS2022"):
                         "SELECT 1 FROM booth_election WHERE ac=? "
                         "AND ps=? AND election=? LIMIT 1",
                         (r["ac"], r["ps"], vs)).fetchone()
+                    bn = con.execute(
+                        "SELECT name FROM booth_row WHERE ac=? AND ps=?",
+                        (r["ac"], r["ps"])).fetchone()
                     top = {"ac": r["ac"],
                            "ac_name": nm["ac_name"] if nm else "",
-                           "ps": r["ps"], "name": r["name"],
+                           "ps": r["ps"], "name": bn["name"] if bn else "",
                            "share": round(100.0 * (r["s"] or 0), 1),
                            "share_vs": round(100.0 * (r["sv"] or 0), 1)
                            if (r["sv"] is not None and vs_hit) else None}
@@ -529,10 +697,23 @@ def api_overview(election: str = "LS2024", vs: str = "VS2022"):
             notes.append("seats/shares counted in %d of 403 ACs "
                          "(booth conversion thin for %s)"
                          % (len(win_e), election))
+        if bad_e:
+            notes.append("%d seats are left out of %s: the party names in "
+                         "their booth sheets are unreadable (more than a "
+                         "quarter of the votes are labelled IND or blank)"
+                         % (len(bad_e), election))
         if election == "LS2024":
             notes.append("2024 seats are assembly-segment leads "
                          "(Lok Sabha), not seats won")
-        out = {"election": election, "vs": vs,
+        out = {"election": election, "vs": vs, "party": party,
+               # seats where the party had any votes: a party that did not
+               # stand is not a party that lost
+               "party_stood": sum(1 for a, v in bjp_e.items()
+                                  if _stood(v, tot_e.get(a, 0))
+                                  and a not in bad_e),
+               "party_stood_vs": sum(1 for a, v in bjp_v.items()
+                                     if _stood(v, tot_v.get(a, 0))
+                                     and a not in bad_v),
                "seats": seats, "seats_counted": len(win_e),
                "avg_share": round(100.0 * bjp_all_e / tot_all_e, 2)
                if tot_all_e else None,
@@ -540,9 +721,11 @@ def api_overview(election: str = "LS2024", vs: str = "VS2022"):
                if tot_all_v else None,
                "ac_shares": {
                    a: [(round(100.0 * bjp_e.get(a, 0) / tot_e[a], 1)
-                        if tot_e.get(a) else None),
+                        if _stood(bjp_e.get(a, 0), tot_e.get(a, 0))
+                        and a not in bad_e else None),
                        (round(100.0 * bjp_v.get(a, 0) / tot_v[a], 1)
-                        if tot_v.get(a) else None)]
+                        if _stood(bjp_v.get(a, 0), tot_v.get(a, 0))
+                        and a not in bad_v else None)]
                    for a in set(tot_e) | set(tot_v)},
                "ac_zones": zones, "ac_zone": ac_zone,
                "booth_zones": booth_zones,
@@ -585,11 +768,18 @@ def api_ac_religion(ac: int):
 
 
 @app.get("/api/trend")
-def api_trend():
-    """Statewide per-election rollup: BJP share + seats/leads +
-    turnout. One call replaces N overview fetches for trend charts."""
-    if "trend" in _CACHE:
-        return _CACHE["trend"]
+def api_trend(party: str = PARTY_DEFAULT):
+    """Statewide per-election rollup: the chosen party's share + seats/
+    leads + turnout. One call replaces N overview fetches for trend
+    charts."""
+    con = db()
+    try:
+        party = resolve_party(con, party)
+    finally:
+        con.close()
+    ck = ("trend", party)
+    if ck in _CACHE:
+        return _CACHE[ck]
     con = db()
     try:
         to = {}
@@ -602,10 +792,12 @@ def api_trend():
             "FROM seg2024_ac").fetchone()
         rows = []
         for e in ("VS2017", "LS2019", "VS2022", "LS2024"):
-            per_ac, ac_tot, ac_bjp, win, labels, nota = \
-                _election_rollup(e)
-            tot = sum(ac_tot.values())
-            bjp = sum(ac_bjp.values())
+            roll = _election_rollup(e)
+            per_ac, ac_tot, _ac_bjp, win, labels, nota = roll
+            bad = _BAD.get(e, set())      # unreadable party labels: left out
+            tot = sum(v for a, v in ac_tot.items() if a not in bad)
+            pv = sum(v for a, v in party_votes(roll, party).items()
+                     if a not in bad)
             wins = {}
             for ac, (n, _) in win.items():
                 wins[n] = wins.get(n, 0) + 1
@@ -618,8 +810,8 @@ def api_trend():
                 turnout = po / el if el else None
             rows.append({
                 "election": e,
-                "bjp_share": round(100.0 * bjp / tot, 2) if tot else None,
-                "bjp_seats": wins.get("BJP", 0),
+                "share": round(100.0 * pv / tot, 2) if tot else None,
+                "seats": wins.get(party, 0),
                 "seats_counted": len(win),
                 "seats_word": "leads" if e.startswith("LS") else "seats",
                 "turnout": round(100.0 * turnout, 2)
@@ -630,19 +822,25 @@ def api_trend():
                          "seats": s}
                         for n, s in sorted(wins.items(),
                                            key=lambda x: -x[1])[:6]]})
-        out = {"rows": rows}
-        _CACHE["trend"] = out
+        out = {"party": party, "rows": rows}
+        _CACHE[ck] = out
         return out
     finally:
         con.close()
 
 
 @app.get("/api/ac/{ac}/past")
-def api_ac_past(ac: int):
+def api_ac_past(ac: int, party: str = PARTY_DEFAULT):
     """Per-election result sheet: turnout, party shares, winner,
     runner-up, margins (votes + pp). LS2024 from official segment
-    totals; else converted-booth sums."""
-    ck = ("past", ac)
+    totals; else converted-booth sums. `party_votes`/`party_share` are
+    the chosen party's."""
+    con = db()
+    try:
+        party = resolve_party(con, party)
+    finally:
+        con.close()
+    ck = ("past", ac, party)
     if ck in _CACHE:
         return _CACHE[ck]
     con = db()
@@ -672,8 +870,9 @@ def api_ac_past(ac: int):
             for p in parties:
                 p["share"] = round(100.0 * p["votes"] / tot, 2) if tot \
                     else None
-            w = parties[0] if parties else None
-            r = parties[1] if len(parties) > 1 else None
+            unreadable = ac in _BAD.get(e, set())
+            w = parties[0] if parties and not unreadable else None
+            r = parties[1] if len(parties) > 1 and not unreadable else None
             if e == "LS2024" and seg:
                 polled = (seg["valid_sum"] or 0) + (seg["nota"] or 0)
                 t = {"electors": seg["electors"], "polled": polled,
@@ -689,10 +888,13 @@ def api_ac_past(ac: int):
             rows.append({
                 "election": e, "turnout": t,
                 "booths": nbooth.get(e, 0),
-                "bjp_votes": next((p["votes"] for p in parties
-                                   if p["party"] == "BJP"), 0),
-                "bjp_share": next((p["share"] for p in parties
-                                   if p["party"] == "BJP"), None),
+                "labels_unreadable": unreadable,
+                "party_votes": next((p["votes"] for p in parties
+                                     if p["party"] == party), 0)
+                if not unreadable else 0,
+                "party_share": next((p["share"] for p in parties
+                                     if p["party"] == party), None)
+                if not unreadable else None,
                 "winner": w["party"] if w else None,
                 "winner_votes": w["votes"] if w else None,
                 "runnerup": r["party"] if r else None,
@@ -701,8 +903,9 @@ def api_ac_past(ac: int):
                 "margin_pp": round(w["share"] - r["share"], 2)
                 if w and r and w["share"] is not None
                 and r["share"] is not None else None,
-                "parties": parties, "source": src})
-        out = {"rows": rows}
+                "parties": parties if not unreadable else [],
+                "source": src})
+        out = {"party": party, "rows": rows}
         _CACHE[ck] = out
         return out
     finally:
@@ -934,20 +1137,29 @@ def api_ac_votes(ac: int, election: str = "VS2017"):
 
 
 @app.get("/api/zones")
-def api_zones(district: str = ""):
-    ck = ("zones", district)
+def api_zones(district: str = "", party: str = PARTY_DEFAULT):
+    """Booth counts per zone, seen from `party`'s side."""
+    con = db()
+    try:
+        party = resolve_party(con, party)
+    finally:
+        con.close()
+    ck = ("zones", district, party)
     if ck in _CACHE:
         return _CACHE[ck]
     con = db()
     try:
+        pjoin, pargs, pcol = party_sql(con, party)
+        z = pcol("zone")
         if district:
             rows = con.execute(
-                "SELECT r.zone, COUNT(*) n FROM booth_row r "
-                "WHERE r.district=? GROUP BY r.zone", (district,))
+                f"SELECT {z} AS zone, COUNT(*) n FROM booth_row r {pjoin} "
+                f"WHERE r.district=? GROUP BY {z}", pargs + [district])
         else:
             rows = con.execute(
-                "SELECT zone, COUNT(*) n FROM booth_row GROUP BY zone")
-        out = {"zones": [dict(r) for r in rows]}
+                f"SELECT {z} AS zone, COUNT(*) n FROM booth_row r {pjoin} "
+                f"GROUP BY {z}", pargs)
+        out = {"party": party, "zones": [dict(r) for r in rows]}
         _CACHE[ck] = out
         return out
     finally:
@@ -977,6 +1189,7 @@ def api_methods():
     con = db()
     try:
         out = {"methods": meta_get(con, "methods"),
+               "party_rule": PARTY_RULE_TEXT,
                "zone_counts": json.loads(meta_get(con, "zone_counts",
                                                   "[]"))}
         _CACHE["methods"] = out

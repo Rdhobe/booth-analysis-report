@@ -15,8 +15,11 @@ Writes: output/servedb.sqlite (WAL, indexed, FTS search, pre-aggregated
 ac_summary). The FastAPI server reads this file read-only; the 272 MB
 fact CSV and 59 MB xlsx are never touched at serve time.
 
-Usage (heavy: ~5 min - run in an external terminal):
-  python Scripts/build_servedb.py [--db output/servedb.sqlite]
+Also builds `booth_party` (Scripts/serve/booth_party.py): each booth's share, strongest opponent, difference and zone seen from
+BJP, SP, BSP and INC, which the party picker in the booth dashboard reads.
+
+Usage (heavy: ~7 min - run in an external terminal, from the repo root):
+  python -m Scripts.serve.build_servedb [--db output/servedb.sqlite]
       [--districts Agra Saharanpur]   (pilot slice for testing)
 """
 from __future__ import annotations
@@ -34,7 +37,12 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger("servedb")
 
-ROOT = Path(__file__).parent.parent
+try:                                  # python -m Scripts.serve.build_servedb
+    from Scripts.serve import booth_party
+except ImportError:                   # python Scripts/serve/build_servedb.py
+    import booth_party
+
+ROOT = Path(__file__).resolve().parents[2]  # repo root (scripts live in Scripts/serve/)
 DATA = ROOT / "data"
 PROC = DATA / "processed"
 
@@ -458,11 +466,16 @@ CREATE INDEX idx_row_zone_a2022 ON booth_row(zone, a2022);
 CREATE INDEX idx_row_zone_a2024 ON booth_row(zone, a2024);
 ANALYZE;
 """)
+    # ---- party-selectable booth view (any party in booth_party.PARTIES, not only the BJP)
+    log.info("building booth_party ...")
+    bp_stats = booth_party.build_booth_party(con)
+    log.info("booth_party: %s", bp_stats["zones"])
     con.execute("PRAGMA synchronous=FULL;")
     con.commit()
     n = {t: cur.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
          for t in ("booth_row", "booth_election", "vote", "ac_summary",
-                   "ac_party", "coverage", "seg2024", "seg2024_ac")}
+                   "ac_party", "coverage", "seg2024", "seg2024_ac",
+                   "booth_party")}
     con.close()
     log.info("BUILD COMPLETE counts=%s total=%.0fs -> %s",
              n, time.time() - t_all, dbp)

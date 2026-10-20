@@ -11,6 +11,10 @@ Nothing here is an input to any pipeline.
 | `dashboard.html` | `Scripts/build_dashboard.py` | Self-contained analytics dashboard (no internet, no server — double-click to open): KPIs, schematic district map, SVG charts, Agra booth explorer, methods |
 | `ml/ac_insights.json` | `Scripts/ml/build_insights.py` | Per-AC types, look-alikes, surprise reading, expected range, history; statewide overview and district table |
 | `ml/model_card.json` | `Scripts/ml/build_insights.py` | Input file hashes, data checks, k selection, injected-anomaly test, error bands, learned-vs-baseline, limits |
+| `ml/extra_insights.json` | `Scripts/ml/build_extra.py` | Per seat: watch score, expected turnout and gap, booth availability; watch-score backtest; alliance estimates |
+| `ml/simulator_inputs.json` | `Scripts/ml/build_extra.py` | What-if simulator: 2022 shares per seat, regions, presets, hindcast evidence |
+| `ml/booth_segments.json` | `Scripts/ml/build_extra.py` | 2024 booth segments for seats whose Form 20 workbook matches the official totals |
+| `ml/extra_model_card.json` | `Scripts/ml/build_extra.py` | Settings, backtests and limits of the additional models |
 | `ml/ac_typology.joblib` | `Scripts/ml/build_insights.py` | Fitted scaler + PCA + k-means (a few KB) |
 | `ml/insights_demo.html` | `Scripts/ml/build_demo_page.py` | Single-file Insights UI (data inlined; double-click to open) |
 | `ml/features_ext_report.json` | `Scripts/ml/features_ext.py` | Coverage and checks for the extra AC features (turnout, 2019 fronts vs official seat totals, incumbency) |

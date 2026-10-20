@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { PartySwitch } from "@/components/PartyPicker";
+import { withParty } from "@/lib/upbi";
 
 // Neutral header: the product name in plain text only. No party, leader or organisation logos or images anywhere in the UI.
-export default function Header({ election, vs, onElection, onVs, hideSelectors = false }) {
+// On the booth pages it also carries the party switch (parties/party/onParty); the Insights pages do not pass them.
+export default function Header({ election, vs, onElection, onVs, hideSelectors = false, parties, party, onParty }) {
   return (
     <header>
       <div className="wrap head">
@@ -33,11 +36,12 @@ export default function Header({ election, vs, onElection, onVs, hideSelectors =
           </div>
         )}
       </div>
-      <div className="wrap">
+      <div className="wrap headrow">
         <nav className="mainnav">
           <Link href="/insights">Insights (all parties)</Link>
-          <Link href="/booths">Booth dashboard</Link>
+          <Link href={withParty("/booths", party)}>Booth dashboard</Link>
         </nav>
+        {parties ? <PartySwitch parties={parties} party={party} onParty={onParty} /> : null}
       </div>
     </header>
   );

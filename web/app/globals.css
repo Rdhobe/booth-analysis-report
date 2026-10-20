@@ -95,7 +95,7 @@ footer.site{color:var(--mut);font-size:12px;padding-bottom:24px}
 @keyframes pulse{50%{opacity:.6}}
 @media(max-width:900px){.kpirow{grid-template-columns:1fr}.duo{grid-template-columns:1fr}.greet{font-size:18px}.kcard .n{font-size:34px}}
 /* ---- Insights (Phase 1 models). Series colours validated for colour-blind separation (blue, orange, aqua). ---- */
-:root{--f-nda:#2a78d6;--f-opp:#eb6834;--f-bsp:#1baf7a;--f-oth:#8a8177;--f-nda-on:#fff;--f-opp-on:#0b0b0b;--f-bsp-on:#0b0b0b;--f-oth-on:#0b0b0b}
+:root{--f-nda:#2a78d6;--f-opp:#eb6834;--f-bsp:#1baf7a;--f-oth:#8a8177;--f-inc:#8e6bbf;--f-nda-on:#fff;--f-opp-on:#0b0b0b;--f-bsp-on:#0b0b0b;--f-oth-on:#0b0b0b;--f-inc-on:#fff}
 .ins-grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:16px}
 .ins-grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:16px}
 .ins-grid2>.panel,.ins-grid3>.panel{margin-bottom:0;min-width:0}
@@ -146,3 +146,36 @@ footer.site{color:var(--mut);font-size:12px;padding-bottom:24px}
 .ins-narrow{max-width:760px}
 @media(max-width:900px){.ins-grid2,.ins-grid3,.ins-steps{grid-template-columns:minmax(0,1fr)}.ins-big{font-size:26px}}
 .ins-acq,.toolbar input#ins-acq{width:min(100%,360px)}
+
+/* ---- Insights part 2: watch list, what-if, turnout, alliances, booths ---- */
+.band-Highest{background:#2b3a4a;border-color:#2b3a4a;color:#fff}
+.band-High{background:#5b6b7c;border-color:#5b6b7c;color:#fff}
+.band-Moderate{background:#cfd6de;border-color:#b9c2cd;color:var(--ink)}
+.band-Lower{background:#fff}
+.ins-bandcards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:12px 0}
+.ins-bandcard{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:3px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.ins-bandcard:hover{border-color:var(--accent)}.ins-bandcard.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.ins-bandcard:focus-visible{outline:2px solid #6b87a8;outline-offset:2px}
+.ins-more{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 14px;font-weight:600;cursor:pointer;margin-top:8px}
+.ins-more:hover{border-color:var(--accent)}
+.ins-note{border-left:4px solid #6b87a8;background:#eef2f7;border-radius:6px;padding:10px 12px;font-size:13px;margin-top:10px}
+.ins-dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+.ins-slide{display:flex;align-items:center;gap:8px}.ins-slide.wide{flex-wrap:wrap;margin:6px 0}
+.ins-slide input[type=range]{flex:1;min-width:90px;accent-color:var(--accent)}
+.ins-slide output{width:44px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:13px}
+table.ins-sliders td{vertical-align:middle;min-width:130px}table.ins-sliders td:first-child{min-width:150px}
+.ins-seatrow{display:flex;align-items:center;gap:12px;margin:8px 0}
+.ins-seatlabel{width:150px;flex:none;font-size:13px;color:var(--mut)}
+.ins-seatbar{flex:1;display:flex;height:30px;border-radius:6px;overflow:hidden;background:#eceff3}
+.ins-seatbar span{display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px;min-width:2px}
+@media(max-width:900px){.ins-bandcards{grid-template-columns:repeat(2,minmax(0,1fr))}.ins-seatrow{flex-direction:column;align-items:stretch;gap:3px}.ins-seatlabel{width:auto}}
+.ins-grid1{margin-bottom:16px}.ins-grid1>.panel{margin-bottom:0}
+.ins-split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:16px;margin-bottom:16px}.ins-split>.panel{margin-bottom:0;min-width:0}
+@media(max-width:900px){.ins-split{grid-template-columns:minmax(0,1fr)}}
+.headrow{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.partysel{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:0 0 6px}
+.partysel button{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:3px 14px;cursor:pointer;font-weight:700;font-size:13px}
+.partysel button:hover{border-color:var(--accent)}
+.partysel button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.partysel.big{gap:10px;padding:6px 0 12px}.partysel.big button{padding:10px 26px;font-size:16px;border-radius:12px}
+.partychooser p{max-width:720px}

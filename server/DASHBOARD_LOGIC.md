@@ -129,3 +129,30 @@ This file is the contract the Next.js frontend reimplements.
   polled per booth, plus the underlying totals.
 - Means are over converted booths only — thin-coverage years
   describe the subset, not the AC.
+
+## 12. Party view (the party picker, 2026-10-20)
+
+Sections 1 to 5 and 7 to 9 were written for the BJP. Every number that was "the BJP's" is now **the chosen party's**: the endpoints take
+`party=` (BJP, SP, BSP or INC; default BJP for API callers, while the website has no default and asks). Everything else is unchanged.
+
+- **Source.** The `booth_party` table, built by `Scripts/serve/booth_party.py` from the store's own booth votes (`vote`, `booth_election`,
+  `ac_party`). A store without it still serves the BJP from the workbook columns (`booth_row`) and refuses other parties (400).
+- **Share and opponent.** Share = the party's votes ÷ booth polled. The reference opponent (B, the `party_b` column) = the strongest other party in the seat from
+  VS2022 seat votes, else the latest other election (marked `*`). A booth's difference per election = share(party) − share(opponent), where the opponent is B
+  if B stood in that election and otherwise the strongest other party in that seat and election (an ally took the seat: the SP in 2017 and 2019 in many seats).
+  The opponent actually used is returned per election as `opp2017` ... `opp2024`; the website names it in brackets when it differs from B.
+- **Zones** are the same cut-offs as §3/§4 (average > +0.10 and latest > 0 Safe; average < −0.10 and latest < 0 Difficult; both > 0 Favorable;
+  otherwise Battlefield; fewer than two differences Data Not sufficient), applied to the chosen party's differences. The seat-level zone is the
+  zone rule on the mean of its booths' average and latest differences.
+- **Where a party did not stand** (under 1% of the seat's votes in that election: a few stray votes under a party's label are mis-read rows, not a candidate) it has no share, no difference and no zone input: the API returns `null`
+  and the website shows "—". The workbook counted such a party as 0%, which made allies' seats look like heavy losses (changed 2026-10-20).
+  Booths with fewer than two differences also keep no average or latest difference (the workbook kept the single one).
+- **Overview** (`/api/overview`): the seat table lists every party and does not change with `party`; the average share, best and least performing
+  seats (only seats where the party stood), seat zones, booth zones, top booth per zone and `ac_shares` follow `party`. `party_stood` is the number
+  of seats where the party had any votes in the selected election.
+- **Trend** (`/api/trend`): `share` and `seats` are the chosen party's (they replace `bjp_share`/`bjp_seats`). **Past** (`/api/ac/{ac}/past`):
+  `party_votes`/`party_share` replace `bjp_votes`/`bjp_share`.
+- **Booth grid** (`/api/booths`): the party-dependent columns come from `booth_party`; the `opponent=` filter keeps booths whose strongest opponent is
+  that party (it used to be called `party=`, which now means the viewing party).
+- **Caveat that did not change:** a booth is followed across elections by its serial number. Where the serial numbering differs between elections
+  (checked in Agra) the per-booth differences and zones are not reliable; the seat-level figures are not affected by it.

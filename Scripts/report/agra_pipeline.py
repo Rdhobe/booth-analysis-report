@@ -26,7 +26,7 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger("agra")
 
-ROOT = Path(__file__).parent.parent
+ROOT = Path(__file__).resolve().parents[2]  # repo root (scripts live in Scripts/report/)
 DATA = ROOT / "data"
 ELECTIONS = [
     ("VS2017", "2017", "Agra"),
