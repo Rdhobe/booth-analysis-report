@@ -1,8 +1,10 @@
 # UPBI Insights: run it on your own computer
 
-This folder lets you run the UPBI Insights website locally and look at the three Phase 1 models. It contains the website (`web/`),
+This folder lets you run the UPBI Insights website locally and look at the eight models: the three Phase 1 models (constituency types, unusual-result score, expected range) and five additional ones (seat watch score, expected turnout, alliance transfer, what-if simulator, booth segments). It contains the website (`web/`),
 the API (`server/`), the model results already computed (`server/insights_data/`), and the code to rebuild the models (`Scripts/ml/`).
 The full report (models, outputs, pending work, detailed setup and troubleshooting) is the Word/PDF file that came with this folder.
+
+**Looking for the whole platform, including the booth dashboard with the party picker?** That needs the full repository and a booth database built from the raw sheets: see `SETUP_GUIDE.md` in the repository (or the PDF "UPBI Setup Guide" that came with this folder).
 
 Everything stays on your computer. The site is deliberately free of party, leader and company logos.
 
@@ -47,6 +49,9 @@ chmod +x run_api.sh run_web.sh
 - http://127.0.0.1:8000/api/insights/meta shows a block of JSON that starts with `{"data_version":...`.
 - http://localhost:3000/insights?tab=ac&ac=86 shows **Etmadpur** with the badge "Type 1: BJP-led stronghold".
 - http://localhost:3000/insights?tab=ac&ac=176 shows **Mohanlalganj** with a red "Strong outlier" badge.
+- http://localhost:3000/insights?tab=whatif shows the **What if the vote moved?** page. With every slider at zero, the first row of the table shows **273** BJP-led seats (the 2022 result). Move "Whole state, BJP-led (NDA)" to +5 and "Whole state, SP-led" to -5 and the BJP-led count rises to about 361.
+- http://localhost:3000/insights?tab=watch lists the seats most likely to change hands, in four bands.
+- http://localhost:3000/insights?tab=ac&ac=1 (Behat) shows a **Booths, Lok Sabha 2024** panel with 397 booths; seat 86 says booths are not available yet.
 - The Overview tab shows "9.2 Cr" votes polled, "403 seats" and "56.8%" turnout.
 
 ## Optional: rebuild the models and run the tests
@@ -54,12 +59,19 @@ chmod +x run_api.sh run_web.sh
 ```
 .venv\Scripts\python.exe -m pip install -r requirements_models.txt
 .venv\Scripts\python.exe Scripts\ml\build_insights.py            (about 25 seconds)
-.venv\Scripts\python.exe -m pytest server\test_insights.py Scripts\ml\test_ml.py -q      (expect: 24 passed)
+.venv\Scripts\python.exe -m pytest server\test_insights.py server\test_insights_extra.py Scripts\ml\test_ml.py Scripts\ml\test_extra.py -q      (expect: 49 passed, 6 skipped)
 ```
 
 This reproduces the model numbers (4 types, 20 flagged seats, ranges) from the two CSV files in `data/`. It writes to `output/ml/`.
 Do not use `--export-server` or `--quick` for the website's data: the rebuilt file has no turnout or data-cleaning sections
 (those need the booth-sheet files, which are not in this folder), and some server tests expect them.
+
+The five **additional models** cannot be rebuilt from this folder: `Scripts/ml/build_extra.py` needs `data/processed/ac_features_ext.csv`
+(candidate, Lok Sabha and turnout features) and, for the booth segments, the Form 20 workbooks in `data/2024/converted`. Neither is included.
+Their finished results are in `server/insights_data/` (`extra_insights.json`, `simulator_inputs.json`, `booth_segments.json`, `extra_model_card.json`)
+and the website uses those. The tests that only need those results run; the 6 tests that rebuild from the source files are skipped on purpose.
+Other test files under `Scripts/ml/` (for example `test_features_ext.py`) need source data files that are not in this folder, so they are not part of this check.
+The draft district-to-region list used by the what-if page is `configs/regions_up.json` (it needs sign-off before any real use).
 
 ## If something goes wrong
 
@@ -70,6 +82,6 @@ Do not use `--export-server` or `--quick` for the website's data: the rebuilt fi
 | Script is blocked from running | Use the `powershell -ExecutionPolicy Bypass -File ...` form shown above |
 | Page says "API unreachable" | The API window is not running, or it uses a different port: `run_web.ps1 -ApiPort 8001` must match `run_api.ps1 -Port 8001` |
 | "Port already in use" | Close the other program, or use other ports: `run_api.ps1 -Port 8001` and `run_web.ps1 -Port 3001 -ApiPort 8001` |
-| "Booth dashboard" link shows "API unreachable ... store not found" | Expected. The booth database is not part of this folder; only the Insights pages work |
+| "Booth dashboard" link says the booth database is not available on this server | Expected. The booth database (1.1 GB, built from raw booth sheets) is not part of this folder; only the Insights pages work. In the full repository the booth dashboard has a party picker (BJP, BSP, INC, SP) and is built with `Scripts/report/build_state_report.py` then `Scripts/serve/build_servedb.py` |
 | `npm` warns that Next.js 14.2.5 has a security vulnerability | Known. It only matters if the site is put on the internet; keep it on localhost |
 | A joblib "wmic" warning while rebuilding | Harmless on Windows 11 |

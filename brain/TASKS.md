@@ -38,6 +38,11 @@ Legend: `[ ]` todo, `[~]` in progress, `[x]` done. Each task has acceptance crit
 - [ ] **T4.2** Residualization + EB shrinkage. *AC: small-booth flag rate not > large-booth flag rate by >2×.* — Agra done 2026-10-03 (w=n/(n+200) on min side; small under-flagged, gate passes).
 - [~] **T4.3** IsolationForest + robust-z ensemble + stability filter. *AC: seeded, deterministic.* — Agra partial: MAD robust-z only (no sklearn); deterministic ✓; IF pending. AC level done 2026-10-17 (`Scripts/ml/models.py`, seeded, repeatable).
 - [ ] **T4.4** Explanations table. *AC: top-3 contributing features per flag.* — Agra done 2026-10-03 (top-2 + benign checklist; `agra_anomaly.csv`).
+- [x] **T4.6** Seat watch score. *AC: beats margin-only by 5 pts of precision in the top 50, else ship the rule and say so.* — built 2026-10-19 (`models_extra.watch_*`): the learned model failed the gate, the fixed rule is used; bands separate 61% to 9% flip rate in 2022.
+- [x] **T4.7** Expected turnout. *AC: beats "same as last time plus the statewide change" by 0.2 pts with districts held out.* — ridge, 1.36 vs 1.61 (2022) and 1.80 vs 2.31 (LS 2024).
+- [x] **T4.8** Alliance transfer estimates with intervals. — 2019 and 2024, four estimates; wide intervals (17 to 62 seats).
+- [~] **T4.9** What-if simulator. *AC: true 2022 regional swing must land inside the shown range.* — built; hindcast calls 76% of seats right and noise made counts worse, so no probabilities are shown; the six-region list is a DRAFT needing sign-off.
+- [~] **T4.10** Booth segments (2024). — rules on 142 verified seats (56,701 booths); trends wait for the booth crosswalk (T2.4) and the other constituencies for Form 20 conversion.
 - [~] **T4.5** Synthetic-anomaly validation. *AC: recall ≥0.8 at FPR ≤2% on injected shifts.* — AC level measured 2026-10-17: 11% / 21% / 39% found for 10 / 15 / 20 pt shifts at about 3-4% other flags (target not met).
 
 ## Phase 5: Sentiment
@@ -56,6 +61,9 @@ Legend: `[ ]` todo, `[~]` in progress, `[x]` done. Each task has acceptance crit
 - [ ] **T6.4** Anomaly tab + booth drill-down.
 - [ ] **T6.5** Methods & caveats tab; Compliance Mode.
 - [ ] **T6.6** Export (aggregates only) with audit log.
+- [~] **T6.8** Battlegrounds, What-if, Turnout and Alliances tabs, seat-page panels and booth view in the Next.js app. *AC: served from `/api/insights/*`; Compliance Mode honoured by the server.* — built 2026-10-19 (`web/components/insights_extra.jsx`, `server/insights_extra.py`); browser-tested (21 checks).
+- [x] **T6.9** Party-selectable booth dashboard. *AC: any listed party can be the point of view on `/booths`, `/zone`, `/ac`; no party preselected; the BJP view agrees with the old workbook where the rules are the same.* — built 2026-10-20 (`Scripts/serve/booth_party.py`, `server/app.py`, `web/components/PartyPicker.jsx`); BJP share agrees in all compared cells; browser-tested (21 checks), 26 unit tests, live check 33.
+- [~] **T2.7** Party labels in the booth sheets. *AC: no seat-election with more than 25% of votes under IND/blank.* — 73 / 24 / 22 / 9 seat-elections (2017/2019/2022/2024) are left out of the booth views today; fix the ingest (party column) rather than hide them.
 - [~] **T6.7** Insights tab in the Next.js app (types, unusual results, expected range). *AC: served from `/api/insights/*`; Compliance Mode honoured by the server.* — built 2026-10-17 (`web/app/insights`, `server/insights.py`); needs a real `npm run build` check.
 
 ## Phase 7: Hardening & release
