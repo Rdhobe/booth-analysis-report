@@ -24,7 +24,7 @@ UPBI (UP Booth Intelligence) has two parts. **Insights** puts all parties side b
 | **B. Everything from the repository** | Insights **and** the booth dashboard with the party picker, built from the raw booth sheets (169,460 booths) | The repository, Python, Node.js, Git; about 6 GB of disk; 8 GB of free memory for one step | About 30 to 45 minutes (12 to 25 of them an unattended build) | You want the whole platform |
 | **C. Booth dashboard on a small slice** | Everything in B, but the booth database holds only Agra's nine constituencies | Same as B | About 10 to 15 minutes | You want to try the booth dashboard quickly before the long build |
 
-> **Note:** Paths B and C use the repository, so the work has to be on GitHub first. If it is not there yet (ask whoever shared this guide), use path A.
+> **Note:** Paths B and C use the repository on GitHub (branch `form20-extraction`). If you cannot reach it, use path A.
 
 ## 2. Before you start
 
@@ -130,7 +130,7 @@ The booth dashboard reads one file, `output/servedb.sqlite`, that holds every bo
 
 ### 6.2 Path B: the full database
 
-> **Note:** **On a fresh copy of the repository, first run the four model commands in Section 9** (about 5 minutes in all). They also re-check which of the 2024 Form 20 workbooks in your copy match the official totals, so the database build keeps every workbook that passes. Without this step the build keeps only the workbooks that are byte-for-byte the ones checked on the author's computer.
+> **Info:** The build keeps the 2024 booth results of the 142 seats whose Form 20 workbook was verified against the official totals and has not changed since (Section 6.6). If you edit or replace any workbook in `data/2024/converted`, run the four model commands in Section 9 first (about 5 minutes): they re-check the workbooks in your copy.
 
 ```
 .\.venv\Scripts\python.exe -m Scripts.report.build_state_report --ac24-dir data/2024/converted --ac24-verified-json output/ml/booth_segments.json
@@ -181,7 +181,7 @@ It should show `"party_view": true`, `"parties": ["BJP", "SP", "BSP", "INC"]` an
 
 ### 6.6 About the 2024 booth results
 
-The 2024 booth figures come from the Form 20 workbooks (PDF-to-Excel conversions). Only seats whose workbook was **verified against the official totals** are used, and only if the workbook is **unchanged since it was verified** (each one is fingerprinted in `output/ml/booth_segments.json`). A workbook that has been replaced or edited is skipped, never trusted. The build prints a line such as `2024 booths: N verified workbooks kept, M skipped`; In our clean-copy test, only 23 of the 142 workbooks verified on the author's computer were still identical to the repository's versions, 76 had been changed since, and 43 were not in the repository at the time. That is why Section 6.2 starts with the model commands of Section 9: they re-check the workbooks **in your copy**, and the database build then keeps every one that passes (99 in our test). Until the verified Form 20 workbooks are committed, the 2024 booth columns cover fewer seats on a fresh copy than on the author's computer. Seats without 2024 booth results still show their official 2024 seat totals; their booth rows simply have no 2024 figure.
+The 2024 booth figures come from the Form 20 workbooks (PDF-to-Excel conversions). Only seats whose workbook was **verified against the official totals** are used, and only if the workbook is **unchanged since it was verified** (each one is fingerprinted in `output/ml/booth_segments.json`). A workbook that has been replaced or edited is skipped, never trusted. The build prints a line such as `2024 booths: N verified workbooks kept, M skipped`; on a copy made from the repository as it stands, it reads `142 verified workbooks kept, 0 skipped`: the repository holds exactly the 142 verified workbooks and each matches its recorded fingerprint. Seats without 2024 booth results still show their official 2024 seat totals; their booth rows simply have no 2024 figure.
 
 ## 7. Check that everything works
 
@@ -284,7 +284,7 @@ python -m venv .venv
 # window 1                                                              # window 2
 powershell -ExecutionPolicy Bypass -File .\run_api.ps1                  powershell -ExecutionPolicy Bypass -File .\run_web.ps1
 
-# on a fresh clone, first the four model commands of Section 9 (about 5 minutes); they re-check the 2024 workbooks in your copy
+# (only if you changed workbooks in data/2024/converted: first the four model commands of Section 9, about 5 minutes)
 
 # booth database: full (12 to 25 minutes) ...
 .\.venv\Scripts\python.exe -m Scripts.report.build_state_report --ac24-dir data/2024/converted --ac24-verified-json output/ml/booth_segments.json
