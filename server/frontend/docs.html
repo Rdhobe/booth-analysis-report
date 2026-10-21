@@ -38,6 +38,25 @@ const page = await (await fetch(`${API}/api/booths?ac=88&amp;sort=latest_diff&am
   { headers: KEY ? { "x-api-key": KEY } : {} })).json();</pre>
 <p class="small muted">CORS: <code>GET</code> from any origin is allowed by default. Tighten with <code>ALLOWED_ORIGINS="https://app.vercel.app"</code> on public deploys. All responses are gzip-encoded JSON (orjson). Every endpoint opens its own read-only SQLite connection — safe to call in parallel.</p></div>
 
+<div class="panel"><h2>Insights (Phase 1 models)</h2>
+<p class="small muted">Static model output from <code>Scripts/ml/build_insights.py</code>; no database needed. Shares are fractions 0&ndash;1. Fronts: <code>NDA</code> (BJP-led), <code>OPP</code> (SP + INC with allies), <code>BSP</code>, <code>OTH</code>.</p>
+<table class="data"><thead><tr><th>Endpoint</th><th>Returns</th></tr></thead><tbody>
+<tr><td><code>GET /api/insights/meta</code></td><td>data/model version, front labels, error bands, <code>compliance_mode</code>, counts, limits</td></tr>
+<tr><td><code>GET /api/insights/overview</code></td><td>statewide shares and seats per election, <code>turnout</code> per election with the number of constituencies behind it, top-ten lists, district table</td></tr>
+<tr><td><code>GET /api/insights/types</code></td><td>types with average shares, typical ACs, flagged count, member list</td></tr>
+<tr><td><code>GET /api/insights/acs</code></td><td>one light row per AC (<code>ac, name, district, type, clean, strength</code>)</td></tr>
+<tr><td><code>GET /api/insights/ac/{ac}</code></td><td>history (4 elections), <code>turnout_block</code> (turnout and electors for 2017, 2019, 2022, 2024; missing values are <code>null</code>), type, 5 look-alikes, <code>surprise</code> (flag, strength, z, drivers), <code>expected</code> (usual and wide range per front). <code>404</code> unknown AC</td></tr>
+<tr><td><code>GET /api/insights/surprises?min_strength=moderate|strong</code></td><td>flagged ACs, strongest first, with the rule used</td></tr>
+<tr><td><code>GET /api/insights/card</code></td><td>model card: input hashes, checks, <code>data_coverage</code> (booth sheets read, checks, unread files and why), selection tables, backtests, limits</td></tr>
+</tbody></table>
+<tr><td><code>GET /api/insights/watchlist?band=&amp;district=&amp;q=&amp;limit=&amp;offset=</code></td><td>seats ranked by the watch score with reasons, band counts and the backtest; <code>{"hidden":true}</code> in Compliance Mode</td></tr>
+<tr><td><code>GET /api/insights/turnout</code></td><td>actual against expected turnout (2022, 2024) per seat, model quality, women&rsquo;s share of voters</td></tr>
+<tr><td><code>GET /api/insights/alliances</code></td><td>estimated transfer of a partner&rsquo;s voters (2019 SP-BSP-RLD, 2024 SP-INC) with intervals</td></tr>
+<tr><td><code>GET /api/insights/simulator/setup</code>, <code>POST /api/insights/simulate</code></td><td>regions, presets, hindcast evidence; leader per seat for a swing by region and an optional alliance (hidden in Compliance Mode)</td></tr>
+<tr><td><code>GET /api/insights/booths</code>, <code>/booths/{ac}</code></td><td>2024 booth segments (Stronghold, Lean, Competitive) for seats whose Form 20 sheet matches the official totals</td></tr>
+<tr><td><code>GET /api/insights/extra/meta</code></td><td>which additional models are built, limits, region-list status</td></tr>
+<p class="small muted"><b>Compliance Mode:</b> with <code>COMPLIANCE_MODE=on</code> the <code>expected</code> field of <code>/ac/{ac}</code> is <code>null</code> and <code>expected_hidden</code> explains why. <code>503</code> means the data files are missing: run <code>python Scripts/ml/build_insights.py --export-server</code>. Same <code>x-api-key</code> rule as every other <code>/api/*</code> route.</p></div>
+
 <div class="panel"><h2>Auth</h2>
 <table class="data"><thead><tr><th>Rule</th><th>Detail</th></tr></thead><tbody>
 <tr><td>Header</td><td><code>x-api-key: &lt;API_KEY&gt;</code> on every <code>/api/*</code> call. Missing/wrong → <code>401 {"detail": "invalid or missing API key"}</code>.</td></tr>
@@ -65,11 +84,11 @@ const page = await (await fetch(`${API}/api/booths?ac=88&amp;sort=latest_diff&am
 <div class="endpoint"><h3>Third-party frontend integration map</h3>
 <p class="small muted">Which endpoint feeds which dashboard widget (for the live shakktii.in frontend).</p>
 <table class="data"><thead><tr><th>Widget</th><th>Endpoint</th></tr></thead><tbody>
-<tr><td>Year selector, seats / vote-share cards</td><td><code>/api/overview?election=&amp;vs=</code>, <code>/api/trend</code></td></tr>
+<tr><td>Year selector, seats / vote-share cards</td><td><code>/api/overview?election=&amp;vs=&amp;party=</code>, <code>/api/trend?party=</code></td></tr>
 <tr><td>District dropdown, Top Districts by Booth Count</td><td><code>/api/acs</code> (districts list; sum booths/electors per district client-side)</td></tr>
 <tr><td>Constituencies</td><td><code>/api/acs</code> + <code>/api/ac/{ac}/past</code></td></tr>
 <tr><td>Candidates</td><td><code>/api/ac/{ac}/votes?election=</code> + per-booth <code>/api/booth/{ac}/{ps}</code></td></tr>
-<tr><td>Booth Explorer search / table</td><td><code>/api/booths?ac=&amp;q=&amp;zone=&amp;sort=&amp;page=</code></td></tr>
+<tr><td>Booth Explorer search / table</td><td><code>/api/booths?ac=&amp;party=&amp;q=&amp;zone=&amp;opponent=&amp;sort=&amp;page=</code></td></tr>
 <tr><td>Strong / Medium / Weak bands</td><td>Winner-share bands over <code>/api/margins</code> rows (e.g. ≥50 / 40–50 / &lt;40)</td></tr>
 <tr><td>Winning Margin Distribution</td><td><code>/api/margins?election=</code> → <code>histogram</code></td></tr>
 <tr><td>Closest Contests</td><td><code>/api/margins?election=&amp;order=asc&amp;limit=</code></td></tr>
@@ -103,8 +122,8 @@ const page = await (await fetch(`${API}/api/booths?ac=88&amp;sort=latest_diff&am
   "districts": ["Agra", "Aligarh", …]
 }</pre></div>
 
-<div class="endpoint"><h3><code>GET /api/booths?ac=88&amp;zone=&amp;q=&amp;party=&amp;sort=ps&amp;order=asc&amp;page=1&amp;page_size=100</code></h3>
-<p class="small muted">Filters: <code>zone</code> (Safe/Favorable/Battlefield/Difficult/Data Not sufficient), <code>party</code> = Party-B code, <code>q</code> = FTS prefix. <code>demo_cols</code> lists the 36 religion columns present on every row.</p>
+<div class="endpoint"><h3><code>GET /api/booths?ac=88&amp;party=SP&amp;zone=&amp;q=&amp;opponent=&amp;sort=ps&amp;order=asc&amp;page=1&amp;page_size=100</code></h3>
+<p class="small muted"><code>party</code> (default <code>BJP</code>; one of <code>/api/meta</code> &rarr; <code>parties</code>) picks whose side the booth is seen from: <code>zone</code>, <code>avg_diff</code>, <code>latest_diff</code>, <code>party_b</code> (the strongest other party, called the opponent) and the <code>a/b/d</code> shares are that party's; the other columns do not change. Shares are <code>null</code> where the party did not stand. Filters: <code>zone</code> (Safe/Favorable/Battlefield/Difficult/Data Not sufficient), <code>opponent</code> = opponent code (this was <code>party</code> before the party picker), <code>q</code> = FTS prefix. An unknown party is a 400 that lists the choices. <code>demo_cols</code> lists the 36 religion columns present on every row.</p>
 <pre class="js">{
   "total": 422, "page": 1, "page_size": 100,
   "rows": [{"ac": 88, "ps": "1", "district": "Agra",
@@ -116,8 +135,8 @@ const page = await (await fetch(`${API}/api/booths?ac=88&amp;sort=latest_diff&am
   "demo_cols": ["electors_17", "missing_percent_17", …]
 }</pre></div>
 
-<div class="endpoint"><h3><code>GET /api/booth/88/1</code> — booth drill-down</h3>
-<p class="small muted">Full row incl. religion columns; per-election turnout rows; top-15 candidates per election the booth contested.</p>
+<div class="endpoint"><h3><code>GET /api/booth/88/1?party=SP</code> — booth drill-down</h3>
+<p class="small muted">Full row incl. religion columns (the party-dependent columns follow <code>party</code>); per-election turnout rows; top-15 candidates per election the booth contested.</p>
 <pre class="js">{
   "row": {"ac": 88, "ps": "1", "zone": "Safe", "party_b": "SP",
           "avg_diff": 0.605, "latest_diff": 0.5927, …},
@@ -140,8 +159,8 @@ const page = await (await fetch(`${API}/api/booths?ac=88&amp;sort=latest_diff&am
 }</pre>
 <p class="small muted">2024 fallback example (<code>?election=LS2024</code>, AC with no 2024 booth files): same shape, <code>"source": "official ECI segment totals (all-AC)"</code>, e.g. BJP 104342 / SP 62997 / BSP 21905 for AC 88, electors 371668, NOTA 1207.</p></div>
 
-<div class="endpoint"><h3><code>GET /api/overview?election=LS2024&amp;vs=VS2022</code> — homepage rollup</h3>
-<p class="small muted">Seats = per-AC plurality (NOTA excluded, MIN_VOTES 2000 gate, party aliases); VS years use booth sums, LS2024 uses official segment totals. Full formula contract in <code>server/DASHBOARD_LOGIC.md</code>.</p>
+<div class="endpoint"><h3><code>GET /api/overview?election=LS2024&amp;vs=VS2022&amp;party=SP</code> — homepage rollup</h3>
+<p class="small muted">The seat table lists every party; the average share, <code>ac_zones</code> (with best and least performing seats where the party stood), <code>booth_zones</code>, top booths and <code>ac_shares</code> are the chosen <code>party</code>'s, and <code>party_stood</code> says in how many seats it had votes. Seats = per-AC plurality (NOTA excluded, MIN_VOTES 2000 gate, party aliases); VS years use booth sums, LS2024 uses official segment totals. Full formula contract in <code>server/DASHBOARD_LOGIC.md</code>.</p>
 <pre class="js">{
   "election": "LS2024", "vs": "VS2022",
   "seats": [{"party": "SP", "seats": 183},
@@ -164,23 +183,24 @@ const page = await (await fetch(`${API}/api/booths?ac=88&amp;sort=latest_diff&am
   "notes": ["2024 seats are assembly-segment leads (Lok Sabha), not seats won"]
 }</pre></div>
 
-<div class="endpoint"><h3><code>GET /api/trend</code> — statewide per-election rollup</h3>
-<p class="small muted">One call for trend charts (share + seats + turnout). Same rollup code as <code>/overview</code>.</p>
-<pre class="js">{"rows": [
-  {"election": "VS2017", "bjp_share": 35.66, "bjp_seats": 292,
+<div class="endpoint"><h3><code>GET /api/trend?party=BJP</code> — statewide per-election rollup</h3>
+<p class="small muted">One call for trend charts (the chosen party's share and seats, plus turnout). Same rollup code as <code>/overview</code>. <code>share</code>/<code>seats</code> replace the old <code>bjp_share</code>/<code>bjp_seats</code>.</p>
+<pre class="js">{"party": "BJP", "rows": [
+  {"election": "VS2017", "share": 35.66, "seats": 292,
    "seats_counted": 400, "seats_word": "seats", "turnout": 61.22,
    "top": [{"party": "BJP", "seats": 292}, …]},
-  {"election": "LS2019", "bjp_share": 45.94, "bjp_seats": 200, …},
-  {"election": "VS2022", "bjp_share": 38.38, "bjp_seats": 127, …},
-  {"election": "LS2024", "bjp_share": 41.37, "bjp_seats": 162,
+  {"election": "LS2019", "share": 45.94, "seats": 200, …},
+  {"election": "VS2022", "share": 38.38, "seats": 127, …},
+  {"election": "LS2024", "share": 41.37, "seats": 162,
    "seats_word": "leads", "turnout": 56.78, …}]}</pre></div>
 
-<div class="endpoint"><h3><code>GET /api/ac/88/past</code> — per-election result sheet</h3>
-<pre class="js">{"rows": [{
+<div class="endpoint"><h3><code>GET /api/ac/88/past?party=BJP</code> — per-election result sheet</h3>
+<p class="small muted"><code>party_votes</code> and <code>party_share</code> are the chosen party's (they were <code>bjp_votes</code>/<code>bjp_share</code>).</p>
+<pre class="js">{"party": "BJP", "rows": [{
   "election": "LS2024", "booths": 0,
   "turnout": {"electors": 371668, "polled": 192313,
               "turnout": 51.7, "nota": 1207},
-  "bjp_votes": 104342, "bjp_share": 54.6,
+  "party_votes": 104342, "party_share": 54.6,
   "winner": "BJP", "winner_votes": 104342,
   "runnerup": "SP", "margin_votes": 41345, "margin_pp": 21.64,
   "parties": [{"party": "BJP", "votes": 104342, "share": 54.6}, …],
@@ -220,8 +240,8 @@ const page = await (await fetch(`${API}/api/booths?ac=88&amp;sort=latest_diff&am
            "polled": 217069, "f_per_1000m": 755.3}]}</pre>
 <p class="small muted">2024 rows carry booth sums where converted, else <code>null</code> sex splits (segment totals have no M/F).</p></div>
 
-<div class="endpoint"><h3><code>GET /api/zones?district=Agra</code> — zone histogram</h3>
-<pre class="js">{"zones": [{"zone": "Battlefield", "n": 832},
+<div class="endpoint"><h3><code>GET /api/zones?district=Agra&amp;party=BJP</code> — zone histogram</h3>
+<pre class="js">{"party": "BJP", "zones": [{"zone": "Battlefield", "n": 832},
            {"zone": "Data Not sufficient", "n": 109},
            {"zone": "Difficult", "n": 143},
            {"zone": "Favorable", "n": 144},

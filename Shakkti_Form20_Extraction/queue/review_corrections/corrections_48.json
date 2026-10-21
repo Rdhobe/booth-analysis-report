@@ -1,0 +1,47 @@
+{
+ "ac": 48,
+ "workbook": "C:/Users/Admin/AppData/Local/Temp/claude/d--booth-test/4170f5a7-db63-4b1e-98cd-684aaee50635/scratchpad/out_48b/48Eng_Form20.xlsx",
+ "edits": [
+  {
+   "page": 13,
+   "row": 19,
+   "values": [
+    606,
+    9,
+    104,
+    1,
+    1,
+    0,
+    0,
+    4,
+    725,
+    0,
+    6,
+    731,
+    0
+   ]
+  }
+ ],
+ "added": [
+  {
+   "page": 13,
+   "after": 22,
+   "values": [
+    92,
+    43,
+    303,
+    3,
+    3,
+    1,
+    1,
+    0,
+    446,
+    0,
+    0,
+    446,
+    0
+   ]
+  }
+ ],
+ "removed": []
+}

@@ -1,0 +1,404 @@
+﻿ac,state,file,detail
+1,VERIFIED,1Eng.pdf,397 rows; every column equals the official total
+2,CONVERTED_UNVERIFIED,2Eng.pdf,386 rows; MOHD KADIR: sheet 129 vs official 106 (+23); PRITI KASHYAP: sheet 133 vs official 121 (+12); YOGESH: sheet 170 vs official 136 (+34); OMBEER
+3,VERIFIED,3Eng.pdf,454 rows; every column equals the official total
+4,CONVERTED_UNVERIFIED,4Eng.pdf,380 rows; ROMA: sheet 130 vs official 128 (+2); RARKUNAR: sheet 150 vs official 148 (+2); SUAI: sheet 343 vs official 254 (+89); SANA: sheet 487 vs of
+5,VERIFIED,5Eng.pdf,365 rows; every column equals the official total
+6,VERIFIED,6Eng.pdf,331 rows; every column equals the official total
+7,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+8,VERIFIED,8Hin.pdf,324 rows; every column equals the official total
+9,FAILED,9Hin.pdf,LayoutNotRecognised: only 0 of 97 rows read as printed after 3 pages; not a layout the extractor supports
+10,CONVERTED_UNVERIFIED,10Hin.pdf,305 rows; नन्द किशोर: sheet 179 vs official 61 (+118); इकरा चौधरी: sheet 80823 vs official 80497 (+326); प्रदीप कुमार: sheet 91283 vs official 91727 (
+11,CONVERTED_UNVERIFIED,11Hin.pdf,321 rows; H: sheet 375 vs official 65 (+310); F: sheet 1249 vs official 71 (+1178); H: sheet 1416 vs official 152 (+1264); Candidate 7: sheet 1598 vs 
+12,FAILED,12Hin.pdf,LayoutNotRecognised: 0 table columns detected -> -7 candidates; not a layout the extractor supports
+13,FAILED,13Hin.pdf,LayoutNotRecognised: only 11 of 81 rows read as printed after 4 pages; not a layout the extractor supports
+14,FAILED,14Hin.pdf,LayoutNotRecognised: 3 table columns detected -> -4 candidates; not a layout the extractor supports
+15,CONVERTED_UNVERIFIED,15Hin.pdf,312 rows; F   E: sheet 72 vs official 68 (+4); L      CC: sheet 74 vs official 75 (-1); Candidate 10: sheet 224 vs official 126 (+98); EL: sheet 417 v
+16,CONVERTED_UNVERIFIED,16Hin.pdf,260 rows; | नस रामधन सिं: sheet 1126 vs official 351 (+775); | दीपक कुमार: sheet 1152 vs official 372 (+780); मौ0 शहजा: sheet 1393 vs official 386 (+1
+17,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+18,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+19,VERIFIED,19Hin.pdf,405 rows; every column equals the official total
+20,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+21,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+22,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+23,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+24,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+25,VERIFIED,25Hin.pdf,419 rows; every column equals the official total
+26,VERIFIED,26Hin.pdf,408 rows; every column equals the official total
+27,VERIFIED,27Hin.pdf,399 rows; every column equals the official total
+28,VERIFIED,28Hin.pdf,502 rows; every column equals the official total
+29,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+30,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+31,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+32,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+33,VERIFIED,33Hin.pdf,380 rows; every column equals the official total
+34,NO_PDF,,no PDF in data/2024/PDF
+35,NO_PDF,,no PDF in data/2024/PDF
+36,FAILED,36Eng.pdf,LayoutNotRecognised: only 0 of 74 rows read as printed after 3 pages; not a layout the extractor supports
+37,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+38,NO_PDF,,no PDF in data/2024/PDF
+39,VERIFIED,39HIn.pdf,390 rows; every column equals the official total
+40,VERIFIED,40Hin.pdf,378 rows; every column equals the official total
+41,VERIFIED,41Hin.pdf,331 rows; every column equals the official total
+42,VERIFIED,42Hin.pdf,389 rows; every column equals the official total
+43,VERIFIED,43Hin.pdf,372 rows; every column equals the official total
+44,VERIFIED,44Hin.pdf,373 rows; every column equals the official total
+45,CONVERTED_UNVERIFIED,45Hin.pdf,372 rows; NOTA: sheet 0 vs official 710
+46,CONVERTED_UNVERIFIED,46Eng.pdf,458 rows; DR HIMANSHU BHATNA: sheet 264 vs official 229 (+35); INA: sheet 303 vs official 256 (+47); ABID HUSAIN: sheet 531 vs official 423 (+108); HA
+47,CONVERTED_UNVERIFIED,47Eng.pdf,435 rows; PAR: sheet 140 vs official 141 (-1); DR HIMANSHU BHATNA: sheet 152 vs official 155 (-3); HAJI AFZAL: sheet 264 vs official 266 (-2); ABID HU
+48,CONVERTED_UNVERIFIED,48Eng.pdf,311 rows; DR HIMANSHU BHATNA: sheet 67 vs official 70 (-3); LIYAKA: sheet 92 vs official 101 (-9); BHUPENDRA PAL URF : sheet 112 vs official 119 (-7);
+49,VERIFIED,49Eng.pdf,488 rows; every column equals the official total
+50,CONVERTED_UNVERIFIED,50Hin.pdf,335 rows; | नर रूबी कश्यप: sheet 703 vs official 710 (-7); | रल सुखवीर सिंह: sheet 783 vs official 788 (-5); मुकेश कुमार शर्मा : sheet 959 vs official
+51,FAILED,51Hin.pdf,LayoutNotRecognised: only 16 of 111 rows read as printed after 4 pages; not a layout the extractor supports
+52,FAILED,52Eng.pdf,LayoutNotRecognised: only 0 of 63 rows read as printed after 3 pages; not a layout the extractor supports
+53,VERIFIED,53Hin.pdf,530 rows; every column equals the official total
+54,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+55,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+56,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+57,NEEDS_DECISION,57Hin.pdf,UNSUPPORTED_LAYOUT: Portrait sheet (a different Form 20 variant); the piloted files of this kind came out unusable. Needs a layout adapter i
+58,VERIFIED,58Hin.pdf,414 rows; every column equals the official total
+59,NEEDS_DECISION,59Hin.pdf,UNSUPPORTED_LAYOUT: Portrait sheet (a different Form 20 variant); the piloted files of this kind came out unusable. Needs a layout adapter i
+60,VERIFIED,60Hin.pdf,392 rows; every column equals the official total
+61,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+62,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+63,VERIFIED,63Eng.pdf,397 rows; every column equals the official total
+64,VERIFIED,64Hin.pdf,433 rows; every column equals the official total
+65,FAILED,65Eng.pdf,LayoutNotRecognised: 2 table columns detected -> -5 candidates; not a layout the extractor supports
+66,CONVERTED_UNVERIFIED,66Eng.pdf,400 rows; UR OF: sheet 1350 vs official 543 (+807); CAST IN FAVO: sheet 2973 vs official 795 (+2178); Candidate 6: sheet 11172 vs official 807 (+10365
+67,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+68,CONVERTED_UNVERIFIED,68Hin.pdf,416 rows; Candidate 6: sheet 510 vs official 522 (-12); Candidate 5: sheet 1117 vs official 841 (+276); Candidate 4: sheet 2777 vs official 937 (+1840
+69,CONVERTED_UNVERIFIED,69Hin.pdf,9 rows; Candidate 2: sheet 0 vs official 469 (-469); Candidate 17: sheet 0 vs official 695 (-695); Candidate 11: sheet 426 vs official 1093 (-667); 
+70,VERIFIED,70Hin.pdf,432 rows; every column equals the official total
+71,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+72,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+73,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+74,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+75,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+76,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+77,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+78,NO_PDF,,no PDF in data/2024/PDF
+79,NO_PDF,,no PDF in data/2024/PDF
+80,NO_PDF,,no PDF in data/2024/PDF
+81,CONVERTED_UNVERIFIED,81Hin (2).pdf,224 rows; EL: sheet 244 vs official 199 (+45); BER: sheet 254 vs official 208 (+46); OF: sheet 264 vs official 253 (+11); IE: sheet 298 vs official 28
+82,CONVERTED_UNVERIFIED,82Hin.pdf,33 rows; 3 53 ०: sheet 59 vs official 158 (-99); ह: sheet 67 vs official 174 (-107); १ न 522 न 0: sheet 68 vs official 179 (-111); ठि: sheet 73 vs of
+83,FAILED,83Hin (2).pdf,LayoutNotRecognised: only 1 of 45 rows read as printed after 5 pages; not a layout the extractor supports
+84,CONVERTED_UNVERIFIED,84Hin (3).pdf,244 rows; MM TE TT TT M: sheet 360 vs official 116 (+244); E: sheet 552 vs official 128 (+424); E I: sheet 696 vs official 137 (+559); E  MM: sheet 74
+85,CONVERTED_UNVERIFIED,85Hin (2).pdf,421 rows; हि: sheet 181 vs official 152 (+29); ति: sheet 228 vs official 186 (+42); हि: sheet 337 vs official 193 (+144); हि: sheet 382 vs official 24
+86,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+87,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+88,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+89,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+90,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+91,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+92,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+93,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+94,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+95,VERIFIED,95Hin (2).pdf,434 rows; every column equals the official total
+96,VERIFIED,96Hin.pdf,446 rows; every column equals the official total
+97,NO_PDF,,no PDF in data/2024/PDF
+98,CONVERTED_UNVERIFIED,98Hin.pdf,393 rows; NOTA: sheet 1033 vs official 1039
+99,VERIFIED,99Hin.pdf,369 rows; every column equals the official total
+100,NO_PDF,,no PDF in data/2024/PDF
+101,NO_PDF,,no PDF in data/2024/PDF
+102,NO_PDF,,no PDF in data/2024/PDF
+103,CONVERTED_UNVERIFIED,103Hin (2).pdf,"378 rows; | कलर | दिनेश: sheet 170 vs official 172 (-2); | कफ | विद्याप्रका: sheet 346 vs official 339 (+7); | रू, अमर सिंह: sheet 535 vs official 544"
+104,FAILED,104Hin.pdf,LayoutNotRecognised: only 0 of 40 rows read as printed after 3 pages; not a layout the extractor supports
+105,FAILED,105Hin.pdf,LayoutNotRecognised: only 0 of 57 rows read as printed after 3 pages; not a layout the extractor supports
+106,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+107,NO_PDF,,no PDF in data/2024/PDF
+108,NO_PDF,,no PDF in data/2024/PDF
+109,NO_PDF,,no PDF in data/2024/PDF
+110,NO_PDF,,no PDF in data/2024/PDF
+111,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+112,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+113,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+114,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+115,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+116,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+117,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+118,CONVERTED_UNVERIFIED,118Hin.pdf,390 rows; । हम दे डे: sheet 235 vs official 188 (+47); सदा मै शो शहु: sheet 239 vs official 198 (+41); हि: sheet 257 vs official 206 (+51); हा | <*: s
+119,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+120,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+121,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+122,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+123,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+124,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+125,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+126,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+127,FAILED,127Hin.pdf,LayoutNotRecognised: only 10 of 74 rows read as printed after 3 pages; not a layout the extractor supports
+128,FAILED,128Hin.pdf,LayoutNotRecognised: 5 table columns detected -> -1 candidates; not a layout the extractor supports
+129,FAILED,129Hin.pdf,LayoutNotRecognised: only 0 of 82 rows read as printed after 3 pages; not a layout the extractor supports
+130,FAILED,130Hin.pdf,LayoutNotRecognised: 1 table columns detected -> -5 candidates; not a layout the extractor supports
+131,FAILED,131Hin.pdf,LayoutNotRecognised: only 6 of 55 rows read as printed after 3 pages; not a layout the extractor supports
+132,FAILED,132Hin.pdf,LayoutNotRecognised: only 5 of 59 rows read as printed after 3 pages; not a layout the extractor supports
+133,FAILED,133Hin.pdf,LayoutNotRecognised: only 1 of 70 rows read as printed after 3 pages; not a layout the extractor supports
+134,VERIFIED,134Hin.pdf,439 rows; every column equals the official total
+135,CONVERTED_UNVERIFIED,135Hin.pdf,397 rows; प्रेमचंद्र हरिजन: sheet 127 vs official 126 (+1); धर्म पाल: sheet 137 vs official 136 (+1); प्रदीप कुमार: sheet 153 vs official 150 (+3); ज्
+136,CONVERTED_UNVERIFIED,136Hin.pdf,440 rows; समेशच्रवर्म ..... : sheet 987 vs official 209 (+778); मीना कश्यप: sheet 1061 vs official 212 (+849); शिव कुमार: sheet 1121 vs official 274 (
+137,VERIFIED,137Eng.pdf,split from 137Eng.pdf; every column equals the official total
+138,VERIFIED,137Eng.pdf,split from 137Eng.pdf; every column equals the official total
+139,VERIFIED,137Eng.pdf,split from 137Eng.pdf; every column equals the official total
+140,VERIFIED,137Eng.pdf,split from 137Eng.pdf; every column equals the official total
+141,VERIFIED,141Eng.pdf,split from 141Eng.pdf; every column equals the official total
+142,VERIFIED,137Eng.pdf,split from 137Eng.pdf; every column equals the official total
+143,VERIFIED,141Eng.pdf,split from 141Eng.pdf; every column equals the official total
+144,NO_PDF,,no PDF in data/2024/PDF
+145,NO_PDF,,no PDF in data/2024/PDF
+146,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+147,VERIFIED,141Eng.pdf,split from 141Eng.pdf; every column equals the official total
+148,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+149,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+150,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+151,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+152,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+153,CONVERTED_UNVERIFIED,153Hin.pdf,96 rows; Candidate 7: sheet 70 vs official 312 (-242); Candidate 6: sheet 93 vs official 315 (-222); Candidate 5: sheet 113 vs official 431 (-318); C
+154,VERIFIED,154Hin.pdf,467 rows; every column equals the official total
+155,NO_PDF,,no PDF in data/2024/PDF
+156,NO_PDF,,no PDF in data/2024/PDF
+157,CONVERTED_UNVERIFIED,157Hin.pdf,142 rows; प्गगगगगाभ है का व: sheet 94 vs official 262 (-168); का | प्ण्स्ल्ल्प्ण: sheet 104 vs official 311 (-207); वे. 5: sheet 115 vs official 331 (
+158,CONVERTED_UNVERIFIED,158Hin.pdf,"131 rows; | ग्यगाया: sheet 82 vs official 233 (-151); बा कि . सबक.: sheet 82 vs official 273 (-191); | ""कालडदद .: sheet 106 vs official 281 (-175); कि"
+159,CONVERTED_UNVERIFIED,159Hin.pdf,167 rows; पा आकर दामाद: sheet 85 vs official 280 (-195); ते: sheet 94 vs official 286 (-192); है बी: sheet 106 vs official 316 (-210); नाना: ड्थ्ि बक 
+160,CONVERTED_UNVERIFIED,160Hin.pdf,164 rows; कया ष्च्जि: sheet 117 vs official 282 (-165); बा | (|: sheet 140 vs official 312 (-172); त प्ज्य दा व: sheet 210 vs official 517 (-307); क्न
+161,CONVERTED_UNVERIFIED,161Hin.pdf,115 rows; कि बाका: sheet 93 vs official 239 (-146); ८9 व्यायाम: sheet 105 vs official 256 (-151); ण्ण्म्ति व ला: sheet 176 vs official 375 (-199); अलि
+162,FAILED,162Eng.pdf,LayoutNotRecognised: 9 table columns detected -> 2 candidates; not a layout the extractor supports
+163,FAILED,163Eng.pdf,LayoutNotRecognised: only 0 of 63 rows read as printed after 3 pages; not a layout the extractor supports
+164,FAILED,164Eng.pdf,LayoutNotRecognised: only 0 of 68 rows read as printed after 3 pages; not a layout the extractor supports
+165,FAILED,165Eng.pdf,LayoutNotRecognised: only 0 of 67 rows read as printed after 3 pages; not a layout the extractor supports
+166,FAILED,166Eng.pdf,LayoutNotRecognised: only 0 of 71 rows read as printed after 3 pages; not a layout the extractor supports
+167,FAILED,167Eng.pdf,LayoutNotRecognised: 5 table columns detected -> -2 candidates; not a layout the extractor supports
+168,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+169,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+170,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+171,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+172,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+173,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+174,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+175,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+176,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+177,CONVERTED_UNVERIFIED,177Eng.pdf,294 rows; MO MOBIN: sheet 370 vs official 420 (-50); HIND ROHITASH: sheet 749 vs official 828 (-79); SUDARSHAN RAM: sheet 782 vs official 901 (-119); 
+178,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+179,CONVERTED_UNVERIFIED,179Eng.pdf,284 rows; MO MOBIN: sheet 376 vs official 439 (-63); HIND ROHITASH: sheet 673 vs official 799 (-126); SUDARSHAN RAM: sheet 770 vs official 916 (-146);
+180,FAILED,180Eng.pdf,LayoutNotRecognised: only 0 of 107 rows read as printed after 3 pages; not a layout the extractor supports
+181,NO_PDF,,no PDF in data/2024/PDF
+182,CONVERTED_UNVERIFIED,182Eng.pdf,255 rows; HIND ROHITAS H: sheet 571 vs official 412 (+159); SUDARSH AN RAM: sheet 574 vs official 844 (-270); HORILAL: sheet 983 vs official 853 (+130
+183,NO_PDF,,no PDF in data/2024/PDF
+184,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+185,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+186,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+187,FAILED,187Eng.pdf,LayoutNotRecognised: only 0 of 72 rows read as printed after 3 pages; not a layout the extractor supports
+188,FAILED,188Eng.pdf,LayoutNotRecognised: only 0 of 72 rows read as printed after 3 pages; not a layout the extractor supports
+189,CONVERTED_UNVERIFIED,189Eng.pdf,364 rows; JAY PRAKASH: sheet 270 vs official 280 (-10); DR SHIV SHANKAR IN: sheet 423 vs official 434 (-11); GIRISH LAL: sheet 439 vs official 450 (-1
+190,CONVERTED_UNVERIFIED,109Eng.pdf,405 rows; JAY PRAKASH: sheet 243 vs official 247 (-4); DR SHIV SHANKAR IN: sheet 398 vs official 406 (-8); GIRISH  LAL: sheet 499 vs official 509 (-10
+191,NEEDS_DECISION,191Eng.pdf,UNSUPPORTED_LAYOUT: Portrait sheet (a different Form 20 variant); the piloted files of this kind came out unusable. Needs a layout adapter i
+192,CONVERTED_UNVERIFIED,192Eng.pdf,402 rows; JAY PRAKASH: sheet 355 vs official 282 (+73); DR SHIV  SHANKAR I: sheet 503 vs official 369 (+134); GIRISH LAL: sheet 572 vs official 618 (-
+193,FAILED,193Hin.pdf,LayoutNotRecognised: no table lines found on any page
+194,FAILED,194Hin.pdf,LayoutNotRecognised: -1 table columns detected -> -7 candidates; not a layout the extractor supports
+195,FAILED,195Hin.pdf,LayoutNotRecognised: -1 table columns detected -> -7 candidates; not a layout the extractor supports
+196,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+197,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+198,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+199,VERIFIED,199Hin.pdf,452 rows; every column equals the official total
+200,VERIFIED,200Hin.pdf,420 rows; every column equals the official total
+201,VERIFIED,201Hin.pdf,470 rows; every column equals the official total
+202,NO_PDF,,no PDF in data/2024/PDF
+203,NO_PDF,,no PDF in data/2024/PDF
+204,VERIFIED,204Hin.pdf,375 rows; every column equals the official total
+205,VERIFIED,205Hin.pdf,384 rows; every column equals the official total
+206,VERIFIED,206Hin.pdf,386 rows; every column equals the official total
+207,VERIFIED,207Hin.pdf,409 rows; every column equals the official total
+208,VERIFIED,208Hin.pdf,407 rows; every column equals the official total
+209,VERIFIED,209Hin.pdf,434 rows; every column equals the official total
+210,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+211,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+212,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+213,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+214,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+215,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+216,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+217,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+218,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+219,NO_PDF,,no PDF in data/2024/PDF
+220,NO_PDF,,no PDF in data/2024/PDF
+221,FAILED,221Eng.pdf,LayoutNotRecognised: only 0 of 42 rows read as printed after 3 pages; not a layout the extractor supports
+222,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+223,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+224,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+225,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+226,NO_PDF,,no PDF in data/2024/PDF
+227,NO_PDF,,no PDF in data/2024/PDF
+228,VERIFIED,228Eng.pdf,455 rows; every column equals the official total
+229,VERIFIED,229Eng.pdf,442 rows; every column equals the official total
+230,NO_PDF,,no PDF in data/2024/PDF
+231,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+232,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+233,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+234,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+235,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+236,NO_PDF,,no PDF in data/2024/PDF
+237,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+238,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+239,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+240,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+241,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+242,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+243,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+244,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+245,NO_PDF,,no PDF in data/2024/PDF
+246,NO_PDF,,no PDF in data/2024/PDF
+247,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+248,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+249,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+250,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+251,NO_PDF,,no PDF in data/2024/PDF
+252,NO_PDF,,no PDF in data/2024/PDF
+253,NO_PDF,,no PDF in data/2024/PDF
+254,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+255,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+256,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+257,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+258,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+259,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+260,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+261,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+262,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+263,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+264,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+265,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+266,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+267,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+268,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+269,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+270,VERIFIED,270Eng.pdf,458 rows; every column equals the official total
+271,VERIFIED,271Eng.pdf,392 rows; every column equals the official total
+272,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+273,VERIFIED,273Eng.pdf,414 rows; every column equals the official total
+274,VERIFIED,274Eng.pdf,410 rows; every column equals the official total
+275,VERIFIED,275Eng.pdf,400 rows; every column equals the official total
+276,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+277,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+278,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+279,FAILED,279Eng.pdf,LayoutNotRecognised: only 0 of 41 rows read as printed after 5 pages; not a layout the extractor supports
+280,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+281,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+282,CONVERTED_UNVERIFIED,282Eng.pdf,303 rows; P   T WI: sheet 288 vs official 334 (-46); P: sheet 323 vs official 379 (-56); EE  R ZZ: sheet 381 vs official 433 (-52); I   P  A   Z: shee
+283,CONVERTED_UNVERIFIED,283Eng.pdf,367 rows; N    P: sheet 353 vs official 328 (+25); N WN D Z: sheet 763 vs official 329 (+434); P .  M OO  I   A: sheet 1085 vs official 374 (+711); A 
+284,CONVERTED_UNVERIFIED,284Hin.pdf,357 rows; जगराम: sheet 271 vs official 293 (-22); रिंकू साहनी: sheet 296 vs official 324 (-28); कफ ु्पफफीफिफि राम : sheet 310 vs official 339 (-29); न
+285,VERIFIED,285Eng.pdf,365 rows; every column equals the official total
+286,CONVERTED_UNVERIFIED,286Eng.pdf,411 rows; Z  A  WN JO NE Z E: sheet 405 vs official 224 (+181); OF A Z   Z     Z: sheet 540 vs official 227 (+313); ESS     AN Q  MM: sheet 691 vs off
+287,CONVERTED_UNVERIFIED,287Hin.pdf,237 rows; हद: sheet 1108 vs official 2106 (-998); । हर ढ: sheet 6119 vs official 11249 (-5130); श्र: sheet 52072 vs official 91544 (-39472); 2 ' वर: s
+288,NOT_RUN,,"queued, not attempted yet"
+289,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+290,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+291,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+292,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+293,CONVERTED_UNVERIFIED,293Hin.pdf,471 rows; TH WH ST TA: sheet 655 vs official 256 (+399); Candidate 8: sheet 675 vs official 317 (+358); RYM: sheet 819 vs official 375 (+444); HOL DY 
+294,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+295,NEEDS_DECISION,295Hin.pdf,UNSUPPORTED_LAYOUT: Portrait sheet (a different Form 20 variant); the piloted files of this kind came out unusable. Needs a layout adapter i
+296,CONVERTED_UNVERIFIED,296Hin.pdf,402 rows; वा राजकुमार: sheet 520 vs official 226 (+294); विनोद कुमार सिंह प: sheet 624 vs official 292 (+332); राघवेन्द्र ।: sheet 714 vs official 322
+297,FAILED,297Hin.pdf,LayoutNotRecognised: only 0 of 44 rows read as printed after 3 pages; not a layout the extractor supports
+298,FAILED,298Hin.pdf,LayoutNotRecognised: only 0 of 49 rows read as printed after 3 pages; not a layout the extractor supports
+299,FAILED,299Hin.pdf,LayoutNotRecognised: 1 table columns detected -> -5 candidates; not a layout the extractor supports
+300,CONVERTED_UNVERIFIED,300Hin.pdf,368 rows; लि :: विनोद कुमार : sheet 326 vs official 324 (+2); | उलगलफर ं कर :...: sheet 587 vs official 405 (+182); जि राघवेन्द्र: sheet 810 vs offici
+301,FAILED,301Hin.pdf,LayoutNotRecognised: only 0 of 63 rows read as printed after 3 pages; not a layout the extractor supports
+302,VERIFIED,302Hin.pdf,412 rows; every column equals the official total
+303,VERIFIED,303Hin.pdf,503 rows; every column equals the official total
+304,VERIFIED,304Hin.pdf,413 rows; every column equals the official total
+305,VERIFIED,305Hin.pdf,406 rows; every column equals the official total
+306,VERIFIED,306Hin.pdf,453 rows; every column equals the official total
+307,CONVERTED_UNVERIFIED,307Hin.pdf,"421 rows; ,. राम करन गौतम ० : sheet 486 vs official 476 (+10); शैलेन्द्र कुमार है: sheet 494 vs official 483 (+11); | ममााममाााााा कं : sheet 586 vs o"
+308,CONVERTED_UNVERIFIED,308Hin.pdf,398 rows; नाता | शैलेन्द्र क: sheet 456 vs official 443 (+13); नमन मानमााााणणाण्ण: sheet 673 vs official 506 (+167); ॥पपपपपपष्पपप्प ्पप: sheet 908 vs 
+309,CONVERTED_UNVERIFIED,309Hin.pdf,440 rows; पाता व खरा हाफिज अ: sheet 655 vs official 585 (+70); | हे हद डर: sheet 828 vs official 588 (+240); ्थ्थण्ण का बल शैले: sheet 978 vs official
+310,VERIFIED,310Hin.pdf,416 rows; every column equals the official total
+311,CONVERTED_UNVERIFIED,311Hin.pdf,436 rows; न्न्ग भी | । ई। डी: sheet 1854 vs official 471 (+1383); _. काना हा न व लिय: sheet 1978 vs official 554 (+1424); हर । दर मी: sheet 2305 vs of
+312,CONVERTED_UNVERIFIED,312Hin.pdf,512 rows; | सुभाष चन्द्र दे : sheet 445 vs official 360 (+85); | नित्रसेन... न: sheet 575 vs official 474 (+101); राजेन्द्र यादव उठ : sheet 597 vs off
+313,CONVERTED_UNVERIFIED,313Hin.pdf,333 rows; कूद आनन्द कुमार गौ: sheet 191 vs official 280 (-89); व सुभाष चन्द्र दूब: sheet 223 vs official 309 (-86); | कल मित्रसेन: sheet 279 vs offici
+314,CONVERTED_UNVERIFIED,314Hin.pdf,439 rows; | गगय ड | कुमार गौ: sheet 618 vs official 300 (+318); सुभाष चन्द्र दूवे : sheet 657 vs official 320 (+337); तय नली कक: sheet 909 vs official
+315,VERIFIED,315Hin.pdf,370 rows; every column equals the official total
+316,VERIFIED,316Hin.pdf,390 rows; every column equals the official total
+317,VERIFIED,317Hin.pdf,431 rows; every column equals the official total
+318,VERIFIED,318Hin.pdf,446 rows; every column equals the official total
+319,VERIFIED,319Hin.pdf,448 rows; every column equals the official total
+320,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+321,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+322,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+323,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+324,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+325,VERIFIED,325Hin.pdf,407 rows; every column equals the official total
+326,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+327,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+328,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+329,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+330,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+331,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+332,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+333,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+334,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+335,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+336,NO_PDF,,no PDF in data/2024/PDF
+337,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+338,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+339,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+340,VERIFIED,340Hin.pdf,378 rows; every column equals the official total
+341,NO_PDF,,no PDF in data/2024/PDF
+342,NO_PDF,,no PDF in data/2024/PDF
+343,VERIFIED,343Hin.pdf,401 rows; every column equals the official total
+344,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+345,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+346,CONVERTED_UNVERIFIED,346Hin.pdf,358 rows; Candidate 5: sheet 355 vs official 356 (-1); Candidate 6: sheet 525 vs official 524 (+1)
+347,VERIFIED,347Hin.pdf,400 rows; every column equals the official total
+348,VERIFIED,348Hin.pdf,340 rows; every column equals the official total
+349,VERIFIED,349Hin.pdf,348 rows; every column equals the official total
+350,VERIFIED,350Hin.pdf,383 rows; every column equals the official total
+351,NO_PDF,,no PDF in data/2024/PDF
+352,VERIFIED,352Hin.pdf,432 rows; every column equals the official total
+353,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+354,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+355,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+356,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+357,CONVERTED_UNVERIFIED,357Hin.pdf,493 rows; हू ६: sheet 1102 vs official 280 (+822); हु: sheet 1911 vs official 362 (+1549); तर है: sheet 2151 vs official 365 (+1786); डे.: sheet 2234 
+358,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+359,CONVERTED_UNVERIFIED,359Hin.pdf,417 rows; BE: sheet 3308 vs official 267 (+3041); GC EAN IGE: sheet 3351 vs official 319 (+3032); RT CIE: sheet 4320 vs official 354 (+3966); SEG: she
+360,CONVERTED_UNVERIFIED,360Hin.pdf,448 rows; मी मी शी: sheet 2800 vs official 163 (+2637); | है.: sheet 2913 vs official 187 (+2726); | श्र.: sheet 3229 vs official 207 (+3022); | हु]: 
+361,CONVERTED_UNVERIFIED,361Hin.pdf,477 rows; | है: sheet 2503 vs official 147 (+2356); ६5 |: sheet 2518 vs official 155 (+2363); | 8 |: sheet 2605 vs official 186 (+2419); | है |: sheet
+362,CONVERTED_UNVERIFIED,362Hin.pdf,543 rows; माह हु: sheet 4154 vs official 521 (+3633); | बेड |: sheet 4190 vs official 568 (+3622); के: sheet 5408 vs official 629 (+4779); हे: sheet 6
+363,CONVERTED_UNVERIFIED,363Hin.pdf,512 rows; छा: sheet 3965 vs official 191 (+3774); | 45:: sheet 4468 vs official 229 (+4239); फ््जी: sheet 4495 vs official 230 (+4265); _ जै: sheet 47
+364,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+365,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+366,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+367,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+368,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+369,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+370,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+371,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+372,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+373,CONVERTED_UNVERIFIED,373Hin.pdf,611 rows; Candidate 10: sheet 9108 vs official 497 (+8611); BAR  FAR: sheet 10301 vs official 654 (+9647); Candidate 7: sheet 11738 vs official 805 (+
+374,CONVERTED_UNVERIFIED,374Hin.pdf,541 rows; जब |: sheet 6268 vs official 401 (+5867); हु: sheet 7515 vs official 604 (+6911); हा: sheet 7885 vs official 618 (+7267); ह्ुड्: sheet 10333
+375,CONVERTED_UNVERIFIED,375Hin.pdf,473 rows; द्घी: sheet 5321 vs official 335 (+4986); हम: sheet 6917 vs official 407 (+6510); है है: sheet 7301 vs official 432 (+6869); | 3 |: sheet 84
+376,CONVERTED_UNVERIFIED,376Hin.pdf,512 rows; CEEVE HAR FOARDT: sheet 9655 vs official 391 (+9264); Candidate 5: sheet 9741 vs official 500 (+9241); OR: sheet 10193 vs official 568 (+962
+377,CONVERTED_UNVERIFIED,377Hin.pdf,524 rows; | श$ |: sheet 575 vs official 226 (+349); ३5 |: sheet 578 vs official 229 (+349); डाइ: sheet 706 vs official 301 (+405); ही: sheet 798 vs of
+378,CONVERTED_UNVERIFIED,378Hin.pdf,573 rows; छाज: sheet 1043 vs official 233 (+810); दी: sheet 1138 vs official 239 (+899); छाइ: sheet 1294 vs official 258 (+1036); छाइ: sheet 1526 vs o
+379,FAILED,379Hin.pdf,LayoutNotRecognised: only 0 of 51 rows read as printed after 3 pages; not a layout the extractor supports
+380,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+381,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+382,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+383,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+384,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+385,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+386,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+387,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+388,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+389,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+390,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+391,DONE_EXCEL,,Excel exists in data/2024/EXCEL
+392,VERIFIED,392Hin.pdf,458 rows; every column equals the official total
+393,VERIFIED,393Hin.pdf,401 rows; every column equals the official total
+394,CONVERTED_UNVERIFIED,394Hin.pdf,397 rows; Candidate 1: sheet 0 vs official 897 (-897)
+395,FAILED,395Eng.pdf,LayoutNotRecognised: only 0 of 47 rows read as printed after 3 pages; not a layout the extractor supports
+396,FAILED,396Eng.pdf,LayoutNotRecognised: only 3 of 66 rows read as printed after 3 pages; not a layout the extractor supports
+397,CONVERTED_UNVERIFIED,397Eng.pdf,386 rows; A    WV: sheet 613 vs official 678 (-65); FE  WO    WN P: sheet 693 vs official 765 (-72); OO Z  FE      A: sheet 825 vs official 961 (-136)
+398,CONVERTED_UNVERIFIED,398Eng.pdf,423 rows; E  BEA A: sheet 957 vs official 716 (+241); AD   IY: sheet 1072 vs official 719 (+353); X    YS  A: sheet 1158 vs official 921 (+237); OE  W
+399,FAILED,399Eng.pdf,LayoutNotRecognised: only 9 of 77 rows read as printed after 5 pages; not a layout the extractor supports
+400,NO_PDF,,no PDF in data/2024/PDF
+401,NO_PDF,,no PDF in data/2024/PDF
+402,NO_PDF,,no PDF in data/2024/PDF
+403,NO_PDF,,no PDF in data/2024/PDF

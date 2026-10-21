@@ -1,0 +1,187 @@
+﻿ac,in_priority_180,status,output_file,input_pdf,how_produced,check,note_or_reason
+1,yes,VERIFIED,converted/1.xlsx,1Eng.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+2,yes,"CONVERTED, NOT VERIFIED",,2Eng (2).pdf; 2Eng (3).pdf; 2Eng.pdf,,,Nearly right: a few digits misread (totals within 3% of official)
+3,yes,VERIFIED,converted/3.xlsx,3Eng.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+4,yes,"CONVERTED, NOT VERIFIED",,4Eng.pdf,,,Nearly right: a few digits misread (totals within 3% of official)
+5,yes,VERIFIED,converted/5.xlsx,5Eng.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+6,yes,VERIFIED,converted/6.xlsx,6Eng.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+8,yes,VERIFIED,converted/8.xlsx,8Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+9,yes,"CONVERTED, NOT VERIFIED",,9Hin.pdf,,,Nearly right: a few digits misread (totals within 3% of official)
+10,yes,"CONVERTED, NOT VERIFIED",,10Hin.pdf,,,Nearly right: a few digits misread (totals within 3% of official)
+11,yes,"CONVERTED, NOT VERIFIED",,11Hin.pdf,,,Rows/pages missed: only 85% of the votes captured (table not found on some pages)
+12,yes,"CONVERTED, NOT VERIFIED",,12Hin.pdf,,,Digits misread on many rows (totals do not match)
+13,yes,"CONVERTED, NOT VERIFIED",,13Hin.pdf,,,Rows/pages missed: only 65% of the votes captured (table not found on some pages)
+14,yes,VERIFIED,converted/14.xlsx,14Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,1 row(s) flagged for a glance
+15,yes,"CONVERTED, NOT VERIFIED",,15Hin.pdf,,,Digits misread on many rows (totals do not match)
+16,yes,"CONVERTED, NOT VERIFIED",,16Hin.pdf,,,Rows/pages missed: only 77% of the votes captured (table not found on some pages)
+19,yes,VERIFIED,converted/19.xlsx,19Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+25,yes,VERIFIED,converted/25.xlsx,25Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+26,yes,VERIFIED,converted/26.xlsx,26Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+27,yes,VERIFIED,converted/27.xlsx,27Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+28,yes,VERIFIED,converted/28.xlsx,28Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+33,yes,VERIFIED,converted/33.xlsx,33Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+36,yes,FAILED,,36Eng.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+39,yes,VERIFIED,converted/39.xlsx,39HIn.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,18 row(s) flagged for a glance
+40,yes,VERIFIED,converted/40.xlsx,40Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,20 row(s) flagged for a glance
+41,yes,VERIFIED,converted/41.xlsx,41Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,17 row(s) flagged for a glance
+42,yes,VERIFIED,converted/42.xlsx,42Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,20 row(s) flagged for a glance
+43,yes,VERIFIED,converted/43.xlsx,43Hin (1).pdf; 43Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+44,yes,VERIFIED,converted/44.xlsx,44Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+45,yes,VERIFIED,converted/45.xlsx,45Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+46,yes,"CONVERTED, NOT VERIFIED",,46Eng.pdf,,,Extra/duplicated rows or wrong columns (116% of official votes)
+47,yes,VERIFIED,converted/47.xlsx,47Eng.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,4 row(s) flagged for a glance
+48,yes,VERIFIED,converted/48.xlsx,48Eng.pdf,"read by OCR, corrected by a person in a review pack",candidate columns and NOTA equal the official 2024 totals,
+49,yes,VERIFIED,converted/49.xlsx,49Eng.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,1 row(s) flagged for a glance
+50,yes,VERIFIED,converted/50.xlsx,50Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+51,yes,VERIFIED,converted/51.xlsx,51Hin.pdf,"read by OCR, corrected by a person in a review pack",candidate columns and NOTA equal the official 2024 totals,
+52,yes,FAILED,,52Eng.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+53,yes,VERIFIED,converted/53.xlsx,53Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+57,yes,ON HOLD,,57Hin.pdf,,,Different form layout (portrait page) the tool cannot read yet
+58,yes,VERIFIED,converted/58.xlsx,58Hin (1).pdf; 58Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+59,yes,ON HOLD,,59Hin.pdf,,,Different form layout (portrait page) the tool cannot read yet
+60,yes,VERIFIED,converted/60.xlsx,60Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+63,yes,VERIFIED,converted/63.xlsx,63Eng.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,1 row(s) flagged for a glance
+64,yes,VERIFIED,converted/64.xlsx,64Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+65,yes,FAILED,,65Eng.pdf,,,Could not find the table's columns (scan lines too faint/uneven)
+66,yes,"CONVERTED, NOT VERIFIED",,66Eng.pdf,,,Rows/pages missed: only 89% of the votes captured (table not found on some pages)
+68,yes,VERIFIED,converted/68.xlsx,68Eng.pdf; 68Hin.pdf,"read by OCR, corrected by a person in a review pack",candidate columns and NOTA equal the official 2024 totals,
+69,yes,"CONVERTED, NOT VERIFIED",,69Hin.pdf,,,PDF holds several constituencies together (must be split) or the grid is over-detected
+70,yes,VERIFIED,converted/70.xlsx,70Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+81,yes,"CONVERTED, NOT VERIFIED",,81Hin (2).pdf; 81Hin.pdf,,,Rows/pages missed: only 48% of the votes captured (table not found on some pages)
+82,yes,"CONVERTED, NOT VERIFIED",,82Hin (2).pdf; 82Hin.pdf,,,Rows/pages missed: only 4% of the votes captured (table not found on some pages)
+83,yes,FAILED,,83Hin (2).pdf; 83Hin (3).pdf; 83Hin.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+84,yes,"CONVERTED, NOT VERIFIED",,84Hin (2).pdf; 84Hin (3).pdf; 84Hin.pdf,,,Rows/pages missed: only 46% of the votes captured (table not found on some pages)
+85,yes,VERIFIED,converted/85.xlsx,85Hin (2).pdf; 85Hin.pdf,"read by OCR, corrected by a person in a review pack",candidate columns and NOTA equal the official 2024 totals,
+95,yes,VERIFIED,converted/95.xlsx,95Hin (2).pdf; 95Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+96,yes,VERIFIED,converted/96.xlsx,96Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+98,yes,"CONVERTED, NOT VERIFIED",,98Hin.pdf,,,Read exactly from the PDF's text; differs from the official totals by a few votes (a typo in the sheet or in the official data)
+99,yes,VERIFIED,converted/99.xlsx,99Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+103,yes,VERIFIED,converted/103.xlsx,103Hin (2).pdf; 103Hin.pdf,"read by OCR, corrected by a person in a review pack",candidate columns and NOTA equal the official 2024 totals,
+104,yes,FAILED,,104Hin.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+105,yes,FAILED,,105Hin.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+118,yes,"CONVERTED, NOT VERIFIED",,118Hin.pdf,,,Digits misread on many rows (totals do not match)
+127,yes,"CONVERTED, NOT VERIFIED",,127Hin.pdf,,,Rows/pages missed: only 87% of the votes captured (table not found on some pages)
+128,yes,"CONVERTED, NOT VERIFIED",,128Hin.pdf,,,Digits misread on many rows (totals do not match)
+129,yes,"CONVERTED, NOT VERIFIED",,129Hin.pdf,,,Rows/pages missed: only 82% of the votes captured (table not found on some pages)
+130,yes,FAILED,,130Hin.pdf,,,Could not find the table's columns (scan lines too faint/uneven)
+131,yes,FAILED,,131Hin.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+132,yes,FAILED,,132Hin.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+133,yes,FAILED,,133Hin.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+134,yes,VERIFIED,converted/134.xlsx,134Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+135,yes,VERIFIED,converted/135.xlsx,135Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+136,yes,"CONVERTED, NOT VERIFIED",,136Hin.pdf,,,Digits misread on many rows (totals do not match)
+137,yes,VERIFIED,converted/137.xlsx,137Eng.pdf,cut out of 137Eng.pdf (multi-constituency PDF),candidate columns and NOTA equal the official 2024 totals,
+138,no,VERIFIED,converted/138.xlsx,137Eng.pdf,cut out of 137Eng.pdf (multi-constituency PDF),candidate columns and NOTA equal the official 2024 totals,no PDF of its own; cut out of the PDF named in input_pdf
+139,no,VERIFIED,converted/139.xlsx,137Eng.pdf,cut out of 137Eng.pdf (multi-constituency PDF),candidate columns and NOTA equal the official 2024 totals,no PDF of its own; cut out of the PDF named in input_pdf
+140,no,VERIFIED,converted/140.xlsx,137Eng.pdf,cut out of 137Eng.pdf (multi-constituency PDF),candidate columns and NOTA equal the official 2024 totals,no PDF of its own; cut out of the PDF named in input_pdf
+141,yes,VERIFIED,converted/141.xlsx,141Eng.pdf,cut out of 141Eng.pdf (multi-constituency PDF),candidate columns and NOTA equal the official 2024 totals,
+142,no,VERIFIED,converted/142.xlsx,137Eng.pdf,cut out of 137Eng.pdf (multi-constituency PDF),candidate columns and NOTA equal the official 2024 totals,no PDF of its own; cut out of the PDF named in input_pdf
+143,no,VERIFIED,converted/143.xlsx,141Eng.pdf,cut out of 141Eng.pdf (multi-constituency PDF),candidate columns and NOTA equal the official 2024 totals,no PDF of its own; cut out of the PDF named in input_pdf
+147,no,VERIFIED,converted/147.xlsx,141Eng.pdf,cut out of 141Eng.pdf (multi-constituency PDF),candidate columns and NOTA equal the official 2024 totals,no PDF of its own; cut out of the PDF named in input_pdf
+153,yes,"CONVERTED, NOT VERIFIED",,153Hin.pdf,,,Rows/pages missed: only 23% of the votes captured (table not found on some pages)
+154,yes,VERIFIED,converted/154.xlsx,154Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+157,yes,"CONVERTED, NOT VERIFIED",,157Hin.pdf,,,Rows/pages missed: only 34% of the votes captured (table not found on some pages)
+158,yes,VERIFIED,converted/158.xlsx,158Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+159,yes,"CONVERTED, NOT VERIFIED",,159Hin.pdf,,,Rows/pages missed: only 39% of the votes captured (table not found on some pages)
+160,yes,"CONVERTED, NOT VERIFIED",,160Hin.pdf,,,Rows/pages missed: only 39% of the votes captured (table not found on some pages)
+161,yes,"CONVERTED, NOT VERIFIED",,161Hin.pdf,,,Rows/pages missed: only 26% of the votes captured (table not found on some pages)
+162,yes,"CONVERTED, NOT VERIFIED",,162Eng.pdf,,,Rows/pages missed: only 85% of the votes captured (table not found on some pages)
+163,yes,VERIFIED,converted/163.xlsx,163Eng.pdf,"read by OCR, corrected by a person in a review pack",candidate columns and NOTA equal the official 2024 totals,
+164,yes,"CONVERTED, NOT VERIFIED",,164Eng.pdf,,,Digits misread on many rows (totals do not match)
+165,yes,"CONVERTED, NOT VERIFIED",,165Eng.pdf,,,Digits misread on many rows (totals do not match)
+166,yes,VERIFIED,converted/166.xlsx,166Eng.pdf,"read by OCR, corrected by a person in a review pack",candidate columns and NOTA equal the official 2024 totals,
+167,yes,FAILED,,167Eng.pdf,,,Could not find the table's columns (scan lines too faint/uneven)
+177,yes,"CONVERTED, NOT VERIFIED",,177Eng.pdf,,,Rows/pages missed: only 84% of the votes captured (table not found on some pages)
+179,yes,"CONVERTED, NOT VERIFIED",,179Eng.pdf,,,Rows/pages missed: only 84% of the votes captured (table not found on some pages)
+180,yes,FAILED,,180Eng.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+182,yes,"CONVERTED, NOT VERIFIED",,182Eng.pdf,,,Rows/pages missed: only 61% of the votes captured (table not found on some pages)
+187,yes,VERIFIED,converted/187.xlsx,187Eng.pdf,"read by OCR, corrected by a person in a review pack",candidate columns and NOTA equal the official 2024 totals,
+188,yes,VERIFIED,converted/188.xlsx,188Eng.pdf,"read by OCR, corrected by a person in a review pack",candidate columns and NOTA equal the official 2024 totals,
+189,yes,VERIFIED,converted/189.xlsx,189Eng.pdf,"read by OCR, corrected by a person in a review pack",candidate columns and NOTA equal the official 2024 totals,
+190,yes,VERIFIED,converted/190.xlsx,109Eng.pdf,"read by OCR, corrected by a person in a review pack",candidate columns and NOTA equal the official 2024 totals,
+191,yes,ON HOLD,,191Eng.pdf,,,Different form layout (portrait page) the tool cannot read yet
+192,yes,"CONVERTED, NOT VERIFIED",,192Eng.pdf; 192Hin.pdf,,,Rows/pages missed: only 89% of the votes captured (table not found on some pages)
+193,yes,FAILED,,193Hin.pdf,,,Could not find the table's columns (scan lines too faint/uneven)
+194,yes,FAILED,,194Hin.pdf,,,Could not find the table's columns (scan lines too faint/uneven)
+195,yes,FAILED,,195Hin.pdf,,,Could not find the table's columns (scan lines too faint/uneven)
+199,yes,VERIFIED,converted/199.xlsx,199Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,99 row(s) flagged for a glance
+200,yes,VERIFIED,converted/200.xlsx,200Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+201,yes,VERIFIED,converted/201.xlsx,201Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+204,yes,VERIFIED,converted/204.xlsx,204Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+205,yes,VERIFIED,converted/205.xlsx,205Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+206,yes,VERIFIED,converted/206.xlsx,206Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,1 row(s) flagged for a glance
+207,yes,VERIFIED,converted/207.xlsx,207Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+208,yes,VERIFIED,converted/208.xlsx,208Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+209,yes,VERIFIED,converted/209.xlsx,209Hin.pdf; 209RHin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+221,yes,FAILED,,221Eng.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+228,yes,VERIFIED,converted/228.xlsx,228Eng.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+229,yes,VERIFIED,converted/229.xlsx,229Eng.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+270,yes,VERIFIED,converted/270.xlsx,270Eng.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+271,yes,VERIFIED,converted/271.xlsx,271Eng.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+273,yes,VERIFIED,converted/273.xlsx,273Eng.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+274,yes,VERIFIED,converted/274.xlsx,274Eng.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,1 row(s) flagged for a glance
+275,yes,VERIFIED,converted/275.xlsx,275Eng.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+279,yes,FAILED,,279Eng.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+282,yes,"CONVERTED, NOT VERIFIED",,282Eng.pdf,,,Rows/pages missed: only 87% of the votes captured (table not found on some pages)
+283,yes,"CONVERTED, NOT VERIFIED",,283Eng.pdf,,,Digits misread on many rows (totals do not match)
+284,yes,VERIFIED,converted/284.xlsx,284Hin.pdf,"read by OCR, corrected by a person in a review pack",candidate columns and NOTA equal the official 2024 totals,
+285,yes,VERIFIED,converted/285.xlsx,285Eng.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+286,yes,"CONVERTED, NOT VERIFIED",,286Eng.pdf,,,Digits misread on many rows (totals do not match)
+287,yes,"CONVERTED, NOT VERIFIED",,287Eng.pdf; 287Hin.pdf,,,Rows/pages missed: only 55% of the votes captured (table not found on some pages)
+288,yes,NOT ATTEMPTED,,288Eng.pdf; 288Hin.pdf,,,Not run yet
+293,yes,"CONVERTED, NOT VERIFIED",,293Hin.pdf,,,Digits misread on many rows (totals do not match)
+295,yes,ON HOLD,,295Hin.pdf,,,Different form layout (portrait page) the tool cannot read yet
+296,yes,"CONVERTED, NOT VERIFIED",,296Hin.pdf,,,Digits misread on many rows (totals do not match)
+297,yes,FAILED,,297Hin.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+298,yes,"CONVERTED, NOT VERIFIED",,298Hin.pdf,,,Digits misread on many rows (totals do not match)
+299,yes,FAILED,,299Hin.pdf,,,Could not find the table's columns (scan lines too faint/uneven)
+300,yes,VERIFIED,converted/300.xlsx,300Hin.pdf,"read by OCR, corrected by a person in a review pack",candidate columns and NOTA equal the official 2024 totals,
+301,yes,FAILED,,301Hin.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+302,yes,VERIFIED,converted/302.xlsx,302Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+303,yes,VERIFIED,converted/303.xlsx,303Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+304,yes,VERIFIED,converted/304.xlsx,304Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+305,yes,VERIFIED,converted/305.xlsx,305Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+306,yes,VERIFIED,converted/306.xlsx,306Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+307,yes,VERIFIED,converted/307.xlsx,307Hin.pdf,"read by OCR, corrected by a person in a review pack",candidate columns and NOTA equal the official 2024 totals,
+308,yes,"CONVERTED, NOT VERIFIED",,308Hin.pdf,,,Digits misread on many rows (totals do not match)
+309,yes,"CONVERTED, NOT VERIFIED",,309Hin.pdf,,,Digits misread on many rows (totals do not match)
+310,yes,VERIFIED,converted/310.xlsx,310Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+311,yes,"CONVERTED, NOT VERIFIED",,311Hin.pdf,,,Digits misread on many rows (totals do not match)
+312,yes,VERIFIED,converted/312.xlsx,312Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,2 row(s) flagged for a glance
+313,yes,"CONVERTED, NOT VERIFIED",,313Hin.pdf,,,Rows/pages missed: only 64% of the votes captured (table not found on some pages)
+314,yes,"CONVERTED, NOT VERIFIED",,314Hin.pdf,,,Digits misread on many rows (totals do not match)
+315,yes,VERIFIED,converted/315.xlsx,315Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+316,yes,VERIFIED,converted/316.xlsx,316Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+317,yes,VERIFIED,converted/317.xlsx,317Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+318,yes,VERIFIED,converted/318.xlsx,318Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+319,yes,VERIFIED,converted/319.xlsx,319Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+325,yes,VERIFIED,converted/325.xlsx,325Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+340,yes,VERIFIED,converted/340.xlsx,340Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+343,yes,VERIFIED,converted/343.xlsx,343Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,1 row(s) flagged for a glance
+346,yes,"CONVERTED, NOT VERIFIED",,346Hin.pdf,,,Read exactly from the PDF's text; differs from the official totals by a few votes (a typo in the sheet or in the official data)
+347,yes,VERIFIED,converted/347.xlsx,347Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,29 row(s) flagged for a glance
+348,yes,VERIFIED,converted/348.xlsx,348Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+349,yes,VERIFIED,converted/349.xlsx,349Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+350,yes,VERIFIED,converted/350.xlsx,350Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+352,yes,VERIFIED,converted/352.xlsx,352Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+357,yes,"CONVERTED, NOT VERIFIED",,357Hin.pdf,,,Extra/duplicated rows or wrong columns (130% of official votes)
+359,yes,"CONVERTED, NOT VERIFIED",,359Hin.pdf,,,Extra/duplicated rows or wrong columns (165% of official votes)
+360,yes,"CONVERTED, NOT VERIFIED",,360Hin.pdf,,,Extra/duplicated rows or wrong columns (174% of official votes)
+361,yes,"CONVERTED, NOT VERIFIED",,361Hin.pdf,,,Extra/duplicated rows or wrong columns (166% of official votes)
+362,yes,"CONVERTED, NOT VERIFIED",,362Hin.pdf,,,Extra/duplicated rows or wrong columns (132% of official votes)
+363,yes,"CONVERTED, NOT VERIFIED",,363Hin.pdf,,,Extra/duplicated rows or wrong columns (180% of official votes)
+373,yes,VERIFIED,converted/373.xlsx,373Hin.pdf,"read by OCR, corrected by a person in a review pack",candidate columns and NOTA equal the official 2024 totals,
+374,yes,VERIFIED,converted/374.xlsx,374Hin.pdf,read by OCR,candidate columns and NOTA equal the official 2024 totals,
+375,yes,"CONVERTED, NOT VERIFIED",,375Hin.pdf,,,Extra/duplicated rows or wrong columns (153% of official votes)
+376,yes,"CONVERTED, NOT VERIFIED",,376Hin.pdf,,,Extra/duplicated rows or wrong columns (170% of official votes)
+377,yes,"CONVERTED, NOT VERIFIED",,377Hin.pdf,,,Nearly right: a few digits misread (totals within 3% of official)
+378,yes,"CONVERTED, NOT VERIFIED",,378Hin.pdf,,,Extra/duplicated rows or wrong columns (129% of official votes)
+379,yes,FAILED,,379Hin.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+392,yes,VERIFIED,converted/392.xlsx,392Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+393,yes,VERIFIED,converted/393.xlsx,393Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+394,yes,VERIFIED,converted/394.xlsx,394Hin.pdf,read from the PDF text layer (exact digits),candidate columns and NOTA equal the official 2024 totals,
+395,yes,FAILED,,395Eng.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+396,yes,FAILED,,396Eng.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"
+397,yes,"CONVERTED, NOT VERIFIED",,397Eng.pdf,,,Rows/pages missed: only 81% of the votes captured (table not found on some pages)
+398,yes,"CONVERTED, NOT VERIFIED",,398Eng.pdf,,,Digits misread on many rows (totals do not match)
+399,yes,FAILED,,399Eng.pdf,,,"Table found but not read reliably (unusual layout, or a scan too poor to read)"

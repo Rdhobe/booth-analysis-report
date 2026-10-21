@@ -1,0 +1,11 @@
+{"ac": 189,
+ "workbook": "C:/Users/Admin/AppData/Local/Temp/claude/d--booth-test/4170f5a7-db63-4b1e-98cd-684aaee50635/scratchpad/out_reg21/189Eng_Form20.xlsx",
+ "edits": [
+  {"page": 7, "row": 1, "values": [184, 287, 110, 3, 0, 2, 0, 0, 3, 589, 0, 8, 597, 0]}
+ ],
+ "added": [
+  {"page": 15, "after": 21, "values": [136, 297, 79, 5, 1, 1, 2, 1, 4, 526, 0, 3, 529, 0]},
+  {"page": 15, "after": 21, "values": [21, 227, 320, 8, 2, 1, 0, 7, 0, 586, 0, 4, 590, 0]},
+  {"page": 15, "after": 21, "values": [58, 94, 93, 1, 0, 1, 1, 2, 0, 250, 0, 3, 253, 0]}
+ ],
+ "removed": []}

@@ -29,14 +29,16 @@ Rules (user-confirmed):
 - Report rule: new data extends existing sheets as new columns; never
   add a new sheet for new/extra data.
 
-Usage:
-  python Scripts/build_state_report.py [--districts Agra Lucknow]
+Usage (from the repo root; the workbook save needs about 6 GB of memory and takes ~17 min for all 403 ACs):
+  python -m Scripts.report.build_state_report [--districts Agra Lucknow]
       [--out-report output/up_booth_report.xlsx] [--skip-workbook]
+      [--ac24-dir data/2024/converted --ac24-verified-json output/ml/booth_segments.json]
 """
 from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import logging
 import re
@@ -48,7 +50,7 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger("state")
 
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root, for `Scripts.report...`
 from Scripts.report.agra_pipeline import (  # noqa: E402
     booth_uid,
     find_vote_header,
@@ -58,7 +60,7 @@ from Scripts.report.agra_pipeline import (  # noqa: E402
     num,
 )
 
-ROOT = Path(__file__).parent.parent
+ROOT = Path(__file__).resolve().parents[2]  # repo root (scripts live in Scripts/report/)
 DATA = ROOT / "data"
 PROC = ROOT / "data" / "processed"
 
@@ -381,6 +383,34 @@ def ingest_2024_state(files, agra_map, seg_map, eci_map):
     return facts, booths, cover
 
 
+def select_verified_2024(files, verified_json):
+    """Keep only the 2024 workbooks that were verified against the official totals.
+
+    verified_json is output/ml/booth_segments.json. A workbook is kept if its seat is under "acs" AND, when the file records
+    SHA-256 fingerprints (meta.source_sha256), the workbook still matches its fingerprint: a workbook that was changed or
+    replaced since it was verified (for example an older version in a fresh clone of the repository) is skipped, never
+    trusted. Returns (kept, [(path, reason), ...])."""
+    d = json.loads(Path(verified_json).read_text(encoding="utf-8"))
+    ok = {int(k) for k in d["acs"]}
+    prints = (d.get("meta") or {}).get("source_sha256") or {}
+    if not prints:
+        log.warning("%s has no workbook fingerprints: only the seat list is "
+                    "checked (re-run Scripts/ml/build_extra.py)", verified_json)
+    kept, skipped = [], []
+    for p in files:
+        ac = int(p.stem)
+        if ac not in ok:
+            skipped.append((p, "SKIPPED-UNVERIFIED (workbook columns not "
+                               "equal to official totals)"))
+        elif prints and (hashlib.sha256(p.read_bytes()).hexdigest()
+                         != prints.get(str(ac))):
+            skipped.append((p, "SKIPPED-CHANGED (this workbook differs from "
+                               "the one that was verified)"))
+        else:
+            kept.append(p)
+    return kept, skipped
+
+
 def main(argv=None) -> int:
     for _s in (sys.stdout, sys.stderr):
         try:
@@ -393,6 +423,13 @@ def main(argv=None) -> int:
     ap.add_argument("--out-report", default="output/up_booth_report.xlsx")
     ap.add_argument("--skip-workbook", action="store_true",
                     help="ingest to CSVs only")
+    ap.add_argument("--ac24-dir", default="",
+                    help="folder with the per-AC 2024 Form 20 workbooks "
+                         "(<ac>.xlsx); default data/2024. Read-only.")
+    ap.add_argument("--ac24-verified-json", default="",
+                    help="only read 2024 workbooks for the seats listed "
+                         "under 'acs' in this JSON (e.g. "
+                         "output/ml/booth_segments.json)")
     ap.add_argument("--no-eci-fallback", action="store_true",
                     help="2024 parties: Agra map only (thinner, skips "
                          "segment + LS-results fallbacks)")
@@ -576,11 +613,24 @@ def main(argv=None) -> int:
         log.warning("ingest failures (quarantined, see coverage): %d",
                     n_fail)
     # ---- 2024: flat root shorts (REVIEW excluded), winners only
-    f24 = sorted(p for p in (DATA / "2024").glob("*.xlsx")
+    d24 = Path(args.ac24_dir) if args.ac24_dir else DATA / "2024"
+    if not d24.is_absolute():
+        d24 = ROOT / d24
+    f24 = sorted(p for p in d24.glob("*.xlsx")
                  if "REVIEW" not in p.name
                  and re.match(r"^\d{1,3}\.xlsx$", p.name))
     if want_ac is not None:
         f24 = [p for p in f24 if int(p.stem) in want_ac]
+    if args.ac24_verified_json:
+        vp = Path(args.ac24_verified_json)
+        f24, skipped24 = select_verified_2024(
+            f24, vp if vp.is_absolute() else ROOT / vp)
+        log.info("2024 booths: %d verified workbooks kept, %d skipped "
+                 "(not verified, or changed since)", len(f24), len(skipped24))
+        for p, why in skipped24:
+            cover.append({"election": "LS2024", "ac": int(p.stem),
+                          "ac_name": "", "file": p.name, "booths": 0,
+                          "note": why})
     for f in f24:
         try:
             fs, bs, cv = ingest_2024_state([f], agra_map, seg_map,

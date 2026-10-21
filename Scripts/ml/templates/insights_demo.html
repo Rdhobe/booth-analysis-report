@@ -1,0 +1,561 @@
+<title>UPBI Insights Demo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: sticky header + tab bar over one panel at a time. Chart colors and chrome come from the validated dataviz palette; text never wears a series color. */
+:root{
+  --plane:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.10); --wash:rgba(11,11,11,.045);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#898781; --accent:#2a78d6;
+  --on1:#ffffff; --on2:#0b0b0b; --on3:#0b0b0b; --on4:#0b0b0b;
+  --good:#006300; --warn:#8a5a00; --crit:#d03b3b;
+  --sans:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --plane:#0d0d0d; --surface:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#898781;
+  --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10); --wash:rgba(255,255,255,.06);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#898781; --accent:#3987e5;
+  --on1:#0b0b0b; --on2:#0b0b0b; --on3:#0b0b0b; --on4:#0b0b0b;
+  --good:#0ca30c; --warn:#fab219; --crit:#ec6a6a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --plane:#0d0d0d; --surface:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#898781;
+  --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10); --wash:rgba(255,255,255,.06);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#898781; --accent:#3987e5;
+  --on1:#0b0b0b; --on2:#0b0b0b; --on3:#0b0b0b; --on4:#0b0b0b;
+  --good:#0ca30c; --warn:#fab219; --crit:#ec6a6a; color-scheme:dark}
+
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--plane);color:var(--ink);font:400 15px/1.55 var(--sans);-webkit-font-smoothing:antialiased;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1180px;margin:0 auto}
+h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+h1{font-size:22px} h2{font-size:20px} h3{font-size:15px} h4{font-size:13px;font-weight:600;color:var(--ink2)}
+p{margin:0 0 .8em;max-width:72ch}
+.panel > p.notice{margin:0}
+.muted{color:var(--ink2)} .small{font-size:13px} .tiny{font-size:12px;color:var(--muted)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+/* header + tabs */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--plane);border-bottom:1px solid var(--grid)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--plane)}
+.top .row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 24px;padding-block:14px 6px}
+.brand p{margin:2px 0 0;font-size:13px;color:var(--ink2)}
+.switch{display:inline-flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;user-select:none}
+.switch input{position:absolute;opacity:0}
+.switch .track{width:34px;height:20px;border-radius:99px;background:var(--axis);position:relative;transition:background .2s}
+.switch .track::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--surface);transition:transform .2s}
+.switch input:checked + .track{background:var(--accent)} .switch input:checked + .track::after{transform:translateX(14px)}
+.switch input:focus-visible + .track{outline:2px solid var(--accent);outline-offset:2px}
+nav.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav.tabs a{padding:9px 14px;font-size:14px;font-weight:500;color:var(--ink2);text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap}
+nav.tabs a:hover{color:var(--ink);background:var(--wash)}
+nav.tabs a[aria-selected=true]{color:var(--ink);border-bottom-color:var(--accent)}
+.notice{margin:14px 0 16px;padding:10px 14px;border:1px solid var(--ring);border-radius:10px;background:var(--surface);font-size:13px;color:var(--ink2);max-width:none}
+.notice b{color:var(--ink)}
+
+/* layout */
+main{padding-top:20px}
+.panel[hidden]{display:none}
+.panel:not([hidden]){display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+.narrow{max-width:760px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--ring);border-radius:14px;padding:18px 20px;min-width:0}
+.card > h3{margin-bottom:2px} .card > .sub{margin:0 0 12px;font-size:13px;color:var(--ink2)}
+.src{margin:10px 0 0;font-size:12px;color:var(--muted);max-width:none}
+.tile .label{font-size:13px;color:var(--ink2)}
+.tile .value{font-size:30px;font-weight:700;letter-spacing:-.02em;margin:2px 0}
+.tile .delta{font-size:13px;color:var(--ink2)}
+
+/* charts */
+svg.chart{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font-family:var(--sans);fill:var(--ink2);font-size:12px}
+.chart .tick{fill:var(--muted);font-size:11.5px} .chart .val{fill:var(--ink);font-weight:600}
+.chart .name{fill:var(--ink)}
+.chart .grid{stroke:var(--grid);stroke-width:1} .chart .axis{stroke:var(--axis);stroke-width:1}
+.chart .cross{stroke:var(--axis);stroke-width:1}
+.chart .ring{stroke:var(--surface);stroke-width:2}
+.c1{--c:var(--s1);--on:var(--on1)} .c2{--c:var(--s2);--on:var(--on2)} .c3{--c:var(--s3);--on:var(--on3)} .c4{--c:var(--s4);--on:var(--on4)}
+.chart .seglabel{fill:var(--on);font-weight:600;font-size:11.5px;pointer-events:none}
+.chart .fc{fill:var(--c)} .chart .sc{stroke:var(--c);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chart .hollow{fill:var(--surface);stroke:var(--c);stroke-width:2}
+.chart .soft{opacity:.4}
+.chart .mark{transition:opacity .12s} .chart .mark:hover,.chart .mark:focus{opacity:.8;outline:none}
+.chart .hit{fill:transparent}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;margin:0 0 8px;font-size:13px;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{display:inline-block;width:16px;height:3px;border-radius:2px;background:var(--c)}
+.legend.bars i{height:10px;width:10px;border-radius:3px}
+.tip{position:fixed;z-index:50;pointer-events:none;background:var(--surface);color:var(--ink);border:1px solid var(--axis);border-radius:10px;padding:8px 10px;font-size:13px;box-shadow:0 6px 24px rgba(0,0,0,.18);max-width:300px}
+.tip .t{font-weight:600;margin-bottom:4px} .tip .r{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.tip .r b{font-weight:700} .tip .k{display:inline-block;width:12px;height:3px;border-radius:2px;background:var(--c);margin-right:6px;vertical-align:middle}
+.tip .m{color:var(--ink2);font-size:12px;margin-top:4px}
+
+/* tables */
+.tw{overflow-x:auto;border-top:1px solid var(--grid)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 14px 9px 0;border-bottom:1px solid var(--grid);vertical-align:top}
+th{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink2);white-space:nowrap}
+th button{all:unset;cursor:pointer;display:inline-flex;gap:5px;align-items:center;text-transform:inherit;letter-spacing:inherit}
+th button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;padding-right:18px}
+td.nowrap{white-space:nowrap}
+tr.hl td{background:var(--wash)}
+.linkbtn{all:unset;cursor:pointer;color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--axis);text-underline-offset:3px}
+.linkbtn:hover{text-decoration-color:var(--accent)} .linkbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.tools{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:0 0 12px}
+input[type=search],input[type=text]{font:inherit;color:var(--ink);background:var(--plane);border:1px solid var(--axis);border-radius:8px;padding:7px 10px;min-width:0;width:min(100%,320px)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:99px;border:1px solid var(--axis);font-size:12.5px;font-weight:500;white-space:nowrap}
+.pill.warn{border-color:var(--warn);color:var(--warn)} .pill.crit{border-color:var(--crit);color:var(--crit)} .pill.ok{color:var(--ink2)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.look{display:grid;gap:0;list-style:none;margin:0;padding:0;border-top:1px solid var(--grid)}
+.look li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--grid);align-items:baseline}
+ul.plain{margin:0;padding-left:18px} ul.plain li{margin:4px 0;color:var(--ink2)} ul.plain b{color:var(--ink)}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;list-style:none;margin:0;padding:0}
+.steps li{border-top:2px solid var(--axis);padding-top:10px;font-size:13.5px;color:var(--ink2)} .steps b{display:block;color:var(--ink);font-size:14px}
+.off{padding:14px;border:1px dashed var(--axis);border-radius:10px;color:var(--ink2);font-size:14px}
+.bar-note{font-size:12px;color:var(--muted);margin-top:6px;max-width:none}
+.hd{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-bottom:6px}
+.hd .meta{color:var(--ink2);font-size:14px}
+
+@media (max-width:860px){.grid2,.grid3,.steps{grid-template-columns:minmax(0,1fr)} .tile .value{font-size:26px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="top"><div class="wrap">
+  <div class="row">
+    <div class="brand"><h1>UPBI Insights</h1><p>Phase 1 demo at constituency level, built from public election results.</p></div>
+    <label class="switch" title="Hides forward-looking numbers, as required during restriction periods"><input type="checkbox" id="compliance"><span class="track"></span><span>Compliance Mode: hide forward-looking numbers</span></label>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Sections" id="tabs"></nav>
+</div></div>
+
+<main class="wrap">
+  <p class="notice"><b>What this is.</b> A working slice of Phase 1: constituency results (assembly 2012, 2017, 2022 and Lok Sabha 2024 by assembly segment) turned into types, unusual-result flags and an expected range. There are no booth-level results, no news and no prediction here. Types are automatic descriptions of vote history, not reasons people vote.</p>
+
+  <section class="panel" id="p-overview" role="tabpanel" aria-label="Overview" hidden></section>
+  <section class="panel" id="p-ac" role="tabpanel" aria-label="Constituency" hidden></section>
+  <section class="panel" id="p-types" role="tabpanel" aria-label="Types" hidden></section>
+  <section class="panel" id="p-surprises" role="tabpanel" aria-label="Unusual results" hidden></section>
+  <section class="panel" id="p-method" role="tabpanel" aria-label="Method and checks" hidden></section>
+</main>
+
+<script id="d-data" type="application/json">/*__DATA__*/</script>
+<script id="d-card" type="application/json">/*__CARD__*/</script>
+<script>
+(function () {
+'use strict';
+const $ = (s, el = document) => el.querySelector(s);
+const D = JSON.parse($('#d-data').textContent), C = JSON.parse($('#d-card').textContent);
+const ACS = D.acs, BY = new Map(ACS.map(a => [a.ac, a]));
+const E = D.meta.elections;
+const ELABEL = { VS2012: 'Assembly 2012', VS2017: 'Assembly 2017', LS2019: 'Lok Sabha 2019', VS2022: 'Assembly 2022', LS2024: 'Lok Sabha 2024' };
+const ESHORT = { VS2012: '2012', VS2017: '2017', LS2019: 'LS 2019', VS2022: '2022', LS2024: 'LS 2024' };
+const YEAR = { VS2012: 2012, VS2017: 2017, VS2022: 2022, LS2024: 2024 };
+const CAMP = {
+  NDA: { name: 'BJP-led (NDA)', short: 'BJP-led', cls: 'c1', i: 0 },
+  OPP: { name: 'SP/INC bloc', short: 'SP/INC', cls: 'c2', i: 1 },
+  BSP: { name: 'BSP', short: 'BSP', cls: 'c3', i: 2 },
+  OTH: { name: 'Others and NOTA', short: 'Others', cls: 'c4', i: 3 },
+};
+const NS = 'http://www.w3.org/2000/svg';
+const nf = new Intl.NumberFormat('en-IN');
+const pct = (x, d = 1) => x == null ? 'n/a' : (x * 100).toFixed(d) + '%';
+const pts = (x, d = 1) => (x >= 0 ? '+' : '−') + Math.abs(x * 100).toFixed(d) + ' pts';
+const compact = n => n >= 1e7 ? (n / 1e7).toFixed(1) + ' Cr' : n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e3 ? Math.round(n / 1e3) + 'K' : String(n);
+
+function mk(ns, tag, attrs, kids) {
+  const el = ns ? document.createElementNS(ns, tag) : document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false) continue;
+    if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat(Infinity)) { if (c == null || c === false) continue; el.append(c.nodeType ? c : document.createTextNode(String(c))); }
+  return el;
+}
+const h = (tag, attrs, ...kids) => mk(null, tag, attrs, kids);
+const sv = (tag, attrs, ...kids) => mk(NS, tag, attrs, kids);
+const fill = (el, ...kids) => el.replaceChildren(...kids.flat(Infinity).filter(x => x != null && x !== false));
+const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } };
+
+/* ---------- tooltip ---------- */
+const tip = h('div', { class: 'tip', role: 'status', hidden: true });
+document.body.append(tip);
+function showTip(x, y, nodes) {
+  tifill(p, ...nodes); tip.hidden = false;
+  const r = tip.getBoundingClientRect();
+  let left = x + 14, top = y + 14;
+  if (left + r.width > innerWidth - 8) left = x - r.width - 14;
+  if (top + r.height > innerHeight - 8) top = y - r.height - 14;
+  tip.style.left = Math.max(8, left) + 'px'; tip.style.top = Math.max(8, top) + 'px';
+}
+const hideTip = () => { tip.hidden = true; };
+const tRow = (cls, name, val) => h('div', { class: 'r ' + cls }, h('span', null, cls ? h('i', { class: 'k' }) : null, name), h('b', null, val));
+function bindTip(el, build) {
+  const at = ev => { const p = ev.type === 'focus' ? el.getBoundingClientRect() : ev; showTip(p.clientX ?? p.left + p.width / 2, p.clientY ?? p.top, build()); };
+  el.addEventListener('pointermove', at); el.addEventListener('pointerenter', at); el.addEventListener('focus', at);
+  el.addEventListener('pointerleave', hideTip); el.addEventListener('blur', hideTip);
+}
+
+/* ---------- charts ---------- */
+function legend(items, bars) {
+  return h('div', { class: 'legend' + (bars ? ' bars' : ''), 'aria-label': 'Legend' },
+    items.map(c => h('span', { class: CAMP[c].cls }, h('i'), CAMP[c].name)));
+}
+
+function shareBars(rows, opt) {            // horizontal 100% stacked bars; rows: [{label, sh:[nda,opp,bsp,oth], extra}]
+  const o = Object.assign({ rowH: 34, thick: 20, labelW: 92, W: 640 }, opt);
+  const H = rows.length * o.rowH + 6, plotW = o.W - o.labelW - 8;
+  const svg = sv('svg', { class: 'chart', viewBox: `0 0 ${o.W} ${H}`, role: 'img', 'aria-label': o.aria || 'Share of votes by front' });
+  rows.forEach((r, i) => {
+    const y = i * o.rowH + (o.rowH - o.thick) / 2 + 2;
+    svg.append(sv('text', { x: 0, y: y + o.thick / 2 + 4, class: 'name' }, r.label));
+    let x = o.labelW;
+    ['NDA', 'OPP', 'BSP', 'OTH'].forEach((c, k) => {
+      const w = Math.max(0, r.sh[k] * plotW - 2);          // 2px surface gap between touching segments
+      if (w <= 0) return;
+      const seg = sv('rect', { x, y, width: w, height: o.thick, rx: 3, class: 'fc mark ' + CAMP[c].cls, tabindex: 0, 'aria-label': `${r.label}, ${CAMP[c].name}, ${pct(r.sh[k])}` });
+      bindTip(seg, () => [h('div', { class: 't' }, r.label), tRow(CAMP[c].cls, CAMP[c].name, pct(r.sh[k])), r.extra ? h('div', { class: 'm' }, r.extra) : null]);
+      svg.append(seg);
+      if (w >= 38 && k < 3) svg.append(sv('text', { x: x + w / 2, y: y + o.thick / 2 + 4, 'text-anchor': 'middle', class: 'seglabel ' + CAMP[c].cls }, Math.round(r.sh[k] * 100) + '%'));
+      x += r.sh[k] * plotW;
+    });
+  });
+  return svg;
+}
+
+function roundedEnd(x, y, w, hgt, r) {      // square at the baseline (left), rounded at the data end (right)
+  r = Math.min(r, w, hgt / 2);
+  return `M${x},${y} h${w - r} a${r},${r} 0 0 1 ${r},${r} v${hgt - 2 * r} a${r},${r} 0 0 1 ${-r},${r} h${-(w - r)} z`;
+}
+
+function rankBars(rows, opt) {              // single-series ranked bars; rows: [{label, value, text, tipRows}]
+  const o = Object.assign({ rowH: 30, thick: 16, labelW: 128, W: 560, valueW: 70, aria: 'Ranked bars' }, opt);
+  const H = rows.length * o.rowH + 4, plotW = o.W - o.labelW - o.valueW;
+  const max = Math.max(...rows.map(r => r.value));
+  const svg = sv('svg', { class: 'chart', viewBox: `0 0 ${o.W} ${H}`, role: 'img', 'aria-label': o.aria });
+  svg.append(sv('line', { class: 'axis', x1: o.labelW, x2: o.labelW, y1: 0, y2: H }));
+  rows.forEach((r, i) => {
+    const y = i * o.rowH + (o.rowH - o.thick) / 2, w = Math.max(3, r.value / max * plotW);
+    const bar = sv('path', { d: roundedEnd(o.labelW, y, w, o.thick, 4), class: 'fc mark c1', tabindex: 0, 'aria-label': `${r.label}, ${r.text}` });
+    bindTip(bar, () => [h('div', { class: 't' }, r.label), h('div', { class: 'r' }, h('span', null, r.what || 'Value'), h('b', null, r.text)), r.note ? h('div', { class: 'm' }, r.note) : null]);
+    svg.append(sv('text', { x: o.labelW - 8, y: y + o.thick / 2 + 4, 'text-anchor': 'end', class: 'name' }, r.label), bar,
+      sv('text', { x: o.labelW + w + 8, y: y + o.thick / 2 + 4, class: 'val' }, r.text));
+  });
+  return svg;
+}
+
+function lineChart(ac) {
+  const W = 640, H = 300, m = { l: 46, r: 84, t: 14, b: 46 };
+  const camps = ['NDA', 'OPP', 'BSP'];
+  const vals = camps.map(c => E.map(e => ac.history[e].sh[CAMP[c].i]));
+  const ymax = Math.min(1, Math.ceil((Math.max(...vals.flat()) + 0.02) * 10) / 10);
+  const step = ymax <= 0.4 ? 0.1 : 0.2;
+  const X = yr => m.l + (yr - 2011) / (2025 - 2011) * (W - m.l - m.r);
+  const Y = v => m.t + (1 - v / ymax) * (H - m.t - m.b);
+  const svg = sv('svg', { class: 'chart', viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `Vote share by front in ${ac.name}, 2012 to 2024` });
+  for (let t = 0; t <= ymax + 1e-9; t += step) {
+    svg.append(sv('line', { class: t === 0 ? 'axis' : 'grid', x1: m.l, x2: W - m.r, y1: Y(t), y2: Y(t) }),
+      sv('text', { class: 'tick', x: m.l - 8, y: Y(t) + 4, 'text-anchor': 'end' }, Math.round(t * 100) + '%'));
+  }
+  E.forEach(e => svg.append(sv('text', { class: 'tick', x: X(YEAR[e]), y: H - m.b + 18, 'text-anchor': 'middle' }, ESHORT[e])));
+  svg.append(sv('text', { class: 'tick', x: X(2024), y: H - m.b + 32, 'text-anchor': 'middle' }, '(general election)'));
+  const cross = sv('line', { class: 'cross', y1: m.t, y2: H - m.b, hidden: true, style: 'display:none' });
+  svg.append(cross);
+  camps.forEach((c, ci) => {
+    const pts3 = [0, 1, 2].map(i => `${X(YEAR[E[i]])},${Y(vals[ci][i])}`).join(' ');
+    svg.append(sv('g', { class: CAMP[c].cls },
+      sv('polyline', { class: 'sc', points: pts3 }),
+      sv('line', { class: 'sc soft', x1: X(2022), y1: Y(vals[ci][2]), x2: X(2024), y2: Y(vals[ci][3]) }),
+      [0, 1, 2].map(i => sv('circle', { class: 'fc ring', cx: X(YEAR[E[i]]), cy: Y(vals[ci][i]), r: 4.5 })),
+      sv('circle', { class: 'hollow', cx: X(2024), cy: Y(vals[ci][3]), r: 4.5 })));
+  });
+  const ys = camps.map((c, ci) => Y(vals[ci][3])).sort((a, b) => a - b);
+  if (ys.every((y, i) => i === 0 || y - ys[i - 1] >= 15)) {          // direct labels only when they do not collide
+    camps.forEach((c, ci) => svg.append(sv('text', { x: X(2024) + 12, y: Y(vals[ci][3]) + 4, class: 'name' }, CAMP[c].short)));
+  }
+  E.forEach((e, i) => {
+    const hit = sv('rect', { class: 'hit', x: X(YEAR[e]) - 34, y: m.t, width: 68, height: H - m.t - m.b, tabindex: 0, 'aria-label': `${ELABEL[e]}: ` + camps.map((c, ci) => `${CAMP[c].short} ${pct(vals[ci][i])}`).join(', ') });
+    const show = () => { cross.setAttribute('x1', X(YEAR[e])); cross.setAttribute('x2', X(YEAR[e])); cross.style.display = ''; };
+    const build = () => [h('div', { class: 't' }, ELABEL[e]), camps.map((c, ci) => tRow(CAMP[c].cls, CAMP[c].short, pct(vals[ci][i]))), h('div', { class: 'm' }, 'Winner: ' + ac.history[e].winner.name + ' (' + ac.history[e].winner.party + ')')];
+    ['pointermove', 'pointerenter', 'focus'].forEach(t => hit.addEventListener(t, ev => { show(); const p = t === 'focus' ? hit.getBoundingClientRect() : ev; showTip(p.clientX ?? p.left + p.width / 2, p.clientY ?? p.top + 40, build()); }));
+    ['pointerleave', 'blur'].forEach(t => hit.addEventListener(t, () => { cross.style.display = 'none'; hideTip(); }));
+    svg.append(hit);
+  });
+  return svg;
+}
+
+function rangeChart(ac) {
+  const rows = ['NDA', 'OPP', 'BSP'], W = 560, rowH = 46, m = { l: 82, r: 92, t: 6, b: 26 };
+  const H = m.t + rows.length * rowH + m.b, X = v => m.l + v * (W - m.l - m.r);
+  const svg = sv('svg', { class: 'chart', viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Expected range of vote share if nothing changes' });
+  [0, .25, .5, .75, 1].forEach(t => svg.append(sv('line', { class: t === 0 ? 'axis' : 'grid', x1: X(t), x2: X(t), y1: m.t, y2: H - m.b }),
+    sv('text', { class: 'tick', x: X(t), y: H - m.b + 16, 'text-anchor': 'middle' }, Math.round(t * 100) + '%')));
+  rows.forEach((c, i) => {
+    const e = ac.expected.camps[c], cy = m.t + i * rowH + rowH / 2;
+    const g = sv('g', { class: CAMP[c].cls + ' mark', tabindex: 0, 'aria-label': `${CAMP[c].name}: expected ${pct(e.expected)}, usual range ${pct(e.low)} to ${pct(e.high)}, wide range ${pct(e.stress_low)} to ${pct(e.stress_high)}` },
+      sv('rect', { class: 'hit', x: m.l, y: cy - rowH / 2, width: W - m.l - m.r, height: rowH }),
+      sv('line', { class: 'sc soft', x1: X(e.stress_low), x2: X(e.stress_high), y1: cy, y2: cy }),
+      sv('rect', { class: 'fc', x: X(e.low), y: cy - 6, width: Math.max(4, X(e.high) - X(e.low)), height: 12, rx: 4 }),
+      sv('rect', { x: X(e.expected) - 1.5, y: cy - 11, width: 3, height: 22, rx: 1.5, style: 'fill:var(--ink)' }));
+    bindTip(g, () => [h('div', { class: 't' }, CAMP[c].name), tRow('', 'Same as ' + ELABEL[ac.expected.base].replace('Assembly ', ''), pct(e.expected)),
+      tRow('', 'Usual range', `${pct(e.low, 0)} to ${pct(e.high, 0)}`), tRow('', 'Wide range', `${pct(e.stress_low, 0)} to ${pct(e.stress_high, 0)}`)]);
+    svg.append(sv('text', { x: m.l - 10, y: cy + 4, 'text-anchor': 'end', class: 'name' }, CAMP[c].short), g,
+      sv('text', { x: W - m.r + 10, y: cy + 4, class: 'val' }, `${Math.round(e.low * 100)}–${Math.round(e.high * 100)}%`));
+  });
+  return svg;
+}
+
+/* ---------- small helpers ---------- */
+function table(cols, rows, opt) {
+  opt = opt || {};
+  return h('div', { class: 'tw' }, h('table', null,
+    h('thead', null, h('tr', null, cols.map(c => h('th', { class: c.n ? 'n' : '' }, c.label)))),
+    h('tbody', null, rows.map(r => h('tr', { class: r.hl ? 'hl' : '' }, cols.map(c => h('td', { class: (c.n ? 'n ' : '') + (c.nowrap ? 'nowrap' : '') }, c.cell(r))))))));
+}
+const acLink = (a, text) => h('button', { class: 'linkbtn', type: 'button', onclick: () => { location.hash = 'ac-' + a.ac; } }, text || a.name);
+const nameOf = n => BY.get(n).name;
+const strengthPill = s => s === 'strong' ? h('span', { class: 'pill crit' }, '▲ Strong outlier') : s === 'moderate' ? h('span', { class: 'pill warn' }, '▲ Outlier') : h('span', { class: 'pill ok' }, 'Within the usual spread');
+const typeShort = t => 'Type ' + t.id;
+function sourceNote(t) { return h('p', { class: 'src' }, 'Source: ' + t); }
+
+/* ---------- Overview ---------- */
+function renderOverview() {
+  const p = $('#p-overview'), S = D.overview.state, L = D.overview.lists, ds = D.overview.districts;
+  const g = S.VS2022.votes / S.VS2017.votes - 1;
+  const ev = ds.reduce((a, x) => a + x.evm_votes_2024, 0), el = ds.reduce((a, x) => a + x.electors_2024, 0);
+  const tile = (label, value, delta, src) => h('div', { class: 'card tile' }, h('div', { class: 'label' }, label), h('div', { class: 'value' }, value), h('div', { class: 'delta' }, delta), sourceNote(src));
+  const rowsShare = E.map(e => ({ label: ELABEL[e].replace('Lok Sabha 2024', 'Lok Sabha 2024*'), sh: ['NDA', 'OPP', 'BSP', 'OTH'].map(c => S[e].camp_share[c]), extra: S[e].seats ? `Seats or segments led: BJP-led ${S[e].seats.NDA}, SP ${S[e].seats.SPF}, INC ${S[e].seats.INC}, BSP ${S[e].seats.BSP}, others ${S[e].seats.OTH}` : '' }));
+  const seatCols = [{ label: 'Election', cell: r => r.l }, ...[['NDA', 'BJP-led'], ['SPF', 'SP-led'], ['INC', 'INC'], ['BSP', 'BSP'], ['OTH', 'Others']].map(([k, n]) => ({ label: n, n: 1, cell: r => nf.format(r.s[k]) }))];
+  const seatRows = E.map(e => ({ l: ELABEL[e] + (e === 'LS2024' ? ' (assembly segments led)' : ' (seats won)'), s: S[e].seats }));
+
+  const byDist = key => ds.slice();
+  let sortKey = 'votes_2022', dir = -1, q = '';
+  const dcols = [
+    { k: 'district', label: 'District', v: x => x.district, cell: x => x.district },
+    { k: 'acs', label: 'ACs', n: 1, v: x => x.acs, cell: x => x.acs },
+    { k: 'votes_2022', label: 'Votes polled 2022', n: 1, v: x => x.votes_2022, cell: x => nf.format(x.votes_2022) },
+    { k: 'growth_pct', label: 'Change vs 2017', n: 1, v: x => x.growth_pct, cell: x => (x.growth_pct >= 0 ? '+' : '−') + Math.abs(x.growth_pct * 100).toFixed(1) + '%' },
+    { k: 'turnout_2024', label: 'Turnout LS 2024', n: 1, v: x => x.turnout_2024, cell: x => pct(x.turnout_2024) },
+    { k: 'n22', label: 'BJP-led 2022', n: 1, v: x => x.share_2022.NDA, cell: x => pct(x.share_2022.NDA) },
+    { k: 'o22', label: 'SP/INC 2022', n: 1, v: x => x.share_2022.OPP, cell: x => pct(x.share_2022.OPP) },
+    { k: 'b22', label: 'BSP 2022', n: 1, v: x => x.share_2022.BSP, cell: x => pct(x.share_2022.BSP) },
+    { k: 'n24', label: 'BJP-led LS 2024', n: 1, v: x => x.share_2024.NDA, cell: x => pct(x.share_2024.NDA) },
+    { k: 'o24', label: 'SP/INC LS 2024', n: 1, v: x => x.share_2024.OPP, cell: x => pct(x.share_2024.OPP) },
+    { k: 'b24', label: 'BSP LS 2024', n: 1, v: x => x.share_2024.BSP, cell: x => pct(x.share_2024.BSP) },
+  ];
+  const holder = h('div');
+  function drawDistricts() {
+    const col = dcols.find(c => c.k === sortKey);
+    const rows = ds.filter(x => x.district.toLowerCase().includes(q.toLowerCase())).sort((a, b) => dir * ((col.v(a) > col.v(b)) - (col.v(a) < col.v(b))));
+    holder.replaceChildren(h('div', { class: 'tw' }, h('table', null,
+      h('thead', null, h('tr', null, dcols.map(c => h('th', { class: c.n ? 'n' : '', 'aria-sort': c.k === sortKey ? (dir < 0 ? 'descending' : 'ascending') : 'none' },
+        h('button', { type: 'button', onclick: () => { dir = c.k === sortKey ? -dir : (c.n ? -1 : 1); sortKey = c.k; drawDistricts(); } }, c.label, c.k === sortKey ? (dir < 0 ? ' ▾' : ' ▴') : ''))))),
+      h('tbody', null, rows.map(x => h('tr', null, dcols.map(c => h('td', { class: c.n ? 'n' : '' }, c.cell(x)))))))), h('p', { class: 'bar-note' }, `${rows.length} of ${ds.length} districts`));
+  }
+  drawDistricts();
+  const note24 = '*Lok Sabha 2024 counts EVM votes only, by assembly segment.';
+  fill(p, 
+    h('div', { class: 'grid3' },
+      tile('Votes polled, Assembly 2022', compact(S.VS2022.votes), (g >= 0 ? '+' : '−') + Math.abs(g * 100).toFixed(1) + '% vs 2017 (' + compact(S.VS2017.votes) + ')', 'data/Uttar_Pradesh.csv, sum of AC totals'),
+      tile('Seats won by front, Assembly 2022', '403 seats', 'BJP-led ' + S.VS2022.seats.NDA + ' · SP-led ' + S.VS2022.seats.SPF + ' · INC ' + S.VS2022.seats.INC + ' · BSP ' + S.VS2022.seats.BSP + ' · Others ' + S.VS2022.seats.OTH, 'Winner of each AC; allied party codes are added to their front (see Method)'),
+      tile('Turnout, Lok Sabha 2024', pct(ev / el), 'EVM votes divided by electors; postal votes excluded', 'ECI assembly-segment file for Uttar Pradesh')),
+    h('div', { class: 'card' }, h('h3', null, 'Share of votes by front'), h('p', { class: 'sub' }, 'All four elections, statewide. Hover a segment for seats.'),
+      legend(['NDA', 'OPP', 'BSP', 'OTH'], true), shareBars(rowsShare, { aria: 'Statewide share of votes by front for four elections' }), h('p', { class: 'src' }, note24 + ' Fronts group allied party codes per election; see Method.')),
+    h('div', { class: 'card' }, h('h3', null, 'Seats by front'), h('p', { class: 'sub' }, 'Counts match the published results for 2012, 2017 and 2022.'), table(seatCols, seatRows), sourceNote('Winner of each AC from data/Uttar_Pradesh.csv; 2024 from the ECI segment file')),
+    h('div', { class: 'card' }, h('h3', null, 'Turnout by election'), h('p', { class: 'sub' }, 'Votes counted over electors, summed over the constituencies whose values passed their checks. The count is shown so a gap is visible.'),
+      table([{ label: 'Election', cell: r => ELABEL[r.election] }, { label: 'Turnout', n: 1, cell: r => pct(r.turnout) },
+        { label: 'Constituencies with trusted data', n: 1, cell: r => r.acs + ' of 403' }, { label: 'Source', cell: r => r.source }], D.overview.turnout || []),
+      sourceNote('ECI booth sheets summed to constituency level (Scripts/ml/ac_booth_totals.py); 2024 from the ECI segment file')),
+    h('div', { class: 'grid2' },
+      h('div', { class: 'card' }, h('h3', null, 'Most votes polled, Assembly 2022'), h('p', { class: 'sub' }, 'Top 10 constituencies.'),
+        rankBars(L.top_votes_vs2022.map(x => ({ label: x.name, value: x.value, text: nf.format(x.value), what: 'Votes polled', note: x.district + ' district' })), { aria: 'Top 10 constituencies by votes polled in 2022' })),
+      h('div', { class: 'card' }, h('h3', null, 'Biggest growth in votes polled, 2017 to 2022'), h('p', { class: 'sub' }, 'Added votes, top 10 constituencies.'),
+        rankBars(L.top_growth_votes.map(x => ({ label: x.name, value: x.value, text: '+' + nf.format(x.value), what: 'Added votes', note: x.district + ' district, ' + (x.pct >= 0 ? '+' : '') + (x.pct * 100).toFixed(0) + '% vs 2017' })), { aria: 'Top 10 constituencies by growth in votes polled' }))),
+    h('div', { class: 'card' }, h('h3', null, 'Districts'), h('p', { class: 'sub' }, 'Sort by any column. Votes and shares are summed from constituencies.'),
+      h('div', { class: 'tools' }, h('input', { type: 'search', placeholder: 'Filter districts', 'aria-label': 'Filter districts', id: 'dq', oninput: ev => { q = ev.target.value; drawDistricts(); } })),
+      holder, sourceNote('configs/ac_format.json maps each AC to its district; turnout is Lok Sabha 2024 EVM votes over electors'))
+  );
+}
+
+/* ---------- Constituency ---------- */
+let currentAC = 86;
+function renderAC(n) {
+  if (n != null && BY.has(n)) currentAC = n;
+  const ac = BY.get(currentAC), p = $('#p-ac');
+  const T = D.types.find(t => t.id === ac.type.id);
+  const sur = ac.surprise;
+  const picker = h('div', { class: 'tools' },
+    h('label', { for: 'acq', class: 'small muted' }, 'Constituency'),
+    h('input', { type: 'text', id: 'acq', list: 'acl', value: `${ac.ac} · ${ac.name} (${ac.district})`, 'aria-label': 'Pick a constituency by number or name', autocomplete: 'off',
+      onfocus: ev => ev.target.select(),
+      onchange: ev => { const v = ev.target.value.trim().toLowerCase(); const hit = ACS.find(a => String(a.ac) === v.split(/[^0-9]/)[0] && /^\d/.test(v)) || ACS.find(a => a.name.toLowerCase() === v) || ACS.find(a => a.name.toLowerCase().startsWith(v)); if (hit) location.hash = 'ac-' + hit.ac; else ev.target.value = `${ac.ac} · ${ac.name} (${ac.district})`; } }),
+    h('datalist', { id: 'acl' }, ACS.map(a => h('option', { value: `${a.ac} · ${a.name} (${a.district})` }))));
+  const head = h('div', { class: 'card' },
+    h('div', { class: 'hd' }, h('h2', null, ac.name), h('span', { class: 'meta' }, `AC ${ac.ac} · ${ac.district} · ${ac.reserved}`)),
+    h('div', { class: 'chips' },
+      h('span', { class: 'pill' }, `${typeShort(ac.type)}: ${ac.type.label}`),
+      sur ? strengthPill(sur.strength) : h('span', { class: 'pill warn' }, 'Not assessed'),
+      ...ac.data_flags.map(f => h('span', { class: 'pill warn' }, '▲ ' + f))));
+
+  const H = ac.history;
+  const TB = ac.turnout_block;
+  const histCols = [
+    { label: 'Election', nowrap: 1, cell: r => ELABEL[r.e] },
+    { label: 'Winner', cell: r => `${H[r.e].winner.name} (${H[r.e].winner.party})` },
+    { label: 'Margin', n: 1, cell: r => nf.format(H[r.e].margin_votes) + ' (' + pct(H[r.e].margin_pp, 0) + ')' },
+    { label: 'BJP-led', n: 1, cell: r => pct(H[r.e].sh[0]) }, { label: 'SP/INC', n: 1, cell: r => pct(H[r.e].sh[1]) },
+    { label: 'BSP', n: 1, cell: r => pct(H[r.e].sh[2]) }, { label: 'Others', n: 1, cell: r => pct(H[r.e].sh[3]) },
+    { label: 'Votes polled', n: 1, cell: r => nf.format(H[r.e].votes) }, { label: 'Turnout', n: 1, cell: r => { const t = TB ? TB.turnout[r.e] : null; return t != null ? pct(t) : (H[r.e].turnout != null ? pct(H[r.e].turnout) : 'n/a'); } }];
+  const trend = h('div', { class: 'card' }, h('h3', null, 'Vote share by front'), h('p', { class: 'sub' }, 'Hollow markers are the 2024 general election, a different kind of contest.'),
+    legend(['NDA', 'OPP', 'BSP']), lineChart(ac),
+    TB ? h('div', { class: 'chips', style: 'margin-top:10px' }, ['VS2017', 'LS2019', 'VS2022', 'LS2024'].map(e => h('span', { class: 'pill' }, `Turnout ${ESHORT[e]}: ${TB.turnout[e] != null ? pct(TB.turnout[e]) : 'n/a'}`))) : null,
+    h('details', null, h('summary', { class: 'small muted', style: 'cursor:pointer;margin-top:8px' }, 'Table view'), table(histCols, E.map(e => ({ e }))),
+      TB ? h('p', { class: 'bar-note' }, 'Electors: ' + ['VS2017', 'LS2019', 'VS2022', 'LS2024'].map(e => `${ELABEL[e]} ${TB.electors[e] != null ? nf.format(TB.electors[e]) : 'n/a'}`).join(' \u00B7 ') + `. Lok Sabha 2019 turnout: ${TB.turnout.LS2019 != null ? pct(TB.turnout.LS2019) : 'n/a'}. 2017 turnout comes from the ${TB.source_2017}.`) : null),
+    sourceNote('data/Uttar_Pradesh.csv (2012 to 2022) and the ECI assembly-segment file (2024)'));
+
+  const compliance = $('#compliance').checked;
+  const range = h('div', { class: 'card' }, h('h3', null, 'If nothing changes'),
+    compliance ? h('div', { class: 'off' }, 'Hidden while Compliance Mode is on. Forward-looking numbers are switched off during restriction periods.') : [
+      h('p', { class: 'sub' }, 'A repeat of the 2022 result, with the error seen when "same as last time" was tested on 2017 to 2022. This is not a forecast.'),
+      rangeChart(ac),
+      h('p', { class: 'bar-note' }, 'Bar: the range 80% of constituencies landed within. Thin line: wider range that also counts 2012 to 2017. Tick: the 2022 value.')]);
+
+  const look = h('div', { class: 'card' }, h('h3', null, 'Constituencies with a similar vote history'), h('p', { class: 'sub' }, 'Nearest five across all four elections.'),
+    h('ul', { class: 'look' }, ac.look_alikes.map(l => { const o = BY.get(l.ac); return h('li', null, acLink(o, o.name), h('span', { class: 'small muted' }, `${o.district} · Type ${o.type.id}`)); })));
+
+  let surCard;
+  if (!sur) surCard = h('div', { class: 'card' }, h('h3', null, 'Compared with similar constituencies'), h('div', { class: 'off' }, 'Not assessed: the source file is incomplete for this constituency.'));
+  else surCard = h('div', { class: 'card' }, h('h3', null, 'Compared with similar constituencies'),
+    h('p', { class: 'sub' }, 'Change from 2017 to 2022 against ACs that looked like this one before 2022.'),
+    h('div', { style: 'margin-bottom:10px' }, strengthPill(sur.strength), h('span', { class: 'small muted', style: 'margin-left:10px' }, `distance from usual ${sur.maxz.toFixed(1)} (flag at ${C.surprise.thresholds.z_flag})`)),
+    h('ul', { class: 'plain' }, sur.drivers.map(d => h('li', null, d))),
+    sur.flag ? h('p', { class: 'bar-note', style: 'margin-top:10px' }, 'Common ordinary explanations to rule out first: boundary or booth changes, a candidate switch or strong independent, an alliance change, a local incident, new housing or migration. A flag is a statistical outlier, not evidence of anything improper.') : null,
+    h('p', { class: 'bar-note' }, (C.surprise.injected_anomaly_test.length ? `Limit: in tests this check found ${Math.round(C.surprise.injected_anomaly_test.slice(-1)[0].recall * 100)}% of artificial ${C.surprise.injected_anomaly_test.slice(-1)[0].shift_pts}-point shifts, so it only catches large departures.` : 'Limit: this check only catches large departures from similar constituencies. The planted-shift test was not run for this build (quick mode).')));
+
+  fill(p, picker, head, h('div', { class: 'grid2' }, trend, range), h('div', { class: 'grid2' }, surCard, look));
+}
+
+/* ---------- Types ---------- */
+let openType = null;
+function renderTypes() {
+  const p = $('#p-types'), ch = C.typology;
+  const cards = D.types.map(t => {
+    const m = y => ['NDA', 'OPP', 'BSP'].map(c => t.mean_shares[y][c]).concat([1 - ['NDA', 'OPP', 'BSP'].reduce((a, c) => a + t.mean_shares[y][c], 0)]);
+    return h('div', { class: 'card' }, h('div', { class: 'hd' }, h('h3', null, 'Type ' + t.id), h('span', { class: 'meta' }, t.size + ' constituencies')),
+      h('p', { style: 'font-weight:600;margin-bottom:8px' }, t.label),
+      shareBars([{ label: '2022', sh: m('VS2022') }, { label: 'LS 2024', sh: m('LS2024') }], { rowH: 28, thick: 16, labelW: 56, W: 380, aria: `Average vote shares for type ${t.id}` }),
+      h('p', { class: 'small muted', style: 'margin-top:8px' }, 'Typical: ' + t.typical_acs.map(nameOf).join(', ')),
+      h('p', { class: 'small muted' }, `${t.flagged} flagged as unusual`),
+      h('button', { class: 'linkbtn small', type: 'button', onclick: () => { openType = openType === t.id ? null : t.id; renderTypes(); } }, openType === t.id ? 'Hide members' : 'Show members'));
+  });
+  const members = openType == null ? null : (() => { const t = D.types.find(x => x.id === openType); return h('div', { class: 'card' }, h('h3', null, `Type ${t.id}: ${t.label}`), h('p', { class: 'sub' }, t.size + ' constituencies'),
+    table([{ label: 'AC', n: 1, cell: a => a.ac }, { label: 'Constituency', cell: a => acLink(a) }, { label: 'District', cell: a => a.district }, { label: 'BJP-led 2022', n: 1, cell: a => pct(a.history.VS2022.sh[0]) }, { label: 'SP/INC 2022', n: 1, cell: a => pct(a.history.VS2022.sh[1]) }, { label: 'BSP 2022', n: 1, cell: a => pct(a.history.VS2022.sh[2]) }],
+      t.members.map(BY.get.bind(BY)))); })();
+  fill(p, 
+    h('div', { class: 'card' }, h('h3', null, 'Constituency types'), h('p', { class: 'sub' }, 'Groups of constituencies with a similar vote history across the four elections. Names are written by rule from average shares, so a person should review them.'),
+      legend(['NDA', 'OPP', 'BSP', 'OTH'], true),
+      h('p', { class: 'bar-note' }, `How solid are the groups? Silhouette ${ch.chosen.silhouette} (1 is perfectly separate) and stability ${ch.chosen.stability_ari_mean} (1 is identical on resampling). Constituencies form a continuum, so these are slices of it, not natural clusters.`)),
+    h('div', { class: 'grid2' }, cards), members);
+}
+
+/* ---------- Unusual results ---------- */
+function renderSurprises() {
+  const p = $('#p-surprises'), T = C.surprise;
+  const fl = ACS.filter(a => a.surprise && a.surprise.flag).sort((a, b) => b.surprise.maxz - a.surprise.maxz);
+  const inj = T.injected_anomaly_test;
+  fill(p, 
+    h('div', { class: 'card' }, h('h3', null, 'Unusual results, Assembly 2017 to 2022'), h('p', { class: 'sub' }, `${fl.length} of ${D.acs.filter(a => a.clean).length} constituencies changed very differently from ACs that looked like them before 2022. These are statistical outliers, listed so a person can check the ordinary explanations first.`),
+      table([{ label: 'Constituency', cell: a => acLink(a) }, { label: 'District', cell: a => a.district }, { label: 'Type', cell: a => 'Type ' + a.type.id, nowrap: 1 },
+        { label: 'Reading', cell: a => strengthPill(a.surprise.strength), nowrap: 1 }, { label: 'Distance from usual', n: 1, cell: a => a.surprise.maxz.toFixed(1) }, { label: 'What stands out', cell: a => a.surprise.drivers[0] }], fl),
+      h('p', { class: 'src' }, `Rule: distance of ${T.thresholds.z_flag} or more with Isolation Forest agreeing, or ${T.thresholds.z_extreme} or more on its own. Peers are the ${T.thresholds.peers} constituencies most similar on 2012 and 2017 results.`)),
+    h('div', { class: 'card' }, h('h3', null, 'How well does the check work?'), h('p', { class: 'sub' }, 'We shifted the BJP-led share of 20 random constituencies by a known amount and counted how many were flagged, over 10 repeats.'),
+      h('div', { class: 'narrow' }, table([{ label: 'Artificial shift', n: 1, cell: r => r.shift_pts + ' pts' }, { label: 'Flagged', n: 1, cell: r => Math.round(r.recall * 100) + '%' }, { label: 'Other constituencies flagged', n: 1, cell: r => (r.false_flag_rate * 100).toFixed(1) + '%' }], inj)),
+      h('p', { class: 'bar-note' }, 'The target in the plan was 80% found at 2% false flags. This first version does not reach it: ordinary variation between elections is large, so only big departures stand out. A better version would compare several parties together and use district trends.')));
+}
+
+/* ---------- Method ---------- */
+function coverageCards(cov) {
+  if (!cov) return [];
+  const reader = { main: 'standard reader', generic: 'label-based reader', form20_preamble: 'Form 20 preamble' };
+  const c = cov.checks;
+  return [
+    h('div', { class: 'card' }, h('h3', null, 'Data cleaning: what was read'), h('p', { class: 'sub' }, cov.note),
+      table([{ label: 'Source', cell: r => r.label }, { label: 'Files', n: 1, cell: r => r.files },
+        { label: 'Constituencies read', n: 1, cell: r => `${r.first_run.read} \u2192 ${r.acs_read}` },
+        { label: 'Turnout passed its checks', n: 1, cell: r => `${r.first_run.trusted_turnout} \u2192 ${r.trusted_turnout}` },
+        { label: 'Read by', cell: r => Object.entries(r.readers).map(([k, v]) => `${reader[k] || k} ${v}`).join(', ') }], cov.by_election),
+      h('p', { class: 'bar-note' }, 'Left of each arrow is the first run, right is now, out of 403 constituencies. ' + cov.filled)),
+    h('div', { class: 'grid2' },
+      h('div', { class: 'card' }, h('h3', null, 'Still unread, and why'),
+        h('ul', { class: 'plain', style: 'margin-top:8px' }, cov.by_election.flatMap(e => e.unread.map(u => h('li', null, h('b', null, `${e.label}, ${u.files.length} file${u.files.length > 1 ? 's' : ''}. `), `${u.reason} (${u.files.join(', ')}).`))))),
+      h('div', { class: 'card' }, h('h3', null, 'Checks against official results'),
+        h('ul', { class: 'plain', style: 'margin-top:8px' },
+          h('li', null, h('b', null, 'Assembly 2017. '), `${c.vs2017_votes_vs_official.within_range} of ${c.vs2017_votes_vs_official.compared} constituencies are within 4% of the official vote total (median ${(c.vs2017_votes_vs_official.median_ratio * 100).toFixed(1)}%; the gap is postal ballots).`),
+          h('li', null, h('b', null, 'Assembly 2022. '), `${c.vs2022_votes_vs_official.within_range} of ${c.vs2022_votes_vs_official.compared} are within 4% (median ${(c.vs2022_votes_vs_official.median_ratio * 100).toFixed(1)}%).`),
+          h('li', null, h('b', null, 'Lok Sabha 2019. '), `${c.ls2019_seats_vs_official.both_within_tol} of ${c.ls2019_seats_vs_official.complete_pcs} complete parliamentary seats match the official EVM votes on total and BJP votes. Party shares are used only for the ${c.ls2019_constituencies_in_verified_seats} constituencies in verified seats.`))))];
+}
+
+function renderMethod() {
+  const p = $('#p-method'), k = C.data_checks, T = C.typology, B = C.baseline, Lr = C.learned_forecaster_vs_baseline;
+  const seats = k.seats_by_camp;
+  fill(p, 
+    h('div', { class: 'card' }, h('h3', null, 'How the numbers get here'),
+      h('ol', { class: 'steps', style: 'margin-top:10px' },
+        h('li', null, h('b', null, 'Public results'), 'Assembly 2012, 2017, 2022 and Lok Sabha 2024 by assembly segment, for all 403 constituencies.'),
+        h('li', null, h('b', null, 'Fronts'), 'Allied party codes are added together per election, so an Apna Dal (S) seat is not shown as "BJP 0%".'),
+        h('li', null, h('b', null, 'Three models'), 'Types (k-means), unusual results (robust z-score plus Isolation Forest), and an expected range from "same as last time".'),
+        h('li', null, h('b', null, 'This page'), 'Results are computed once in a batch and read here. Data version ' + D.meta.data_version + ', model ' + D.meta.model_version + '.'))),
+    ...coverageCards(C.data_coverage),
+    h('div', { class: 'grid2' },
+      h('div', { class: 'card' }, h('h3', null, 'Checks that ran'),
+        h('ul', { class: 'plain', style: 'margin-top:8px' },
+          h('li', null, h('b', null, 'All four elections cover 403 constituencies.')),
+          h('li', null, h('b', null, 'Seat counts match published results. '), `2012: BJP ${seats.VS2012.NDA}, SP ${seats.VS2012.SPF}, BSP ${seats.VS2012.BSP}. 2017: BJP-led ${seats.VS2017.NDA}, SP+INC ${seats.VS2017.SPF}, BSP ${seats.VS2017.BSP}. 2022: BJP-led ${seats.VS2022.NDA}, SP-led ${seats.VS2022.SPF}.`),
+          h('li', null, h('b', null, `${k.excluded_from_fitting.length} constituencies are kept out of model fitting. `), 'Their 2012 rows cover only 45% to 55% of votes polled in the source file: AC ' + k.excluded_from_fitting.join(', ') + '.'),
+          h('li', null, h('b', null, 'Only Uttar Pradesh rows are used from the 2024 file. '), 'A loose match on "Uttar" also pulls in Uttarakhand, whose AC numbers 1 to 70 collide with ours; the build uses an exact match and checks for 4,288 candidate rows.'),
+          h('li', null, h('b', null, 'Allies rarely stand against their front leader. '), `Constituencies where two codes of one front both stood: 2017 ${(k.alliance_overlap_acs.VS2017.NDA || 0)} (BJP-led) and ${(k.alliance_overlap_acs.VS2017.SPF || 0)} (SP+INC friendly contests); 2022 ${(k.alliance_overlap_acs.VS2022.NDA || 0)} (BJP-led); 2024 ${(k.alliance_overlap_acs.LS2024.NDA || 0)}.`),
+          h('li', null, h('b', null, 'Constituency names agree between files. '), `${Math.round(k.ac_name_match_rate_ls2024_vs_config * 100)}% match exactly; the rest are spelling variants such as Bagpat and Baghpat.`))),
+      h('div', { class: 'card' }, h('h3', null, 'What is not in this demo'),
+        h('ul', { class: 'plain', style: 'margin-top:8px' },
+          h('li', null, h('b', null, 'Booth-level results. '), 'The match of booths across elections has not passed its check yet.'),
+          h('li', null, h('b', null, 'News, sentiment or predictions of 2027. '), 'Those are later phases and need data this repository does not have.'),
+          h('li', null, h('b', null, 'Turnout for every constituency. '), `${D.acs.filter(a => a.turnout_block && a.turnout_block.turnout.VS2022 == null).length} have no trusted 2022 value and ${D.acs.filter(a => a.turnout_block && a.turnout_block.turnout.LS2019 == null).length} no trusted 2019 value (see Data cleaning above). Missing values stay blank.`),
+          h('li', null, h('b', null, 'Reasons people vote. '), 'Types and flags describe results only.')))),
+    h('div', { class: 'card' }, h('h3', null, 'Choosing the number of types'), h('p', { class: 'sub' }, `History reduced to ${T.pca_components} main directions (${Math.round(T.pca_variance_explained * 100)}% of the variation kept), then k-means. The highlighted row was chosen.`),
+      h('div', { class: 'narrow' }, table([{ label: 'Types', n: 1, cell: r => r.k }, { label: 'Silhouette', n: 1, cell: r => r.silhouette.toFixed(3) }, { label: 'Stability (mean)', n: 1, cell: r => r.stability_ari_mean.toFixed(3) }, { label: 'Smallest group', n: 1, cell: r => r.smallest_group }, { label: 'Score', n: 1, cell: r => (r.k === T.chosen_k ? '✔ ' : '') + r.score.toFixed(3) }], T.selection.map(r => Object.assign({ hl: r.k === T.chosen_k }, r))))),
+    h('div', { class: 'card' }, h('h3', null, 'Does a learned model beat "same as last time"?'), h('p', { class: 'sub' }, `Learned on the ${Lr.train_transition[0].slice(2)} to ${Lr.train_transition[1].slice(2)} change, tested on ${Lr.test_transition[0].slice(2)} to ${Lr.test_transition[1].slice(2)}. Error is the average miss in percentage points; lower is better.`),
+      table([{ label: 'Front', cell: r => CAMP[r.camp].name }, { label: 'Method', cell: r => r.method }, { label: 'Average miss', n: 1, cell: r => r.mae_pts.toFixed(1) }, { label: '80% within', n: 1, cell: r => r.within_80pct_pts.toFixed(1) }], Lr.rows.map(r => Object.assign({ hl: r.method.startsWith('Same') }, r))),
+      h('p', { class: 'bar-note' }, Lr.decision + '. The learned models did better for BSP but worse for the BJP-led front, and there is only one test transition, so the simple baseline stays.')),
+    h('div', { class: 'card' }, h('h3', null, 'Expected-range bands'), h('p', { class: 'sub' }, 'Half-width of the range within which 80% of constituencies landed when "same as last time" was tested.'),
+      h('div', { class: 'narrow' }, table([{ label: 'Front', cell: r => CAMP[r.c].name }, { label: 'Usual band (2017 to 2022)', n: 1, cell: r => '±' + (r.b.band_last * 100).toFixed(1) + ' pts' }, { label: 'Wide band (adds 2012 to 2017)', n: 1, cell: r => '±' + (r.b.band_pooled * 100).toFixed(1) + ' pts' }], Object.entries(B.bands).map(([c, b]) => ({ c, b })))),
+      h('p', { class: 'bar-note' }, 'The wide band for the BJP-led front is large because its vote share jumped by about 24 points between 2012 and 2017.')),
+    h('div', { class: 'card' }, h('h3', null, 'Limits'), h('ul', { class: 'plain', style: 'margin-top:8px' }, C.limits.map(l => h('li', null, l)))));
+}
+
+/* ---------- router ---------- */
+const TABS = [['overview', 'Overview', renderOverview], ['ac', 'Constituency', null], ['types', 'Types', renderTypes], ['surprises', 'Unusual results', renderSurprises], ['method', 'Method and checks', renderMethod]];
+const tabs = $('#tabs');
+TABS.forEach(([id, label]) => tabs.append(h('a', { href: '#' + id, role: 'tab', id: 't-' + id }, label)));
+const rendered = new Set();
+function route() {
+  hideTip();
+  const raw = location.hash.slice(1) || 'overview';
+  const m = /^ac-(\d{1,3})$/.exec(raw);
+  const id = m ? 'ac' : (TABS.some(t => t[0] === raw) ? raw : 'overview');
+  TABS.forEach(([tid]) => { $('#p-' + tid).hidden = tid !== id; $('#t-' + tid).setAttribute('aria-selected', String(tid === id)); });
+  if (id === 'ac') renderAC(m ? +m[1] : currentAC);
+  else if (!rendered.has(id)) { TABS.find(t => t[0] === id)[2](); rendered.add(id); }
+  if (id === 'ac') $('#t-ac').href = '#ac-' + currentAC;
+}
+$('#compliance').checked = lsGet('upbi-compliance') === '1';
+$('#compliance').addEventListener('change', ev => { lsSet('upbi-compliance', ev.target.checked ? '1' : '0'); if (!$('#p-ac').hidden) renderAC(); });
+addEventListener('hashchange', route);
+route();
+})();
+</script>

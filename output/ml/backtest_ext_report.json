@@ -1,0 +1,228 @@
+{
+  "seed": 42,
+  "forward_test": {
+    "train": "assembly 2012 + Lok Sabha 2009/2014 -> assembly 2017",
+    "test": "assembly 2017 + Lok Sabha 2014/2019 -> assembly 2022",
+    "n_train": 399,
+    "n_test": 399,
+    "best_simple_baseline": "Same as last assembly election",
+    "best_baseline_mean_mae_pts": 8.79,
+    "promotion_margin_pts": 0.2,
+    "results": [
+      {
+        "method": "Same as last assembly election",
+        "kind": "baseline",
+        "features": "none",
+        "mae_pts": {
+          "nda": 4.86,
+          "opp": 11.67,
+          "bsp": 9.82
+        },
+        "mean_mae_pts": 8.79,
+        "within80_pts": 13.6,
+        "lead_call_accuracy": 0.684
+      },
+      {
+        "method": "Last assembly result plus the Lok Sabha swing",
+        "kind": "baseline",
+        "features": "none",
+        "mae_pts": {
+          "nda": 7.62,
+          "opp": 19.62,
+          "bsp": 16.94
+        },
+        "mean_mae_pts": 14.72,
+        "within80_pts": 26.87,
+        "lead_call_accuracy": 0.632
+      },
+      {
+        "method": "Latest Lok Sabha result for the seat",
+        "kind": "baseline",
+        "features": "none",
+        "mae_pts": {
+          "nda": 7.81,
+          "opp": 18.99,
+          "bsp": 17.92
+        },
+        "mean_mae_pts": 14.91,
+        "within80_pts": 27.06,
+        "lead_call_accuracy": 0.654
+      },
+      {
+        "method": "Average of last assembly result and latest Lok Sabha",
+        "kind": "baseline",
+        "features": "none",
+        "mae_pts": {
+          "nda": 4.29,
+          "opp": 13.39,
+          "bsp": 10.42
+        },
+        "mean_mae_pts": 9.37,
+        "within80_pts": 18.53,
+        "lead_call_accuracy": 0.687
+      },
+      {
+        "method": "CEILING: last result plus true state swing (only known afterwards)",
+        "kind": "ceiling",
+        "features": "none",
+        "mae_pts": {
+          "nda": 4.61,
+          "opp": 5.87,
+          "bsp": 5.0
+        },
+        "mean_mae_pts": 5.16,
+        "within80_pts": 7.83,
+        "lead_call_accuracy": 0.739
+      },
+      {
+        "method": "Ridge",
+        "kind": "learned",
+        "features": "history only",
+        "mae_pts": {
+          "nda": 6.13,
+          "opp": 11.49,
+          "bsp": 7.21
+        },
+        "mean_mae_pts": 8.28,
+        "within80_pts": 13.3,
+        "lead_call_accuracy": 0.619,
+        "beats_best_baseline_on_every_front": false
+      },
+      {
+        "method": "Ridge",
+        "kind": "learned",
+        "features": "history + Lok Sabha",
+        "mae_pts": {
+          "nda": 6.18,
+          "opp": 13.23,
+          "bsp": 7.6
+        },
+        "mean_mae_pts": 9.01,
+        "within80_pts": 14.27,
+        "lead_call_accuracy": 0.619,
+        "beats_best_baseline_on_every_front": false
+      },
+      {
+        "method": "Ridge",
+        "kind": "learned",
+        "features": "history + Lok Sabha + candidate (after nominations)",
+        "mae_pts": {
+          "nda": 6.25,
+          "opp": 13.22,
+          "bsp": 7.48
+        },
+        "mean_mae_pts": 8.98,
+        "within80_pts": 14.15,
+        "lead_call_accuracy": 0.619,
+        "beats_best_baseline_on_every_front": false
+      },
+      {
+        "method": "Gradient boosting",
+        "kind": "learned",
+        "features": "history only",
+        "mae_pts": {
+          "nda": 7.0,
+          "opp": 12.36,
+          "bsp": 6.78
+        },
+        "mean_mae_pts": 8.71,
+        "within80_pts": 13.92,
+        "lead_call_accuracy": 0.619,
+        "beats_best_baseline_on_every_front": false
+      },
+      {
+        "method": "Gradient boosting",
+        "kind": "learned",
+        "features": "history + Lok Sabha",
+        "mae_pts": {
+          "nda": 6.34,
+          "opp": 11.73,
+          "bsp": 6.15
+        },
+        "mean_mae_pts": 8.08,
+        "within80_pts": 12.92,
+        "lead_call_accuracy": 0.659,
+        "beats_best_baseline_on_every_front": false
+      },
+      {
+        "method": "Gradient boosting",
+        "kind": "learned",
+        "features": "history + Lok Sabha + candidate (after nominations)",
+        "mae_pts": {
+          "nda": 6.34,
+          "opp": 11.69,
+          "bsp": 6.21
+        },
+        "mean_mae_pts": 8.08,
+        "within80_pts": 12.92,
+        "lead_call_accuracy": 0.657,
+        "beats_best_baseline_on_every_front": false
+      }
+    ],
+    "any_learned_model_promoted": false
+  },
+  "cross_section_test": {
+    "design": "5-fold CV grouped by district inside task B (assembly 2022 as target)",
+    "n": 399,
+    "same_as_last_for_reference": {
+      "mae_pts": {
+        "nda": 4.86,
+        "opp": 11.67,
+        "bsp": 9.82
+      },
+      "mean_mae_pts": 8.79,
+      "within80_pts": 13.6,
+      "lead_call_accuracy": 0.684
+    },
+    "results": [
+      {
+        "method": "Ridge",
+        "features": "history + Lok Sabha + candidate",
+        "mae_pts": {
+          "nda": 3.81,
+          "opp": 4.66,
+          "bsp": 4.12
+        },
+        "mean_mae_pts": 4.2,
+        "within80_pts": 6.59,
+        "lead_call_accuracy": 0.807
+      },
+      {
+        "method": "Ridge",
+        "features": "... plus turnout, electors and 2019 booth-sheet fronts",
+        "mae_pts": {
+          "nda": 3.56,
+          "opp": 4.54,
+          "bsp": 4.07
+        },
+        "mean_mae_pts": 4.06,
+        "within80_pts": 6.23,
+        "lead_call_accuracy": 0.812
+      },
+      {
+        "method": "Gradient boosting",
+        "features": "history + Lok Sabha + candidate",
+        "mae_pts": {
+          "nda": 3.86,
+          "opp": 4.91,
+          "bsp": 4.27
+        },
+        "mean_mae_pts": 4.34,
+        "within80_pts": 6.82,
+        "lead_call_accuracy": 0.81
+      },
+      {
+        "method": "Gradient boosting",
+        "features": "... plus turnout, electors and 2019 booth-sheet fronts",
+        "mae_pts": {
+          "nda": 3.5,
+          "opp": 4.63,
+          "bsp": 4.15
+        },
+        "mean_mae_pts": 4.09,
+        "within80_pts": 6.22,
+        "lead_call_accuracy": 0.807
+      }
+    ]
+  }
+}

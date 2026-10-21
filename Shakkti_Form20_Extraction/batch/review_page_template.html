@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review AC __AC__</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --ink:#1d2330; --muted:#667085; --line:#d9dde5; --ok:#1a7f45; --bad:#b42318; --warn:#b54708; --accent:#2457d6; --okbg:#e8f6ee; --badbg:#fdecea; --warnbg:#fff4e5; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#14171f; --card:#1c212b; --ink:#e7eaf0; --muted:#98a1b3; --line:#2f3646; --ok:#4cc38a; --bad:#ff7b72; --warn:#f0a35a; --accent:#7aa2ff; --okbg:#12301f; --badbg:#3a1a18; --warnbg:#3a2a12; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.45 system-ui, "Segoe UI", sans-serif; }
+  header { padding:12px 16px 0; }
+  h1 { font-size:18px; margin:0 0 2px; }
+  .sub { color:var(--muted); margin:0 0 8px; }
+  #gap { position:sticky; top:0; z-index:5; background:var(--card); border-bottom:1px solid var(--line); padding:8px 16px 10px; }
+  #gap table { border-collapse:collapse; width:100%; font-size:13px; }
+  #gap th, #gap td { padding:2px 8px; text-align:right; white-space:nowrap; }
+  #gap th:first-child, #gap td:first-child { text-align:left; }
+  #gap td.zero { color:var(--ok); font-weight:600; }
+  #gap td.off { color:var(--bad); font-weight:600; }
+  #summary { margin-top:6px; font-weight:600; }
+  .tools { display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:10px 16px; }
+  button { font:inherit; padding:5px 10px; border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:6px; cursor:pointer; }
+  button.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+  button:hover { filter:brightness(0.96); }
+  main { padding:0 16px 60px; display:grid; gap:12px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
+  .card.done { opacity:0.55; }
+  .card.review { border-left:4px solid var(--bad); } .card.unusual { border-left:4px solid var(--warn); } .card.auto { border-left:4px solid var(--accent); } .card.added { border-left:4px solid var(--ok); } .card.removed { opacity:.45; } .card.removed .scan { filter:grayscale(1); }
+  .head { display:flex; flex-wrap:wrap; gap:10px; align-items:baseline; margin-bottom:6px; }
+  .head b { font-size:15px; }
+  .tag { font-size:12px; padding:1px 8px; border-radius:10px; background:var(--badbg); color:var(--bad); }
+  .tag.unusual { background:var(--warnbg); color:var(--warn); } .tag.auto { background:var(--okbg); color:var(--accent); }
+  .note { color:var(--muted); font-size:12px; }
+  .scan { max-width:100%; border:1px solid var(--line); border-radius:4px; display:block; margin:4px 0 8px; cursor:zoom-in; }
+  .scan.big { max-width:none; cursor:zoom-out; }
+  .cells { display:flex; flex-wrap:wrap; gap:6px; }
+  .cell { display:flex; flex-direction:column; align-items:stretch; width:78px; }
+  .cell label { font-size:11px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .cell input { width:100%; padding:4px 5px; font:inherit; text-align:right; border:1px solid var(--line); border-radius:5px; background:var(--card); color:var(--ink); }
+  .cell input.changed { border-color:var(--warn); background:var(--warnbg); }
+  .cell input.edited { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
+  .cell small { font-size:11px; color:var(--muted); min-height:14px; text-align:right; }
+  .actions { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:8px; }
+  .badge { font-size:12px; padding:1px 8px; border-radius:10px; }
+  .badge.ok { background:var(--okbg); color:var(--ok); } .badge.bad { background:var(--badbg); color:var(--bad); }
+  textarea { width:100%; min-height:120px; font:12px/1.4 ui-monospace, Consolas, monospace; background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:6px; }
+  .empty { color:var(--muted); padding:20px; text-align:center; }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title"></h1>
+  <p class="sub" id="sub"></p>
+</header>
+<section id="gap"></section>
+<div class="tools">
+  <button id="order">Order: most doubtful first</button>
+  <button id="hide-done">Hide rows I marked as checked</button>
+  <button id="add-row">Add a missing booth row</button>
+  <button id="download" class="primary">Download corrections</button>
+  <button id="reset">Discard my edits</button>
+  <span class="note" id="saved"></span>
+</div>
+<main id="rows"></main>
+<div style="padding:0 16px 40px">
+  <p class="note">The corrections are saved in this browser as you type. “Download corrections” writes a small JSON file; apply it with
+  <code>python batch/apply_review.py corrections.json --accept</code>, which re-checks the totals against the official data.</p>
+  <textarea id="json" readonly placeholder="The corrections appear here when you press Download."></textarea>
+</div>
+<script>
+const DATA = __DATA__;
+const NC = DATA.candidates.length;
+const COLS = DATA.candidates.map(c => c.label).concat(["Valid", "Rejected", "NOTA", "Total", "Tendered"]);
+const KEY = "form20-review-" + DATA.ac;
+let state = { values: {}, checked: {}, added: [], removed: {}, hideDone: false, byPage: false };
+try { const s = JSON.parse(localStorage.getItem(KEY) || "null"); if (s) state = Object.assign(state, s); } catch (e) {}
+
+const rowsById = {};
+DATA.rows.forEach(r => { rowsById[r.key] = r; if (!state.values[r.key]) state.values[r.key] = r.values.slice(); });
+
+function num(v) { return v === null || v === "" || v === undefined || isNaN(Number(v)) ? null : Number(v); }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); document.getElementById("saved").textContent = "saved in this browser"; } catch (e) { document.getElementById("saved").textContent = "not saved (browser storage is off)"; } }
+function allRows() { return DATA.rows.filter(r => !state.removed[r.key]).map(r => ({ key: r.key, kind: "row", values: state.values[r.key] })).concat(state.added.map((a, i) => ({ key: "add" + i, kind: "added", values: a.values }))); }
+
+function sums() {
+  const cand = DATA.candidates.map(c => c.base), nota = DATA.nota.base;
+  const out = { cand: cand.slice(), nota };
+  allRows().forEach(r => {
+    for (let j = 0; j < NC; j++) out.cand[j] += num(r.values[j]) || 0;
+    out.nota += num(r.values[NC + 2]) || 0;
+  });
+  return out;
+}
+
+function renderGap() {
+  const s = sums();
+  let off = 0, rows = "";
+  DATA.candidates.forEach((c, j) => {
+    const d = s.cand[j] - c.official; if (d !== 0) off++;
+    rows += `<tr><td>${esc(c.label)} <span class="note">(${esc(c.name)})</span></td><td>${s.cand[j]}</td><td>${c.official}</td><td class="${d === 0 ? "zero" : "off"}">${d > 0 ? "+" : ""}${d}</td></tr>`;
+  });
+  const dn = s.nota - DATA.nota.official; if (dn !== 0) off++;
+  rows += `<tr><td>NOTA</td><td>${s.nota}</td><td>${DATA.nota.official}</td><td class="${dn === 0 ? "zero" : "off"}">${dn > 0 ? "+" : ""}${dn}</td></tr>`;
+  document.getElementById("gap").innerHTML = `<table><thead><tr><th>Column</th><th>Your total</th><th>Official</th><th>Difference</th></tr></thead><tbody>${rows}</tbody></table>` +
+    `<div id="summary" style="color:var(--${off ? "bad" : "ok"})">${off ? off + " column(s) still differ from the official totals" : "Every candidate column and NOTA now equal the official totals - download the corrections."}</div>`;
+}
+
+function esc(t) { return String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+function identitiesHold(v) {
+  const c = v.slice(0, NC).map(num), valid = num(v[NC]), rej = num(v[NC + 1]) || 0, nota = num(v[NC + 2]) || 0, total = num(v[NC + 3]);
+  if (c.some(x => x === null) || valid === null || total === null) return null;
+  return c.reduce((a, b) => a + b, 0) === valid && valid + rej + nota === total;
+}
+
+function renderRows() {
+  const box = document.getElementById("rows");
+  box.innerHTML = "";
+  let shown = 0;
+  const order = DATA.rows.slice().sort((a, b) => state.byPage ? (a.page - b.page || a.row - b.row) : (b.score - a.score || a.page - b.page || a.row - b.row));
+  order.forEach(r => { if (state.hideDone && state.checked[r.key]) return; box.appendChild(card(r, state.values[r.key], r.key, "row")); shown++; });
+  state.added.forEach((a, i) => { box.appendChild(addedCard(a, i)); shown++; });
+  if (!shown) box.innerHTML = '<div class="empty">Nothing to show.</div>';
+}
+
+function card(r, values, key, kind) {
+  const el = document.createElement("div");
+  el.className = "card " + (kind === "added" ? "added" : r.status === "REVIEW" ? "review" : r.status === "UNUSUAL" ? "unusual" : "auto") + (state.checked[key] ? " done" : "") + (state.removed[key] ? " removed" : "");
+  const tag = kind === "added" ? "" : `<span class="tag ${r.status === "UNUSUAL" ? "unusual" : r.status === "REVIEW" ? "" : "auto"}">${esc(r.status)}</span>`;
+  el.innerHTML = `<div class="head"><b>Page ${r.page}, row ${r.row}</b><span>serial ${esc(r.serial)}</span>${tag}<span class="note">${esc(r.note || "")}</span></div>` +
+    (r.img ? `<img class="scan" src="${r.img}" alt="scan of page ${r.page} row ${r.row}">` : "") + `<div class="cells"></div><div class="actions"></div>`;
+  const cells = el.querySelector(".cells");
+  COLS.forEach((name, j) => {
+    const c = document.createElement("div"); c.className = "cell";
+    const read = (r.plain && r.plain[j] !== undefined) ? r.plain[j] : "";
+    c.innerHTML = `<label title="${esc(name)}">${esc(name)}</label><input inputmode="numeric" value="${values[j] === null ? "" : values[j]}"><small>${read !== "" && String(read) !== String(r.values ? r.values[j] : "") ? "read: " + esc(read) : ""}</small>`;
+    const inp = c.querySelector("input");
+    if (r.changed && r.changed.indexOf(j) >= 0) inp.classList.add("changed");
+    if (r.values && String(values[j] === null ? "" : values[j]) !== String(r.values[j] === null ? "" : r.values[j])) inp.classList.add("edited");
+    inp.addEventListener("input", () => { values[j] = inp.value === "" ? null : Number(inp.value); inp.classList.toggle("edited", !r.values || String(inp.value) !== String(r.values[j] === null ? "" : r.values[j])); save(); renderGap(); badge(); });
+    cells.appendChild(c);
+  });
+  const act = el.querySelector(".actions");
+  const b = document.createElement("span"); b.className = "badge";
+  const fill = document.createElement("button"); fill.textContent = "Fill valid and total from the candidates";
+  fill.onclick = () => { const s = values.slice(0, NC).reduce((a, x) => a + (num(x) || 0), 0); values[NC] = s; values[NC + 3] = s + (num(values[NC + 1]) || 0) + (num(values[NC + 2]) || 0); save(); refresh(); };
+  const chk = document.createElement("label"); chk.innerHTML = `<input type="checkbox" ${state.checked[key] ? "checked" : ""}> I have checked this row`;
+  chk.querySelector("input").onchange = e => { state.checked[key] = e.target.checked; save(); refresh(); };
+  act.append(b, fill, chk);
+  if (kind === "row") {
+    const gone = document.createElement("button"); gone.className = "gone";
+    gone.textContent = state.removed[key] ? "Put this row back" : "Not a booth - remove this row";
+    gone.onclick = () => { if (state.removed[key]) delete state.removed[key]; else state.removed[key] = true; save(); refresh(); };
+    act.appendChild(gone);
+  }
+  function badge() { const h = identitiesHold(values); b.className = "badge " + (h ? "ok" : "bad"); b.textContent = h === null ? "incomplete" : h ? "adds up" : "does not add up"; }
+  badge();
+  const img = el.querySelector(".scan"); if (img) img.onclick = () => img.classList.toggle("big");
+  return el;
+}
+
+function addedCard(a, i) {
+  const el = card({ page: a.page, row: "after " + a.after, serial: "(new)", status: "ADDED", note: "a booth the extractor missed", plain: [], changed: [] }, a.values, "add" + i, "added");
+  const rm = document.createElement("button"); rm.textContent = "Remove this row";
+  rm.onclick = () => { state.added.splice(i, 1); save(); refresh(); };
+  el.querySelector(".actions").appendChild(rm);
+  return el;
+}
+
+function refresh() { renderGap(); renderRows(); }
+
+document.getElementById("order").onclick = () => { state.byPage = !state.byPage; document.getElementById("order").textContent = state.byPage ? "Order: by page" : "Order: most doubtful first"; save(); refresh(); };
+document.getElementById("order").textContent = state.byPage ? "Order: by page" : "Order: most doubtful first";
+document.getElementById("hide-done").onclick = () => { state.hideDone = !state.hideDone; save(); refresh(); };
+document.getElementById("add-row").onclick = () => {
+  const page = prompt("Which page of the PDF is the missing booth on?"); if (!page) return;
+  const after = prompt("After which row of that page (its number on the page)? 0 = before the first row"); if (after === null) return;
+  state.added.push({ page: Number(page), after: Number(after), values: new Array(NC + 5).fill(null) }); save(); refresh();
+};
+document.getElementById("reset").onclick = () => { if (confirm("Discard all your edits for this AC?")) { localStorage.removeItem(KEY); location.reload(); } };
+document.getElementById("download").onclick = () => {
+  const edits = [];
+  DATA.rows.forEach(r => { const v = state.values[r.key]; if (!state.removed[r.key] && JSON.stringify(v) !== JSON.stringify(r.values)) edits.push({ page: r.page, row: r.row, values: v }); });
+  const removed = DATA.rows.filter(r => state.removed[r.key]).map(r => ({ page: r.page, row: r.row }));
+  const out = { ac: DATA.ac, workbook: DATA.workbook, edits, added: state.added.map(a => ({ page: a.page, after: a.after, values: a.values })), removed };
+  const text = JSON.stringify(out, null, 1);
+  document.getElementById("json").value = text;
+  const link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([text], { type: "application/json" })); link.download = "corrections_" + DATA.ac + ".json"; link.click();
+};
+
+document.getElementById("title").textContent = "Review AC " + DATA.ac + " - " + DATA.name;
+document.getElementById("sub").textContent = DATA.rows.length + " rows to look at (of " + DATA.total_rows + "), from " + DATA.pdf + ". Compare each row with its scan and correct what differs; the totals above update as you type.";
+refresh();
+</script>
+</body>
+</html>

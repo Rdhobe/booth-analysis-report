@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
-import { YR, get, pct1 } from "@/lib/upbi";
+import { PartyChooser } from "@/components/PartyPicker";
+import { YR, get, isBadParty, loadError, pct1, useParty, withParty } from "@/lib/upbi";
 
 export default function ZonePage({ params, searchParams }) {
   const zone = decodeURIComponent(params.zone);
@@ -11,22 +12,35 @@ export default function ZonePage({ params, searchParams }) {
   const [vs, setVs] = useState(searchParams.vs || "VS2022");
   const [o, setO] = useState(null);
   const [info, setInfo] = useState(null);
+  const [meta, setMeta] = useState(null);
   const [q, setQ] = useState("");
   const [err, setErr] = useState("");
+  const [party, setParty, ready] = useParty();
 
   useEffect(() => {
+    get("meta")
+      .then(setMeta)
+      .catch((e) => setErr(e.message));
+  }, []);
+  const parties = meta ? meta.parties || [] : null;
+  useEffect(() => {
+    if (ready && !party && parties && parties.length === 1) setParty(parties[0]);
+  }, [ready, party, parties, setParty]);
+
+  useEffect(() => {
+    if (!ready || !party) return;
     setO(null);
     setErr("");
     Promise.all([
-      get(`overview?election=${election}&vs=${vs}`),
+      get(`overview?election=${election}&vs=${vs}&party=${party}`),
       get("acs"),
     ])
       .then(([ov, acs]) => {
         setO(ov);
         setInfo(acs);
       })
-      .catch((e) => setErr(e.message));
-  }, [election, vs]);
+      .catch((e) => (isBadParty(e) ? setParty(null) : setErr(e.message)));
+  }, [election, vs, party, ready, setParty]);
 
   const rows = useMemo(() => {
     if (!o || !info) return [];
@@ -58,16 +72,25 @@ export default function ZonePage({ params, searchParams }) {
 
   return (
     <>
-      <Header election={election} vs={vs} onElection={setElection} onVs={setVs} />
+      <Header election={election} vs={vs} onElection={setElection} onVs={setVs} parties={parties} party={party} onParty={setParty} />
       <main className="wrap">
+        {party ? (
+          <div className="warnbox">
+            <b>Booth analysis from {party}&apos;s side.</b> Zones and shares here are {party}&apos;s. For all parties side by side, use <Link href="/insights">Insights</Link>.
+          </div>
+        ) : null}
         {err ? (
-          <div className="panel err">API unreachable: {err}</div>
+          <div className="panel err">{loadError(err)}</div>
+        ) : !ready || !meta ? (
+          <div className="skel" />
+        ) : !party ? (
+          <PartyChooser parties={parties} onParty={setParty} what="these constituencies" />
         ) : !o ? (
           <div className="skel" />
         ) : (
           <div className="panel">
             <h2>
-              <Link href="/" className="backbtn" title="back to dashboard">
+              <Link href={withParty("/booths", party)} className="backbtn" title="back to booth dashboard">
                 ←
               </Link>{" "}
               {zone} ACs ({rows.length})
@@ -86,8 +109,8 @@ export default function ZonePage({ params, searchParams }) {
                     <th>#</th>
                     <th>AC Name</th>
                     <th>District</th>
-                    <th>BJP {YR[election]}</th>
-                    <th>BJP {YR[vs]}</th>
+                    <th>{party} {YR[election]}</th>
+                    <th>{party} {YR[vs]}</th>
                     <th>Change</th>
                     <th></th>
                   </tr>
@@ -97,7 +120,7 @@ export default function ZonePage({ params, searchParams }) {
                     <tr key={r.ac}>
                       <td>{i + 1}</td>
                       <td>
-                        <Link href={`/ac/${r.ac}`}>
+                        <Link href={withParty(`/ac/${r.ac}`, party)}>
                           {r.name} ({r.ac})
                         </Link>
                       </td>
@@ -114,7 +137,7 @@ export default function ZonePage({ params, searchParams }) {
                         )}
                       </td>
                       <td>
-                        <Link href={`/ac/${r.ac}`}>›</Link>
+                        <Link href={withParty(`/ac/${r.ac}`, party)}>›</Link>
                       </td>
                     </tr>
                   ))}

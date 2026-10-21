@@ -4,16 +4,19 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
 import { Donut, Gauge, TrendChart } from "@/components/charts";
+import { PartyChooser } from "@/components/PartyPicker";
 import {
-  API_IMG,
   YR,
   ZGLYPH,
   RELS,
   RELABEL,
-  RELCOLOR,
   get,
   inr,
   pct1,
+  isBadParty,
+  loadError,
+  useParty,
+  withParty,
   zclass,
 } from "@/lib/upbi";
 
@@ -30,37 +33,62 @@ function Delta({ cur, prev }) {
 export default function Home() {
   const [election, setElection] = useState("LS2024");
   const [vs, setVs] = useState("VS2022");
+  const [party, setParty, ready] = useParty();
+  const [meta, setMeta] = useState(null);
   const [d, setD] = useState(null);
   const [err, setErr] = useState("");
 
   useEffect(() => {
+    get("meta")
+      .then(setMeta)
+      .catch((e) => setErr(e.message));
+  }, []);
+  const parties = meta ? meta.parties || [] : null;
+  // a store with a single party view (built before the party picker existed) needs no choice
+  useEffect(() => {
+    if (ready && !party && parties && parties.length === 1) setParty(parties[0]);
+  }, [ready, party, parties, setParty]);
+
+  useEffect(() => {
+    if (!ready || !party || !meta) return;
     setD(null);
     setErr("");
     Promise.all([
-      get(`overview?election=${election}&vs=${vs}`),
-      get("meta"),
+      get(`overview?election=${election}&vs=${vs}&party=${party}`),
       get("acs"),
-      get("trend"),
+      get(`trend?party=${party}`),
     ])
-      .then(([o, meta, acs, trend]) => setD({ o, meta, acs, trend }))
-      .catch((e) => setErr(e.message));
-  }, [election, vs]);
+      .then(([o, acs, trend]) => setD({ o, meta, acs, trend }))
+      .catch((e) => (isBadParty(e) ? setParty(null) : setErr(e.message)));
+  }, [election, vs, party, ready, meta, setParty]);
 
   return (
     <>
-      <Header election={election} vs={vs} onElection={setElection} onVs={setVs} />
+      <Header election={election} vs={vs} onElection={setElection} onVs={setVs} parties={parties} party={party} onParty={setParty} />
       <main className="wrap">
-        {err ? (
-          <div className="panel err">
-            API unreachable: {err} (is the FastAPI server running? See web/README.)
+        {party ? (
+          <div className="warnbox">
+            <b>Booth analysis from {party}&apos;s side.</b> Every share, zone and trend on the booth pages is {party}&apos;s, compared with its
+            strongest opponent in each booth. Switch party with the buttons above to see the same booths from another side. It is not a view of all
+            parties side by side: for that, use <Link href="/insights">Insights</Link>.
           </div>
+        ) : null}
+        {err ? (
+          <div className="panel err">{loadError(err)}</div>
+        ) : !ready || !meta ? (
+          <>
+            <div className="skel" />
+            <div className="skel" />
+          </>
+        ) : !party ? (
+          <PartyChooser parties={parties} onParty={setParty} />
         ) : !d ? (
           <>
             <div className="skel" />
             <div className="skel" />
           </>
         ) : (
-          <Dashboard d={d} election={election} vs={vs} />
+          <Dashboard d={d} election={election} vs={vs} party={party} />
         )}
       </main>
       <footer className="wrap site">
@@ -78,20 +106,20 @@ export default function Home() {
   );
 }
 
-function Dashboard({ d, election, vs }) {
+function Dashboard({ d, election, vs, party }) {
   const { o, meta, acs, trend } = d;
   const isLS = election.startsWith("LS");
-  const bjp = o.seats.find((s) => s.party === "BJP");
-  const bjpSeats = bjp ? bjp.seats : 0;
-  const seatPct = o.seats_counted ? (100 * bjpSeats) / o.seats_counted : 0;
+  const mine = o.seats.find((s) => s.party === party);
+  const mySeats = mine ? mine.seats : 0;   // the chosen party's seats
+  const seatPct = o.seats_counted ? (100 * mySeats) / o.seats_counted : 0;
   const dShare = o.avg_share != null && o.avg_share_vs != null ? o.avg_share - o.avg_share_vs : null;
   const acTotal = o.ac_zones.reduce((a, x) => a + x.acs, 0);
   const boothTotal = o.booth_zones.reduce((a, x) => a + x.booths, 0);
 
   const points = d.trend.rows.map((t) => ({
     label: YR[t.election] + (t.election.startsWith("LS") ? " (LS)" : ""),
-    share: t.bjp_share,
-    seats: t.bjp_seats,
+    share: t.share,
+    seats: t.seats,
     seatWord: t.seats_word,
   }));
 
@@ -100,28 +128,17 @@ function Dashboard({ d, election, vs }) {
 
   return (
     <>
-      <div className="hero">
-        <div className="slogan">
-          ❝ Sabka Saath Sabka Vikas
-          <br />
-          Sabka Vishwas Sabka Prayas<small>— Narendra Modi</small>
-        </div>
-        <div className="leaders">
-          <img src={`${API_IMG}/assets/portraits/yogi_adityanath.png`} alt="Yogi Adityanath" />
-          <img src={`${API_IMG}/assets/portraits/narendra_modi.png`} alt="Narendra Modi" />
-        </div>
-      </div>
-
       <div className="kpirow">
         <div className="kcard seats">
           <div>
-            <div className="t">{isLS ? "BJP AC Leads in UP (Lok Sabha)" : "BJP Seats in UP Assembly"}</div>
+            <div className="t">{isLS ? `${party} AC Leads in UP (Lok Sabha)` : `${party} Seats in UP Assembly`}</div>
             <div className="n">
-              {bjpSeats} <small>/ {o.seats_counted}</small>
+              {mySeats} <small>/ {o.seats_counted}</small>
             </div>
             <div className="d">
               {seatPct.toFixed(1)}% {isLS ? "leads" : "seats"} ·{" "}
               {o.seats.map((s) => `${s.party} ${s.seats}`).join(" · ")}
+              {o.party_stood != null && o.party_stood < o.seats_counted ? ` · ${party} stood in ${o.party_stood} of ${o.seats_counted} seats counted` : ""}
             </div>
           </div>
           <div>
@@ -141,7 +158,7 @@ function Dashboard({ d, election, vs }) {
         </div>
       </div>
 
-      <Finder acs={acs} />
+      <Finder acs={acs} party={party} />
 
       <div className="panel">
         <div className="sectionhead">
@@ -150,7 +167,7 @@ function Dashboard({ d, election, vs }) {
         </div>
         <div className="zonegrid">
           {o.ac_zones.map((z) => (
-            <Link className={`zcard ${zclass(z.zone)}`} key={z.zone} href={`/zone/${encodeURIComponent(z.zone)}`}>
+            <Link className={`zcard ${zclass(z.zone)}`} key={z.zone} href={withParty(`/zone/${encodeURIComponent(z.zone)}?e=${election}&vs=${vs}`, party)}>
               <div className="zhead">
                 <span className="zdot">{ZGLYPH[z.zone] || "•"}</span>
                 {z.zone.toUpperCase()}
@@ -185,7 +202,7 @@ function Dashboard({ d, election, vs }) {
               {z.top ? (
                 <div className="small" style={{ marginTop: 6 }}>
                   Top Booth <b>No. {z.top.ps}</b> — {z.top.ac_name} (AC{" "}
-                  <Link href={`/ac/${z.top.ac}`}>{z.top.ac}</Link>)<br />
+                  <Link href={withParty(`/ac/${z.top.ac}`, party)}>{z.top.ac}</Link>)<br />
                   <b>{pct1(z.top.share)}</b> <Delta cur={z.top.share} prev={z.top.share_vs} />
                 </div>
               ) : (
@@ -199,7 +216,7 @@ function Dashboard({ d, election, vs }) {
       <div className="duo">
         <div className="panel">
           <div className="sectionhead">
-            <h2>BJP Trajectory 2017–2024</h2>
+            <h2>{party} Trajectory 2017–2024</h2>
             <span>share + {isLS ? "leads" : "seats"}</span>
           </div>
           <TrendChart points={points} />
@@ -214,7 +231,7 @@ function Dashboard({ d, election, vs }) {
             <div className="relrow" key={t.e}>
               <span>{YR[t.e]}</span>
               <span className="reltrack">
-                <i style={{ width: `${((t.pct || 0) / tmax) * 100}%`, background: "#2456a6" }} />
+                <i style={{ width: `${((t.pct || 0) / tmax) * 100}%`, background: "#5b6b7c" }} />
               </span>
               <b>{t.pct != null ? `${t.pct.toFixed(1)}%` : "—"}</b>
             </div>
@@ -232,8 +249,8 @@ function Dashboard({ d, election, vs }) {
             <Donut
               size={96}
               segs={[
-                ["Male", o.voter.male_pct || 0, "#2456a6"],
-                ["Female", o.voter.female_pct || 0, "#e0508a"],
+                ["Male", o.voter.male_pct || 0, "#5b6b7c"],
+                ["Female", o.voter.female_pct || 0, "#a9b4c0"],
               ]}
             />
             <div>
@@ -255,11 +272,9 @@ function Dashboard({ d, election, vs }) {
           </div>
           {RELS.map((r) => (
             <div className="relrow" key={r}>
-              <span>
-                <span style={{ color: RELCOLOR[r] }}>●</span> {RELABEL[r]}
-              </span>
+              <span>{RELABEL[r]}</span>
               <span className="reltrack">
-                <i style={{ width: `${Math.min(100, o.religion[r] || 0)}%`, background: RELCOLOR[r] }} />
+                <i style={{ width: `${Math.min(100, o.religion[r] || 0)}%`, background: "#5b6b7c" }} />
               </span>
               <b>{pct1(o.religion[r])}</b>
             </div>
@@ -286,7 +301,7 @@ function Perf({ label, p }) {
   );
 }
 
-function Finder({ acs }) {
+function Finder({ acs, party }) {
   const [q, setQ] = useState("");
   const all = useMemo(() => {
     const seen = {};
@@ -323,7 +338,7 @@ function Finder({ acs }) {
       {hits.length > 0 && (
         <div className="cols" style={{ marginBottom: 8 }}>
           {hits.map((r) => (
-            <Link key={r.ac} href={`/ac/${r.ac}`} className="pill">
+            <Link key={r.ac} href={withParty(`/ac/${r.ac}`, party)} className="pill">
               {r.name} ({r.ac})
             </Link>
           ))}
@@ -344,7 +359,7 @@ function Finder({ acs }) {
                   .filter((r) => r.dist === d)
                   .map((r) => (
                     <div key={r.ac}>
-                      <Link href={`/ac/${r.ac}`}>
+                      <Link href={withParty(`/ac/${r.ac}`, party)}>
                         {r.name} ({r.ac})
                       </Link>
                     </div>

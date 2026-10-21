@@ -7,3 +7,13 @@ web\node_modules
 .env.example
 .env.local
 data/processed/
+# 94 MB generated booth workbook (Scripts/report/build_state_report.py); rebuilt, not committed
+output/up_booth_report.xlsx
+output/servedb.sqlite-*
+# loose images in the top folder are scratch output (old ones are in Shakkti_Form20_Extraction/scratch_archive)
+/*.png
+# generated documents and the shareable zip (copies are shared separately), old Form 20 debugging files, a separate nested project
+output/handoff/
+output/status/
+Shakkti_Form20_Extraction/scratch_archive/
+VoterEroll_Extractor_temp/

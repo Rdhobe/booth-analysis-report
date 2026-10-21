@@ -1,0 +1,279 @@
+{
+  "version": "0.1.0",
+  "seed": 42,
+  "camps": {
+    "order": [
+      "NDA",
+      "SPF",
+      "BSP",
+      "INC",
+      "OTH"
+    ],
+    "labels": {
+      "NDA": "BJP-led (NDA)",
+      "SPF": "SP-led",
+      "BSP": "BSP",
+      "INC": "INC (when not in the SP alliance)",
+      "OTH": "Others and NOTA",
+      "OPP": "SP/INC bloc (with allies)"
+    },
+    "note": "A camp is the set of party codes that fought as one front in that election. Ally codes are summed into the front, so a seat where Apna Dal (S) or Nishad stood for the NDA is not shown as 'BJP 0%'. Membership is checked against the data (ally codes should almost never stand in the same AC as the main party; see model_card data_checks.alliance_overlap). TODO(verify): small allies not listed here fall into OTH.",
+    "elections": {
+      "VS2012": {
+        "NDA": [
+          "BJP"
+        ],
+        "SPF": [
+          "SP"
+        ],
+        "BSP": [
+          "BSP"
+        ],
+        "INC": [
+          "INC",
+          "RLD"
+        ]
+      },
+      "VS2017": {
+        "NDA": [
+          "BJP",
+          "ADS",
+          "SBSP"
+        ],
+        "SPF": [
+          "SP",
+          "INC"
+        ],
+        "BSP": [
+          "BSP"
+        ],
+        "INC": []
+      },
+      "VS2022": {
+        "NDA": [
+          "BJP",
+          "ADS",
+          "NISHAD"
+        ],
+        "SPF": [
+          "SP",
+          "RLD",
+          "SBSP",
+          "AD(K)"
+        ],
+        "BSP": [
+          "BSP"
+        ],
+        "INC": [
+          "INC"
+        ]
+      },
+      "LS2024": {
+        "NDA": [
+          "BJP",
+          "RLD",
+          "ADAL",
+          "SBSP"
+        ],
+        "SPF": [
+          "SP",
+          "INC",
+          "AITC"
+        ],
+        "BSP": [
+          "BSP"
+        ],
+        "INC": []
+      }
+    },
+    "derived": {
+      "OPP": [
+        "SPF",
+        "INC"
+      ]
+    },
+    "model_camps": [
+      "NDA",
+      "OPP",
+      "BSP",
+      "OTH"
+    ],
+    "derived_note": "OPP = SPF + INC. INC sits inside the SP alliance in 2017 and 2024 but stands alone in 2012 and 2022, so the models use the combined bloc to avoid mistaking alliance structure for voter movement."
+  },
+  "elections": {
+    "order": [
+      "VS2012",
+      "VS2017",
+      "VS2022",
+      "LS2024"
+    ],
+    "labels": {
+      "VS2012": "Assembly 2012",
+      "VS2017": "Assembly 2017",
+      "VS2022": "Assembly 2022",
+      "LS2024": "Lok Sabha 2024 (assembly segments, EVM votes only)"
+    }
+  },
+  "typology": {
+    "pca_components": 3,
+    "k_range": [
+      3,
+      8
+    ],
+    "bootstrap_resamples": 60,
+    "min_group_size": 15,
+    "look_alikes": 5
+  },
+  "surprise": {
+    "pair": [
+      "VS2017",
+      "VS2022"
+    ],
+    "peer_features": [
+      "VS2012",
+      "VS2017"
+    ],
+    "peers": 25,
+    "camps": [
+      "NDA",
+      "OPP",
+      "BSP"
+    ],
+    "z_flag": 3.5,
+    "z_extreme": 5.0,
+    "isolation_forest_trees": 300,
+    "isolation_forest_bottom_pct": 5.0,
+    "injected_shifts_pts": [
+      10,
+      15,
+      20
+    ],
+    "injected_trials": 10,
+    "injected_acs_per_trial": 20
+  },
+  "baseline": {
+    "transitions": [
+      [
+        "VS2012",
+        "VS2017"
+      ],
+      [
+        "VS2017",
+        "VS2022"
+      ]
+    ],
+    "band_quantile": 0.8,
+    "forecast_base_election": "VS2022",
+    "promotion_margin_pts": 0.2,
+    "band_source": "last",
+    "band_note": "Main range uses the latest transition (2017 to 2022). The stress range pools 2012 to 2017 as well, which includes a one-off jump in BJP-led vote share."
+  },
+  "data_checks": {
+    "coverage_min": 0.995,
+    "turnout_suspicious_above": 0.85
+  },
+  "features_ext": {
+    "note": "Constituency features derived from the ECI booth sheets, uprolls2017, the 2024 segment file and candidate names. Gates decide which values are trusted; failing values become missing, never guessed.",
+    "reconcile_ratio_range": [
+      0.96,
+      1.02
+    ],
+    "turnout_range": [
+      0.3,
+      0.95
+    ],
+    "ls2019_fronts": {
+      "NDA": [
+        "BJP",
+        "ADS"
+      ],
+      "GBA": [
+        "SP",
+        "BSP",
+        "RLD"
+      ],
+      "INC": [
+        "INC"
+      ]
+    },
+    "ls2019_mapped_min": 0.85,
+    "pc_check_tolerance": 0.02,
+    "name_match": {
+      "ratio": 0.85,
+      "min_tokens_for_subset": 2
+    },
+    "electors17_source_scale": 0.979,
+    "reconcile_note": "Booth votes are EVM only. Official totals include postal ballots (official higher) while booth sheets also count NOTA and tendered votes (booth higher), so a gap of a few percent either way is normal."
+  },
+  "extra": {
+    "note": "Settings for the additional seat-level models (Scripts/ml/models_extra.py, build_extra.py). Each model has a backtest and a promotion gate; a model that does not clear its gate is reported but not used.",
+    "regions_file": "configs/regions_up.json",
+    "watch": {
+      "note": "Seat watch score: a fixed rule (nothing fitted). A learned logistic regression is evaluated against it and reported.",
+      "mood_weight": 0.25,
+      "band_top_fractions": [
+        0.1,
+        0.25,
+        0.5
+      ],
+      "band_names": [
+        "Highest",
+        "High",
+        "Moderate",
+        "Lower"
+      ],
+      "eval_top_k": [
+        50,
+        100
+      ],
+      "logistic_C": 0.3,
+      "promotion_margin_pts": 5.0
+    },
+    "turnout": {
+      "note": "Expected turnout from other elections and seat facts, scored with out-of-fold predictions (5 folds, whole districts held out).",
+      "targets": [
+        "VS2022",
+        "LS2024"
+      ],
+      "ridge_alpha": 3.0,
+      "cv_folds": 5,
+      "promotion_margin_pts": 0.2,
+      "flag_z": -1.5
+    },
+    "alliance": {
+      "note": "Ecological regression of an alliance's vote share on the partners' earlier shares, by parliamentary seat; bootstrap intervals over seats.",
+      "bootstrap": 500,
+      "interval": 0.8,
+      "min_seats": 8
+    },
+    "simulator": {
+      "note": "What-if seat simulator. Seats are led by the front with the highest share after the chosen swing; no random noise (hindcasts show noise makes seat counts worse).",
+      "base": "VS2022",
+      "toss_up_pp": 5.0,
+      "margin_bands_pp": [
+        3,
+        6,
+        10,
+        15
+      ],
+      "hindcast_pairs": [
+        [
+          "VS2017",
+          "VS2022"
+        ],
+        [
+          "VS2012",
+          "VS2017"
+        ]
+      ]
+    },
+    "booths": {
+      "note": "Booth segments from the 2024 Form 20 workbooks whose candidate columns all equal the official totals.",
+      "dir": "data/2024/converted",
+      "strong_pp": 25.0,
+      "lean_pp": 10.0,
+      "min_votes": 50,
+      "fronts_election": "LS2024"
+    }
+  }
+}

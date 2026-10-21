@@ -1,6 +1,6 @@
 "use client";
 
-import { inr, partyIcon } from "@/lib/upbi";
+import { inr } from "@/lib/upbi";
 
 export function Gauge({ pct, label }) {
   const p = Math.min(100, Math.max(0, pct || 0));
@@ -16,21 +16,6 @@ export function Gauge({ pct, label }) {
   );
 }
 
-export function PartyIcon({ code }) {
-  const src = partyIcon(code);
-  if (!src) return null;
-  return (
-    <img
-      className="plico"
-      src={src}
-      alt=""
-      onError={(e) => {
-        e.currentTarget.style.display = "none";
-      }}
-    />
-  );
-}
-
 export function PartyBars({ items }) {
   const mx = Math.max(...items.map((i) => Math.abs(i[1]) || 0), 0) || 1;
   return (
@@ -40,7 +25,6 @@ export function PartyBars({ items }) {
         return (
           <div className="bar-row" key={i}>
             <span className="lbl">
-              <PartyIcon code={label} />
               {label}
             </span>
             <span className="track">
@@ -112,18 +96,18 @@ export function TrendChart({ points }) {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto" }}>
       {[0.25, 0.5, 0.75].map((f) => (
-        <line key={f} x1={PAD} x2={W - PAD} y1={PAD + f * (H - PAD * 2)} y2={PAD + f * (H - PAD * 2)} stroke="#e9dcc2" strokeWidth="1" />
+        <line key={f} x1={PAD} x2={W - PAD} y1={PAD + f * (H - PAD * 2)} y2={PAD + f * (H - PAD * 2)} stroke="#dde1e6" strokeWidth="1" />
       ))}
-      <path d={line} fill="none" stroke="#e8721c" strokeWidth="3" strokeLinejoin="round" />
+      <path d={line} fill="none" stroke="#3a4a5c" strokeWidth="3" strokeLinejoin="round" />
       {points.map((p, i) => (
         <g key={i}>
           {p.share != null && (
             <>
-              <circle cx={X(i)} cy={Y(p.share)} r="5" fill="#e8721c" stroke="#fff" strokeWidth="2" />
-              <text x={X(i)} y={Y(p.share) - 12} textAnchor="middle" fontSize="12" fontWeight="800" fill="#332619">
+              <circle cx={X(i)} cy={Y(p.share)} r="5" fill="#3a4a5c" stroke="#fff" strokeWidth="2" />
+              <text x={X(i)} y={Y(p.share) - 12} textAnchor="middle" fontSize="12" fontWeight="800" fill="#1d2733">
                 {p.share.toFixed(1)}%
               </text>
-              <text x={X(i)} y={H - 8} textAnchor="middle" fontSize="11" fill="#8a7760">
+              <text x={X(i)} y={H - 8} textAnchor="middle" fontSize="11" fill="#5f6b78">
                 {p.label} · {p.seats != null ? `${p.seats} ${p.seatWord}` : "—"}
               </text>
             </>
@@ -155,22 +139,22 @@ export function SexPie({ rows }) {
           <div className="sexrow" key={r.election}>
             <span className="yr">{YRMAP[r.election] || r.election}</span>
             <svg width="56" height="56" viewBox="0 0 42 42">
-              <circle cx="21" cy="21" r="15.9" fill="none" stroke="#f0e8d5" strokeWidth="7" />
-              <circle cx="21" cy="21" r="15.9" fill="none" stroke="#2456a6" strokeWidth="7"
+              <circle cx="21" cy="21" r="15.9" fill="none" stroke="#e6e9ee" strokeWidth="7" />
+              <circle cx="21" cy="21" r="15.9" fill="none" stroke="#5b6b7c" strokeWidth="7"
                 pathLength="100" strokeDasharray={`${mp.toFixed(1)} 100`} strokeDashoffset="25" />
-              <circle cx="21" cy="21" r="15.9" fill="none" stroke="#e0508a" strokeWidth="7"
+              <circle cx="21" cy="21" r="15.9" fill="none" stroke="#a9b4c0" strokeWidth="7"
                 pathLength="100" strokeDasharray={`${fp.toFixed(1)} 100`} strokeDashoffset={(25 - mp).toFixed(1)} />
             </svg>
             <div className="sbars">
               <div className="sbar">
                 <span className="track">
-                  <i style={{ width: `${mp.toFixed(1)}%`, background: "#2456a6" }} />
+                  <i style={{ width: `${mp.toFixed(1)}%`, background: "#5b6b7c" }} />
                 </span>
                 <span className="val">♂ {mp.toFixed(1)}%</span>
               </div>
               <div className="sbar">
                 <span className="track">
-                  <i style={{ width: `${fp.toFixed(1)}%`, background: "#e0508a" }} />
+                  <i style={{ width: `${fp.toFixed(1)}%`, background: "#a9b4c0" }} />
                 </span>
                 <span className="val">♀ {fp.toFixed(1)}%</span>
               </div>

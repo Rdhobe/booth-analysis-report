@@ -1,0 +1,34 @@
+{
+ "ac": 373,
+ "workbook": "C:/Users/Admin/AppData/Local/Temp/claude/d--booth-test/4170f5a7-db63-4b1e-98cd-684aaee50635/scratchpad/out_final/373Hin_Form20.xlsx",
+ "edits": [
+  {
+   "page": 31,
+   "row": 8,
+   "values": [
+    361,
+    167,
+    258,
+    2,
+    2,
+    4,
+    3,
+    1,
+    9,
+    1,
+    808,
+    0,
+    6,
+    814,
+    0
+   ]
+  }
+ ],
+ "added": [],
+ "removed": [
+  {
+   "page": 34,
+   "row": 1
+  }
+ ]
+}

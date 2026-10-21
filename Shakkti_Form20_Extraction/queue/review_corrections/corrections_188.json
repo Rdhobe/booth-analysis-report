@@ -1,0 +1,9 @@
+{"ac": 188,
+ "workbook": "D:/booth-test/Shakkti_Form20_Extraction/data/output/2024/188Eng_Form20.xlsx",
+ "edits": [
+  {"page": 7,  "row": 1, "values": [93, 188, 25, 0, 0, 1, 0, 0, 0, 307, 0, 3, 310, 0]},
+  {"page": 12, "row": 1, "values": [31, 275, 263, 1, 0, 0, 0, 0, 1, 571, 0, 4, 575, 0]},
+  {"page": 12, "row": 2, "values": [4, 601, 157, 0, 0, 1, 0, 0, 0, 763, 0, 1, 764, 0]}
+ ],
+ "added": [],
+ "removed": [{"page": 18, "row": 1}]}

@@ -12,30 +12,36 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000. The FastAPI server must be running
+Open http://localhost:3000 (it opens the all-parties Insights page). The FastAPI server must be running
 (`server/README.md`) — pages proxy through `app/api/*`, which
 attaches `X-API-Key` server-side from `UPBI_API_KEY`. The key never
-reaches the browser. Images load directly from
-`NEXT_PUBLIC_UPBI_API/assets` (public, no key).
+reaches the browser. The UI shows no logos, portraits or other images (see Notes).
 
 ## Pages
 
 | Route | Content |
 |---|---|
-| `/` | Hero, seats/share KPIs, AC + booth zone cards, voter profile, religion panel (all from `/api/overview`) |
-| `/zone/[zone]` | AC table with search + change-sort (`?e=&vs=` preserved from home links) |
+| `/` | Redirects to `/insights` (the neutral, all-parties view) |
+| `/booths` | Booth dashboard seen from one party's side, chosen with the party buttons (BJP, BSP, INC, SP; none preselected; `?party=SP` is shareable): seats/share KPIs, AC + booth zone cards, voter profile, religion panel (all from `/api/overview?party=`). Needs the booth store (`servedb.sqlite`) |
+| `/zone/[zone]` | AC table with search + change-sort for the chosen party (`?e=&vs=&party=` preserved from the `/booths` links) |
 | `/ac/[ac]` | Tabs: Overview (sexratio + top parties), Booths (filters, Results/Turnout/Religion-wise, drill-down drawer), Past Elections, Map placeholder |
+| `/insights` | Phase 1 models: Overview (shares, seats, top constituencies, districts), Constituency (history, turnout and electors, type, look-alikes, unusual-result reading, expected range, watch score, turnout against expected, 2024 booth segments), Battlegrounds (seat watch list), What-if (swing and alliance calculator), Turnout, Alliances, Types, Unusual results, Method and checks (including the data-cleaning coverage). The Overview also shows turnout by election. Data from `/api/insights/*`; `?tab=ac&ac=86` is shareable |
 
 ## Deploy (Vercel)
 
 Push `web/` (or the repo with Root Directory = `web`), then set env:
 `UPBI_API_BASE` (e.g. `https://<you>.onrender.com`),
-`UPBI_API_KEY`, `NEXT_PUBLIC_UPBI_API` (same base, for images).
+`UPBI_API_KEY`.
 
 ## Notes
 
 - No component library, no chart dependency — hand-rolled SVG/divs.
-- Party logos hide themselves when the file is missing; add PNGs to
-  `server/assets/parties/` and they appear with zero code changes.
+- **Neutral by design.** No party, leader, company or other logos, portraits, slogans or greetings anywhere in the UI; the only name shown is the
+  product's own plain-text title (`components/Header.jsx`). Chrome colours are neutral greys, chart colours (blue, orange, aqua) are an
+  accessible palette and are not party colours, and religion and gender bars use one neutral colour so colour never encodes a community.
+  Party names appear only as data labels. `server/assets/` still holds old logo and portrait files, but nothing in the UI loads them.
+- The `/booths`, `/ac/[ac]` and `/zone/[zone]` pages are single-party views: they are seen from the party picked in the header (`components/PartyPicker.jsx`,
+  `useParty` in `lib/upbi.js`; the choice is the `?party=` URL parameter) and say so in a banner. There is no default party in the UI: until one is picked the
+  pages show the chooser, and the party buttons are listed alphabetically. Where a party did not stand, its share shows `—`, not 0%.
 - Value scales: shares/margins/turnout arrive as fractions (×100 to
   display); religion `*_percent_17` arrive 0–100; `null` = suppressed.
